@@ -28,7 +28,7 @@ class RebellionTest {
             .map { newInvestment -> Rebellion(index = emptyIndex, newInvestment = newInvestment) }
             .map { rebellion -> rebellion.fullInvestment }
 
-        assertEquals(fullInvestments, listOf(CashEquivalent.ONE, CashEquivalent.TEN))
+        assertEquals(listOf(CashEquivalent.ONE, CashEquivalent.TEN), fullInvestments)
     }
 
     @Test
@@ -41,7 +41,7 @@ class RebellionTest {
         )
         val index = Index(constituents = listOf(constituent), memo = "")
         val rebellion = Rebellion(index = index, newInvestment = CashAmount.TEN)
-        assertEquals(rebellion.fullInvestment, CashEquivalent.UNKNOWN)
+        assertEquals(CashEquivalent.UNKNOWN, rebellion.fullInvestment)
     }
 
     @Test
@@ -49,11 +49,11 @@ class RebellionTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.SAMPLED(CashAmount.TEN, Date()),
+            sharePrice = SharePrice.SAMPLE(CashAmount.TEN, Date()),
             ownedShares = ShareCount.ONE
         )
         val index = Index(constituents = listOf(constituent), memo = "")
         val rebellion = Rebellion(index = index, newInvestment = CashAmount.ONE)
-        assertEquals(rebellion.fullInvestment, CashEquivalent.AMOUNT(CashAmount(11)))
+        assertEquals(CashEquivalent.AMOUNT(CashAmount(11)), rebellion.fullInvestment)
     }
 }

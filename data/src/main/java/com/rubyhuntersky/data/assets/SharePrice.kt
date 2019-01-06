@@ -5,5 +5,5 @@ import java.util.*
 
 sealed class SharePrice {
     object UNKNOWN : SharePrice()
-    data class SAMPLED(val cashAmount: CashAmount, val date: Date) : SharePrice()
+    data class SAMPLE(val cashAmount: CashAmount, val date: Date) : SharePrice()
 }
