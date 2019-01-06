@@ -11,20 +11,19 @@ import com.rubyhuntersky.data.index.MarketWeight
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.util.*
 
 class RebellionTest {
 
     @Test
     fun seedRebellion() {
-        val rebellion = Rebellion.SEED
-        assertNotNull(rebellion)
+        assertNotNull(Rebellion.SEED)
     }
 
     @Test
     fun fullInvestmentEqualsNewInvestmentWhenIndexIsEmpty() {
-        val newInvestments = listOf(CashAmount.ONE, CashAmount.TEN)
         val emptyIndex = Index.EMPTY
-
+        val newInvestments = listOf(CashAmount.ONE, CashAmount.TEN)
         val fullInvestments = newInvestments
             .map { newInvestment -> Rebellion(index = emptyIndex, newInvestment = newInvestment) }
             .map { rebellion -> rebellion.fullInvestment }
@@ -34,14 +33,27 @@ class RebellionTest {
 
     @Test
     fun fullInvestmentIsUnknownWhenIndexIncludesUnpricedConstituent() {
-        val unpricedConstituent = Constituent(
+        val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
             sharePrice = SharePrice.Unknown,
             ownedShares = ShareCount.ONE
         )
-        val index = Index(constituents = listOf(unpricedConstituent), memo = "")
-        val rebellion = Rebellion(index, CashAmount.TEN)
+        val index = Index(constituents = listOf(constituent), memo = "")
+        val rebellion = Rebellion(index = index, newInvestment = CashAmount.TEN)
         assertEquals(rebellion.fullInvestment, CashEquivalent.Unknown)
+    }
+
+    @Test
+    fun fullInvestmentCombinesIndexCashEquivalentAndNewInvestment() {
+        val constituent = Constituent(
+            marketWeight = MarketWeight.ZERO,
+            assetSymbol = AssetSymbol("TSLA"),
+            sharePrice = SharePrice.Sampled(CashAmount.TEN, Date()),
+            ownedShares = ShareCount.ONE
+        )
+        val index = Index(constituents = listOf(constituent), memo = "")
+        val rebellion = Rebellion(index = index, newInvestment = CashAmount.ONE)
+        assertEquals(rebellion.fullInvestment, CashEquivalent.Amount(CashAmount(11)))
     }
 }

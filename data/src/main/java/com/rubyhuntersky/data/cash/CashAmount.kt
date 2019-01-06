@@ -3,6 +3,7 @@ package com.rubyhuntersky.data.cash
 import java.math.BigDecimal
 
 data class CashAmount(private val value: BigDecimal) {
+    constructor(long: Long) : this(BigDecimal.valueOf(long.toDouble()))
 
     operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
 
