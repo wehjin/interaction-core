@@ -13,14 +13,18 @@ data class CashAmount(private val value: BigDecimal) {
 
     override fun hashCode(): Int = value.toDouble().hashCode()
 
-    operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
+    fun compareTo(other: CashAmount): Int = value.compareTo(other.value)
 
+
+    operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
     operator fun plus(increment: CashEquivalent): CashEquivalent = when (increment) {
-        is CashEquivalent.UNKNOWN -> CashEquivalent.UNKNOWN
-        is CashEquivalent.AMOUNT -> CashEquivalent.AMOUNT(this + increment.cashAmount)
+        is CashEquivalent.Unknown -> CashEquivalent.Unknown
+        is CashEquivalent.Amount -> CashEquivalent.Amount(this + increment.cashAmount)
     }
 
     operator fun times(multiplier: Double): CashAmount = CashAmount(value * BigDecimal.valueOf(multiplier))
+
+    operator fun div(divisor: CashAmount): Double = (value / divisor.value).toDouble()
 
     companion object {
         val ZERO = CashAmount(BigDecimal.ZERO)

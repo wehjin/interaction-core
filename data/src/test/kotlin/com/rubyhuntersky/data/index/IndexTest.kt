@@ -13,7 +13,7 @@ class IndexTest {
     @Test
     fun cashEquivalentIsZeroWhenIndexHasNoConstituents() {
         val index = Index(constituents = emptyList(), memo = "No constituents")
-        assertEquals(CashEquivalent.ZERO, index.cashEquivalent)
+        assertEquals(CashEquivalent.ZERO, index.cashEquivalentOfAllConstituents)
     }
 
     @Test
@@ -21,11 +21,11 @@ class IndexTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.UNKNOWN,
+            sharePrice = SharePrice.Unknown,
             ownedShares = ShareCount.ONE
         )
         val index = Index(constituents = listOf(constituent), memo = "Unknown share price")
-        assertEquals(CashEquivalent.UNKNOWN, index.cashEquivalent)
+        assertEquals(CashEquivalent.Unknown, index.cashEquivalentOfAllConstituents)
     }
 
     @Test
@@ -33,10 +33,10 @@ class IndexTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.SAMPLE(CashAmount.TEN, Date()),
+            sharePrice = SharePrice.Sample(CashAmount.TEN, Date()),
             ownedShares = ShareCount.ONE
         )
         val index = Index(constituents = listOf(constituent), memo = "Known share price")
-        assertEquals(CashEquivalent.TEN, index.cashEquivalent)
+        assertEquals(CashEquivalent.TEN, index.cashEquivalentOfAllConstituents)
     }
 }

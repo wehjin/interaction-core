@@ -7,7 +7,7 @@ import com.rubyhuntersky.data.index.Index
 data class Rebellion(val index: Index, val newInvestment: CashAmount) {
 
     val fullInvestment: CashEquivalent
-        get() = index.cashEquivalent + newInvestment
+        get() = index.cashEquivalentOfAllConstituents + newInvestment
 
     companion object {
 

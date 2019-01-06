@@ -18,12 +18,12 @@ class ReportTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.SAMPLE(cashAmount = CashAmount.TEN, date = Date()),
+            sharePrice = SharePrice.Sample(cashAmount = CashAmount.TEN, date = Date()),
             ownedShares = ShareCount.TEN
         )
         val index = Index(listOf(constituent), "")
         val report = Report(index, CashAmount.TEN)
-        assertEquals(index.cashEquivalent, report.currentInvestment)
+        assertEquals(index.cashEquivalentOfAllConstituents, report.currentInvestment)
     }
 
     @Test
@@ -37,11 +37,11 @@ class ReportTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.SAMPLE(cashAmount = CashAmount.TEN, date = Date()),
+            sharePrice = SharePrice.Sample(cashAmount = CashAmount.TEN, date = Date()),
             ownedShares = ShareCount.TEN
         )
         val index = Index(listOf(constituent), "")
         val report = Report(index, CashAmount.TEN)
-        assertEquals(index.cashEquivalent + CashAmount.TEN, report.fullInvestment)
+        assertEquals(index.cashEquivalentOfAllConstituents + CashAmount.TEN, report.fullInvestment)
     }
 }
