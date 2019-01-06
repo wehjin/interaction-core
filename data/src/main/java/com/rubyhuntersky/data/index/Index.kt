@@ -1,3 +1,14 @@
 package com.rubyhuntersky.data.index
 
-data class Index(val constituents: List<Constituent>, val memo: String)
+import com.rubyhuntersky.data.cash.CashEquivalent
+import com.rubyhuntersky.data.cash.sum
+
+data class Index(val constituents: List<Constituent>, val memo: String) {
+
+    val cashEquivalent: CashEquivalent
+        get() = constituents.map { it.cashEquivalent }.fold(CashEquivalent.ZERO, ::sum)
+
+    companion object {
+        val EMPTY = Index(emptyList(), "")
+    }
+}
