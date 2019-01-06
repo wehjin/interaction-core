@@ -8,7 +8,7 @@ import com.rubyhuntersky.data.cash.CashEquivalent
 data class Constituent(
     val marketWeight: MarketWeight,
     val assetSymbol: AssetSymbol,
-    val sharePrice: SharePrice = SharePrice.Unknown,
+    val sharePrice: SharePrice = SharePrice.UNKNOWN,
     val ownedShares: ShareCount = ShareCount(0.0),
     val isRemoved: Boolean = false
 ) {
