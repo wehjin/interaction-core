@@ -10,7 +10,6 @@ data class Rebellion(val index: Index, val newInvestment: CashAmount) {
         get() = index.cashEquivalentOfAllConstituents + newInvestment
 
     companion object {
-
         val SEED = Rebellion(Index.EMPTY, CashAmount.ZERO)
     }
 }

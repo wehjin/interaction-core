@@ -1,23 +1,32 @@
 package com.rubyhuntersky.data.report
 
+import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
-import com.rubyhuntersky.data.index.Index
 import com.rubyhuntersky.data.index.MarketWeight
 
-class Report(private val index: Index, val newInvestment: CashAmount) {
+class RebellionReport(private val rebellion: Rebellion) {
 
-    val currentInvestment: CashEquivalent by lazy { index.cashEquivalentOfAllConstituents }
-    val fullInvestment: CashEquivalent by lazy { currentInvestment + newInvestment }
+    private val index = rebellion.index
+    val currentInvestment: CashEquivalent by lazy { rebellion.index.cashEquivalentOfAllConstituents }
+    val newInvestment: CashAmount get() = rebellion.newInvestment
+    val fullInvestment: CashEquivalent get() = rebellion.fullInvestment
 
-    val conclusion: ReportConclusion by lazy {
+    sealed class Conclusion {
+        object AddConstituent : Conclusion()
+        object RefreshPrices : Conclusion()
+        data class Divest(val corrections: List<Correction>) : Conclusion()
+        data class Maintain(val corrections: List<Correction>) : Conclusion()
+    }
+
+    val conclusion: Conclusion by lazy {
         val totalMarketWeight = index.totalMarketWeightOfIncludedConstituents
         if (totalMarketWeight == MarketWeight.ZERO) {
-            ReportConclusion.AddConstituent
+            Conclusion.AddConstituent
         } else {
             val fullInvestment = fullInvestment
             when (fullInvestment) {
-                is CashEquivalent.Unknown -> ReportConclusion.RefreshPrices
+                is CashEquivalent.Unknown -> Conclusion.RefreshPrices
                 is CashEquivalent.Amount -> {
                     if (fullInvestment <= CashEquivalent.ZERO) {
                         val currentInvestment = currentInvestment as CashEquivalent.Amount
@@ -29,12 +38,12 @@ class Report(private val index: Index, val newInvestment: CashAmount) {
                                     it.cashEquivalent as CashEquivalent.Amount / currentInvestment
                                 }
                                 if (actualWeight == 0.0) {
-                                    ConstituentCorrection.Hold(
+                                    Correction.Hold(
                                         assetSymbol = it.assetSymbol,
                                         weight = actualWeight
                                     )
                                 } else {
-                                    ConstituentCorrection.Sell(
+                                    Correction.Sell(
                                         assetSymbol = it.assetSymbol,
                                         targetWeight = 0.0,
                                         actualWeight = actualWeight,
@@ -42,24 +51,24 @@ class Report(private val index: Index, val newInvestment: CashAmount) {
                                     )
                                 }
                             }
-                        ReportConclusion.Divest(constituentCorrections)
+                        Conclusion.Divest(constituentCorrections)
                     } else {
                         val constituentCorrections = index.includedOrOwnedConstituents
                             .map {
                                 val targetWeight = if (it.isRemoved) 0.0 else (it.marketWeight / totalMarketWeight)
                                 val actualWeight = it.cashEquivalent as CashEquivalent.Amount / fullInvestment
                                 when {
-                                    actualWeight == targetWeight -> ConstituentCorrection.Hold(
+                                    actualWeight == targetWeight -> Correction.Hold(
                                         assetSymbol = it.assetSymbol,
                                         weight = targetWeight
                                     )
-                                    actualWeight < targetWeight -> ConstituentCorrection.Buy(
+                                    actualWeight < targetWeight -> Correction.Buy(
                                         assetSymbol = it.assetSymbol,
                                         targetWeight = targetWeight,
                                         actualWeight = actualWeight,
                                         deficit = fullInvestment.cashAmount * (targetWeight - actualWeight)
                                     )
-                                    else -> ConstituentCorrection.Sell(
+                                    else -> Correction.Sell(
                                         assetSymbol = it.assetSymbol,
                                         targetWeight = targetWeight,
                                         actualWeight = actualWeight,
@@ -67,7 +76,7 @@ class Report(private val index: Index, val newInvestment: CashAmount) {
                                     )
                                 }
                             }
-                        ReportConclusion.Maintain(constituentCorrections)
+                        Conclusion.Maintain(constituentCorrections)
                     }
                 }
             }

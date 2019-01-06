@@ -1,5 +1,6 @@
 package com.rubyhuntersky.data.report
 
+import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
@@ -11,7 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
 
-class ReportTest {
+class RebellionReportTest {
 
     @Test
     fun currentInvestmentIsIndexCashEquivalent() {
@@ -21,14 +22,21 @@ class ReportTest {
             sharePrice = SharePrice.Sample(cashAmount = CashAmount.TEN, date = Date()),
             ownedShares = ShareCount.TEN
         )
-        val index = Index(listOf(constituent), "")
-        val report = Report(index, CashAmount.TEN)
-        assertEquals(index.cashEquivalentOfAllConstituents, report.currentInvestment)
+        val rebellion = Rebellion(
+            index = Index(listOf(constituent), ""),
+            newInvestment = CashAmount.TEN
+        )
+        val report = RebellionReport(rebellion)
+        assertEquals(rebellion.index.cashEquivalentOfAllConstituents, report.currentInvestment)
     }
 
     @Test
     fun newInvestmentIsPublic() {
-        val report = Report(index = Index.EMPTY, newInvestment = CashAmount.TEN)
+        val rebellion = Rebellion(
+            index = Index.EMPTY,
+            newInvestment = CashAmount.TEN
+        )
+        val report = RebellionReport(rebellion)
         assertEquals(CashAmount.TEN, report.newInvestment)
     }
 
@@ -40,8 +48,9 @@ class ReportTest {
             sharePrice = SharePrice.Sample(cashAmount = CashAmount.TEN, date = Date()),
             ownedShares = ShareCount.TEN
         )
-        val index = Index(listOf(constituent), "")
-        val report = Report(index, CashAmount.TEN)
-        assertEquals(index.cashEquivalentOfAllConstituents + CashAmount.TEN, report.fullInvestment)
+        val newInvestment = CashAmount.TEN
+        val rebellion = Rebellion(index = Index(listOf(constituent), ""), newInvestment = newInvestment)
+        val report = RebellionReport(rebellion)
+        assertEquals(rebellion.index.cashEquivalentOfAllConstituents + newInvestment, report.fullInvestment)
     }
 }
