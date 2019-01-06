@@ -11,6 +11,7 @@ import com.rubyhuntersky.interaction.interactions.main.MainInteraction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.activity_main_viewing.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     is MainInteraction.State.Viewing -> {
                         setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
+                        setSupportActionBar(toolbar)
                     }
                 }
             }
