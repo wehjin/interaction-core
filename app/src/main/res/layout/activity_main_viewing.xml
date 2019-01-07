@@ -2,6 +2,7 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,12 +28,18 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <View
+            <com.rubyhuntersky.indexrebellion.views.StatisticView
+                android:id="@+id/goalStatisticView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_rounded_primary_light" />
+                android:background="@drawable/bg_rounded_primary_light"
+                custom:labelText="Goal"
+                custom:text="$88.8M"
+                custom:textColor="@color/primaryTextColor" />
 
             <TextView
                 android:layout_width="24dp"
@@ -42,45 +49,25 @@
                 android:textColor="#50ffffff"
                 android:textSize="23sp" />
 
-            <LinearLayout
+            <com.rubyhuntersky.indexrebellion.views.StatisticView
+                android:id="@+id/investedStatisticView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="6dp"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_rounded_primary_light"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="55"
-                    android:fontFeatureSettings="smcp"
-                    android:gravity="bottom|center_horizontal"
-                    android:lines="1"
-                    android:text="$0.00M"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="45"
-                    android:fontFeatureSettings="smcp"
-                    android:gravity="top|center_horizontal"
-                    android:lines="1"
-                    android:text="Invested"
-                    android:textAllCaps="true"
-                    android:textColor="@color/primaryTextColor"
-                    android:textSize="10dp" />
-            </LinearLayout>
+                custom:labelText="Invested"
+                custom:text="$9.99M"
+                custom:textColor="@color/primaryTextColor" />
 
             <TextView
                 android:layout_width="24dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:text="@string/plus"
                 android:textColor="#50ffffff"
                 android:textSize="23sp" />
@@ -88,48 +75,23 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1">
 
-                <LinearLayout
+                <com.rubyhuntersky.indexrebellion.views.StatisticView
+                    android:id="@+id/depositStatisticView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="55"
-                        android:fontFeatureSettings="smcp"
-                        android:gravity="bottom|center_horizontal"
-                        android:lines="1"
-                        android:text="$0.00M"
-                        android:textColor="@color/secondaryColor"
-                        android:textSize="17dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="45"
-                        android:fontFeatureSettings="smcp"
-                        android:gravity="top|center_horizontal"
-                        android:lines="1"
-                        android:text="Withdraw"
-                        android:textAllCaps="true"
-                        android:textColor="@color/secondaryColor"
-                        android:textSize="10dp" />
-                </LinearLayout>
+                    custom:labelText="Withdraw"
+                    custom:text="$3.33M"
+                    custom:textColor="@color/secondaryLightColor" />
 
                 <android.support.design.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:strokeColor="@color/secondaryColor" />
+                    app:strokeColor="@color/secondaryLightColor" />
             </FrameLayout>
         </LinearLayout>
 

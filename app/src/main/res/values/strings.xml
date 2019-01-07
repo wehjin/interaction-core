@@ -4,4 +4,8 @@
     <string name="plus">+</string>
     <string name="equals">=</string>
     <string name="deposit">Deposit</string>
+    <string name="units">Units</string>
+    <string name="zero_dollars">$\u202f0</string>
+    <string name="statisticViewDefaultValue">0</string>
+    <string name="statisticViewDefaultUnit">count</string>
 </resources>
