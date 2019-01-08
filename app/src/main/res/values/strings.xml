@@ -8,4 +8,5 @@
     <string name="zero_dollars">$\u202f0</string>
     <string name="statisticViewDefaultValue">0</string>
     <string name="statisticViewDefaultUnit">count</string>
+    <string name="index">Index</string>
 </resources>
