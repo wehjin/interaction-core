@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/correctionsFooterLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-
-    <View
-        android:layout_width="3dp"
-        android:layout_height="32dp"
-        android:layout_margin="4dp"
-        android:background="@color/secondaryStrokeColor" />
+    android:layout_height="wrap_content">
 
     <android.support.design.button.MaterialButton
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="Add Constituent" />
 
-</LinearLayout>
+</RelativeLayout>

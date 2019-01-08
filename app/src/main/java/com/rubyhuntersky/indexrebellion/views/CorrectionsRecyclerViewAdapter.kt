@@ -9,7 +9,7 @@ import com.rubyhuntersky.indexrebellion.R
 
 class CorrectionsRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    enum class CorrectionsViewType { HEADER, FOOTER, CORRECTION, CONNECTOR }
+    enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
 
     private val corrections = listOf(Correction.Hold(AssetSymbol("TSLA"), 100.0))
 
@@ -18,12 +18,16 @@ class CorrectionsRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHol
     override fun getItemViewType(position: Int): Int = getViewType(position).ordinal
 
     private fun getViewType(position: Int): CorrectionsViewType = if (position % 2 == 1) {
-        CorrectionsViewType.CONNECTOR
+        if ((position + 1) / 2 == 1 + corrections.size) {
+            CorrectionsViewType.CONNECTOR_TALL
+        } else {
+            CorrectionsViewType.CONNECTOR_SHORT
+        }
     } else {
         val elementPosition = position / 2
         when {
             elementPosition == 0 -> CorrectionsViewType.HEADER
-            elementPosition - 1 < corrections.size -> CorrectionsViewType.CORRECTION
+            elementPosition - 1 < corrections.size -> CorrectionsViewType.BODY
             else -> CorrectionsViewType.FOOTER
         }
     }
@@ -32,9 +36,10 @@ class CorrectionsRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHol
         val correctionsViewType = CorrectionsViewType.values()[viewType]
         val layoutRes = when (correctionsViewType) {
             CorrectionsViewType.HEADER -> R.layout.view_corrections_header
-            CorrectionsViewType.CONNECTOR -> R.layout.view_corrections_connector
+            CorrectionsViewType.CONNECTOR_SHORT -> R.layout.view_corrections_connector_short
+            CorrectionsViewType.BODY -> R.layout.view_corrections_body
+            CorrectionsViewType.CONNECTOR_TALL -> R.layout.view_corrections_connector_tall
             CorrectionsViewType.FOOTER -> R.layout.view_corrections_footer
-            CorrectionsViewType.CORRECTION -> R.layout.view_corrections_correction
         }
         val itemView = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return object : RecyclerView.ViewHolder(itemView) {}
