@@ -9,6 +9,7 @@ import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.toStatString
+import com.rubyhuntersky.indexrebellion.views.CorrectionsRecyclerViewAdapter
 import com.rubyhuntersky.indexrebellion.views.StatisticView
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.books.RebellionBook
