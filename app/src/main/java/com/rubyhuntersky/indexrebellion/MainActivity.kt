@@ -4,10 +4,7 @@ import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
@@ -61,32 +58,13 @@ class MainActivity : AppCompatActivity() {
         renderCorrectionsView()
     }
 
-    enum class CorrectionsViewType {
-        FOOTER
-    }
-
     private fun renderCorrectionsView() {
         with(correctionsRecyclerView) {
             if (layoutManager == null) {
                 layoutManager = object : LinearLayoutManager(context) {}
             }
             if (adapter == null) {
-                adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                    override fun getItemCount(): Int = 1
-                    override fun getItemViewType(position: Int): Int = CorrectionsViewType.FOOTER.ordinal
-                    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {}
-
-                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-                        val correctionsViewType = CorrectionsViewType.values()[viewType]
-                        return when (correctionsViewType) {
-                            CorrectionsViewType.FOOTER -> {
-                                val view = LayoutInflater.from(parent.context)
-                                    .inflate(R.layout.view_corrections_footer, parent, false)
-                                object : RecyclerView.ViewHolder(view) {}
-                            }
-                        }
-                    }
-                }
+                adapter = CorrectionsRecyclerViewAdapter()
             }
         }
     }
