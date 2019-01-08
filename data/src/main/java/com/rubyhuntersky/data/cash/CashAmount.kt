@@ -26,6 +26,8 @@ data class CashAmount(private val value: BigDecimal) {
 
     operator fun div(divisor: CashAmount): Double = (value / divisor.value).toDouble()
 
+    fun toDouble(): Double = value.toDouble()
+
     companion object {
         val ZERO = CashAmount(BigDecimal.ZERO)
         val ONE = CashAmount(BigDecimal.ONE)

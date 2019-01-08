@@ -24,6 +24,11 @@ sealed class CashEquivalent {
 
     fun toCashAmount(): CashAmount = (this as CashEquivalent.Amount).cashAmount
 
+    fun toDouble(): Double? = when (this) {
+        is Unknown -> null
+        is Amount -> this.cashAmount.toDouble()
+    }
+
     companion object {
 
         val ZERO = CashEquivalent.Amount(CashAmount.ZERO) as CashEquivalent
