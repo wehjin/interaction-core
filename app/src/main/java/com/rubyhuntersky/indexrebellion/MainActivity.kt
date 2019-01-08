@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderViewing(viewing: MainInteraction.State.Viewing) {
         supportActionBar!!.title = getString(R.string.funding)
         val report = viewing.rebellionReport
-        renderNewInvestmentStatisticView(report.newInvestment)
+        renderNewInvestment(report.newInvestment)
         currentInvestmentStatisticView.setText(report.currentInvestment)
         goalInvestmentStatisticView.setText(report.fullInvestment)
     }
@@ -62,11 +62,14 @@ class MainActivity : AppCompatActivity() {
                 ?: getString(R.string.unknown_quantity)
     }
 
-    private fun renderNewInvestmentStatisticView(newInvestment: CashAmount) {
+    private fun renderNewInvestment(newInvestment: CashAmount) {
+        val deposit = newInvestment.toDouble()
         with(newInvestmentStatisticView) {
-            val deposit = newInvestment.toDouble()
-            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(R.string.withdraw)
+            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(R.string.withdrawal)
             text = addDollarToStatString(deposit.toStatString())
+        }
+        with(newInvestmentOperatorTextView) {
+            text = if (deposit >= 0) getString(R.string.plus) else getString(R.string.minus)
         }
     }
 
