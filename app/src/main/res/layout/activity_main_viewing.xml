@@ -174,7 +174,7 @@
             </LinearLayout>
 
             <android.support.design.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sell $10.4K" />
@@ -194,15 +194,5 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_black_24dp"
-        app:fabSize="mini"
-        app:layout_anchor="@id/correctionsScrollView"
-        app:layout_anchorGravity="bottom|end" />
-
 
 </android.support.design.widget.CoordinatorLayout>
