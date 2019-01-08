@@ -3,10 +3,15 @@
     <string name="loading">Loading…</string>
     <string name="plus">+</string>
     <string name="equals">=</string>
-    <string name="deposit">Deposit</string>
     <string name="units">Units</string>
-    <string name="zero_dollars">$\u202f0</string>
     <string name="statisticViewDefaultValue">0</string>
     <string name="statisticViewDefaultUnit">count</string>
     <string name="index">Index</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="dollar_format">$%1$s</string>
+    <string name="dollar_space_format">$%1$s\u00a0</string>
+    <string name="unknown_quantity">\?\?\?</string>
+    <string name="goalInvestmentStatisticViewLabel">Goal</string>
+    <string name="funding">Funding</string>
 </resources>

@@ -5,6 +5,10 @@ import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.rubyhuntersky.data.Rebellion
+import com.rubyhuntersky.data.cash.CashAmount
+import com.rubyhuntersky.data.cash.CashEquivalent
+import com.rubyhuntersky.data.toStatString
+import com.rubyhuntersky.indexrebellion.views.StatisticView
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.books.RebellionBook
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
@@ -12,6 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_main_viewing.*
+import kotlinx.android.synthetic.main.view_funding.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,11 +40,40 @@ class MainActivity : AppCompatActivity() {
                     is MainInteraction.State.Viewing -> {
                         setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
                         setSupportActionBar(toolbar)
+                        renderViewing(it)
                     }
                 }
             }
             .addTo(disposable)
         super.onStart()
+    }
+
+    private fun renderViewing(viewing: MainInteraction.State.Viewing) {
+        supportActionBar!!.title = getString(R.string.funding)
+        val report = viewing.rebellionReport
+        renderNewInvestmentStatisticView(report.newInvestment)
+        currentInvestmentStatisticView.setText(report.currentInvestment)
+        goalInvestmentStatisticView.setText(report.fullInvestment)
+    }
+
+    private fun StatisticView.setText(cashEquivalent: CashEquivalent) {
+        val invested = cashEquivalent.toDouble()
+        text = invested?.toStatString()?.let(this@MainActivity::addDollarToStatString)
+                ?: getString(R.string.unknown_quantity)
+    }
+
+    private fun renderNewInvestmentStatisticView(newInvestment: CashAmount) {
+        with(newInvestmentStatisticView) {
+            val deposit = newInvestment.toDouble()
+            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(R.string.withdraw)
+            text = addDollarToStatString(deposit.toStatString())
+        }
+    }
+
+    private fun addDollarToStatString(statString: String): String = if (statString.length == 1) {
+        getString(R.string.dollar_space_format, statString)
+    } else {
+        getString(R.string.dollar_format, statString)
     }
 
     override fun onStop() {

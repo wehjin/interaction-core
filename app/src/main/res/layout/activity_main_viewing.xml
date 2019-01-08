@@ -2,7 +2,6 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainViewing"
     android:layout_width="match_parent"
@@ -10,6 +9,7 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        style="@style/Widget.MaterialComponents.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp">
@@ -23,78 +23,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextColor="@color/primaryTextColor" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="128dp"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <com.rubyhuntersky.indexrebellion.views.StatisticView
-                android:id="@+id/goalStatisticView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_rounded_primary_light"
-                custom:labelText="Goal"
-                custom:text="$88.8M"
-                custom:textColor="@color/primaryTextColor" />
-
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/equals"
-                android:textColor="#50ffffff"
-                android:textSize="23sp" />
-
-            <com.rubyhuntersky.indexrebellion.views.StatisticView
-                android:id="@+id/investedStatisticView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_rounded_primary_light"
-                custom:labelText="Invested"
-                custom:text="$9.99M"
-                custom:textColor="@color/primaryTextColor" />
-
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:gravity="center"
-                android:text="@string/plus"
-                android:textColor="#50ffffff"
-                android:textSize="23sp" />
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
-
-                <com.rubyhuntersky.indexrebellion.views.StatisticView
-                    android:id="@+id/depositStatisticView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    custom:labelText="Withdraw"
-                    custom:text="$3.33M"
-                    custom:textColor="@color/secondaryLightColor" />
-
-                <android.support.design.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:strokeColor="@color/secondaryLightColor" />
-            </FrameLayout>
-        </LinearLayout>
+        <include layout="@layout/view_funding" />
 
     </android.support.design.widget.AppBarLayout>
 
