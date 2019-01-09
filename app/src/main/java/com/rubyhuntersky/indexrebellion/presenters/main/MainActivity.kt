@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion
+package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
@@ -8,6 +8,7 @@ import android.view.View
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.toStatString
+import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.views.CorrectionsRecyclerViewAdapter
 import com.rubyhuntersky.indexrebellion.views.StatisticView
@@ -28,10 +29,16 @@ class MainActivity : AppCompatActivity() {
             .subscribe {
                 when (it) {
                     is MainVision.Loading -> {
-                        setContentView(R.id.mainLoading, R.layout.activity_main_loading)
+                        setContentView(
+                            R.id.mainLoading,
+                            R.layout.activity_main_loading
+                        )
                     }
                     is MainVision.Viewing -> {
-                        setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
+                        setContentView(
+                            R.id.mainViewing,
+                            R.layout.activity_main_viewing
+                        )
                         setSupportActionBar(toolbar)
                         renderViewing(it)
                     }
@@ -70,7 +77,9 @@ class MainActivity : AppCompatActivity() {
     private fun renderNewInvestment(newInvestment: CashAmount) {
         val deposit = newInvestment.toDouble()
         with(newInvestmentStatisticView) {
-            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(R.string.withdrawal)
+            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(
+                R.string.withdrawal
+            )
             text = addDollarToStatString(deposit.toStatString())
         }
         with(newInvestmentOperatorTextView) {
