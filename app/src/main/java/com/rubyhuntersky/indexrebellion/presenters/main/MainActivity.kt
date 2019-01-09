@@ -81,8 +81,10 @@ class MainActivity : AppCompatActivity() {
                 is RebellionReport.Conclusion.RefreshPrices -> {
                 }
                 is RebellionReport.Conclusion.Divest -> {
+                    recyclerViewAdapter.setCorrections(conclusion.corrections)
                 }
                 is RebellionReport.Conclusion.Maintain -> {
+                    recyclerViewAdapter.setCorrections(conclusion.corrections)
                 }
             }
         }
