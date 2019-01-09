@@ -4,9 +4,11 @@ import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
+import com.rubyhuntersky.data.report.RebellionReport
 import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
@@ -58,16 +60,30 @@ class MainActivity : AppCompatActivity() {
         renderNewInvestment(report.newInvestment)
         currentInvestmentStatisticView.setText(report.currentInvestment)
         goalInvestmentStatisticView.setText(report.fullInvestment)
-        renderCorrectionsView()
+        renderCorrectionsView(report.conclusion)
     }
 
-    private fun renderCorrectionsView() {
+    private fun renderCorrectionsView(conclusion: RebellionReport.Conclusion) {
         with(correctionsRecyclerView) {
             if (layoutManager == null) {
                 layoutManager = object : LinearLayoutManager(context) {}
             }
-            if (adapter == null) {
-                adapter = CorrectionsRecyclerViewAdapter(mainInteraction)
+
+            val recyclerViewAdapter: CorrectionsRecyclerViewAdapter =
+                adapter as? CorrectionsRecyclerViewAdapter
+                    ?: CorrectionsRecyclerViewAdapter(mainInteraction).apply { adapter = this }
+
+            Log.d(MainActivity::class.java.simpleName, "conclusion: $conclusion")
+            when (conclusion) {
+                is RebellionReport.Conclusion.AddConstituent -> {
+                    recyclerViewAdapter.setCorrections(emptyList())
+                }
+                is RebellionReport.Conclusion.RefreshPrices -> {
+                }
+                is RebellionReport.Conclusion.Divest -> {
+                }
+                is RebellionReport.Conclusion.Maintain -> {
+                }
             }
         }
     }

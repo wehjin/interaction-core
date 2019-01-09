@@ -15,7 +15,7 @@ class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteractio
 
     enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
 
-    private val corrections = listOf(Correction.Hold(AssetSymbol("TSLA"), 100.0))
+    private var corrections: List<Correction> = listOf(Correction.Hold(AssetSymbol("TSLA"), 100.0))
 
     override fun getItemCount(): Int = 1 + corrections.size * 2 + 2
 
@@ -34,6 +34,11 @@ class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteractio
             elementPosition - 1 < corrections.size -> CorrectionsViewType.BODY
             else -> CorrectionsViewType.FOOTER
         }
+    }
+
+    fun setCorrections(value: List<Correction>) {
+        corrections = value
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
