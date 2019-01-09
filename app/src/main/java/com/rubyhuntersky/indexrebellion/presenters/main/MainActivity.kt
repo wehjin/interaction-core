@@ -14,7 +14,6 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.SharedConstituentSearchInteraction
-import com.rubyhuntersky.indexrebellion.views.CorrectionsRecyclerViewAdapter
 import com.rubyhuntersky.indexrebellion.views.StatisticView
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo

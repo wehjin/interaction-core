@@ -17,4 +17,8 @@
     <string name="funding">Funding</string>
     <string name="plus_constituent">+ Constituent</string>
     <string name="save">Save</string>
+    <string name="correctionViewDefaultSymbolText">SYMBOL</string>
+    <string name="hold">Hold</string>
+    <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
 </resources>

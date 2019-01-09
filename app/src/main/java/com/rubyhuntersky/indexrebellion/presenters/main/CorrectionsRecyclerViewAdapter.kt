@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.views
+package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -42,6 +42,7 @@ class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteractio
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
         val correctionsViewType = CorrectionsViewType.values()[viewType]
         val layoutRes = when (correctionsViewType) {
             CorrectionsViewType.HEADER -> R.layout.view_corrections_header
@@ -50,15 +51,31 @@ class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteractio
             CorrectionsViewType.CONNECTOR_TALL -> R.layout.view_corrections_connector_tall
             CorrectionsViewType.FOOTER -> R.layout.view_corrections_footer
         }
-        val itemView = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-        return object : RecyclerView.ViewHolder(itemView) {}
-    }
-
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        if (position == itemCount - 1) {
-            viewHolder.itemView.plusConstituentButton.setOnClickListener {
-                mainInteraction.update(MainAction.FindConstituent)
-            }
+        val itemView = layoutInflater.inflate(layoutRes, parent, false)
+        return when (correctionsViewType) {
+            CorrectionsViewType.BODY -> CorrectionBodyViewHolder(itemView)
+            else -> object : RecyclerView.ViewHolder(itemView) {}
         }
     }
+
+
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        val viewType = getViewType(position)
+        when (viewType) {
+            CorrectionsViewType.FOOTER -> {
+                viewHolder.itemView.plusConstituentButton.setOnClickListener {
+                    mainInteraction.update(MainAction.FindConstituent)
+                }
+            }
+            CorrectionsViewType.BODY -> {
+                val correction = corrections[position / 2 - 1]
+                val bodyViewHolder = viewHolder as CorrectionBodyViewHolder
+                bodyViewHolder.bindCorrection(correction)
+            }
+            CorrectionsViewType.HEADER -> Unit
+            CorrectionsViewType.CONNECTOR_SHORT -> Unit
+            CorrectionsViewType.CONNECTOR_TALL -> Unit
+        }
+    }
+
 }

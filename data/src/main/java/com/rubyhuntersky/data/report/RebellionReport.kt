@@ -39,12 +39,12 @@ class RebellionReport(private val rebellion: Rebellion) {
                                 }
                                 if (actualWeight == 0.0) {
                                     Correction.Hold(
-                                        assetSymbol = it.assetSymbol,
+                                        holdAssetSymbol = it.assetSymbol,
                                         weight = actualWeight
                                     )
                                 } else {
                                     Correction.Sell(
-                                        assetSymbol = it.assetSymbol,
+                                        sellAssetSymbol = it.assetSymbol,
                                         targetWeight = 0.0,
                                         actualWeight = actualWeight,
                                         surplus = it.cashEquivalent.toCashAmount()
@@ -59,17 +59,17 @@ class RebellionReport(private val rebellion: Rebellion) {
                                 val actualWeight = it.cashEquivalent as CashEquivalent.Amount / fullInvestment
                                 when {
                                     actualWeight == targetWeight -> Correction.Hold(
-                                        assetSymbol = it.assetSymbol,
+                                        holdAssetSymbol = it.assetSymbol,
                                         weight = targetWeight
                                     )
                                     actualWeight < targetWeight -> Correction.Buy(
-                                        assetSymbol = it.assetSymbol,
+                                        buyAssetSymbol = it.assetSymbol,
                                         targetWeight = targetWeight,
                                         actualWeight = actualWeight,
                                         deficit = fullInvestment.cashAmount * (targetWeight - actualWeight)
                                     )
                                     else -> Correction.Sell(
-                                        assetSymbol = it.assetSymbol,
+                                        sellAssetSymbol = it.assetSymbol,
                                         targetWeight = targetWeight,
                                         actualWeight = actualWeight,
                                         surplus = fullInvestment.cashAmount * (actualWeight - targetWeight)

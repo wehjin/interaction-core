@@ -8,9 +8,10 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/correctionHeadingTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SYMBOL"
+        android:text="@string/correctionViewDefaultSymbolText"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
     <LinearLayout
@@ -33,11 +34,12 @@
             android:background="@color/primaryColor" />
 
         <View
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_margin="4dp"
+            android:id="@+id/correctionCircleView"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_margin="3dp"
             android:background="@drawable/ic_add_circle_black_24dp"
-            android:backgroundTint="@color/secondaryStrokeColor" />
+            android:backgroundTint="@color/primaryLightColor" />
 
         <View
             android:layout_width="0dp"
@@ -58,6 +60,7 @@
     </LinearLayout>
 
     <android.support.design.button.MaterialButton
+        android:id="@+id/correctionActionButton"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
