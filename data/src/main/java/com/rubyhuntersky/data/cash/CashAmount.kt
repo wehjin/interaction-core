@@ -4,6 +4,7 @@ import java.math.BigDecimal
 
 data class CashAmount(private val value: BigDecimal) {
     constructor(long: Long) : this(BigDecimal.valueOf(long))
+    constructor(double: Double) : this(BigDecimal.valueOf(double))
 
     override fun equals(other: Any?): Boolean = if (other is CashAmount) {
         value.compareTo(other.value) == 0

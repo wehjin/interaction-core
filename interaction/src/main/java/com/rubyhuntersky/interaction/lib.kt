@@ -5,6 +5,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 interface Interaction<V, in A> {
+    fun reset() {}
+
     val visionStream: Observable<V>
     fun update(action: A)
 }
