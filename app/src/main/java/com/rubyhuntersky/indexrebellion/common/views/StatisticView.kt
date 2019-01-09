@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.views
+package com.rubyhuntersky.indexrebellion.common.views
 
 import android.content.Context
 import android.graphics.Color

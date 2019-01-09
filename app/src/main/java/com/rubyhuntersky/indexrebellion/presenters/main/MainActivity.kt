@@ -2,6 +2,7 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -12,12 +13,13 @@ import com.rubyhuntersky.data.report.RebellionReport
 import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.common.views.StatisticView
+import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
+import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.SharedConstituentSearchInteraction
-import com.rubyhuntersky.indexrebellion.views.StatisticView
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo
-import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchAction
 import com.rubyhuntersky.interaction.interactions.main.MainAction
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
 import com.rubyhuntersky.interaction.interactions.main.MainVision
@@ -145,12 +147,20 @@ class MainActivity : AppCompatActivity() {
             rebellionBook = SharedRebellionBook,
             constituentSearchCatalyst = object : InteractionCatalyst {
                 override fun catalyze() {
-                    SharedConstituentSearchInteraction.update(ConstituentSearchAction.Clear)
-                    mainActivity?.supportFragmentManager?.let {
-                        ConstituentSearchDialogFragment.newInstance().show(it, "constituent_search")
-                    }
+                    SharedConstituentSearchInteraction.reset()
+                    showDialogFragment(ConstituentSearchDialogFragment.newInstance(), "constituent_search")
+                }
+            },
+            cashEditingCatalyst = object : InteractionCatalyst {
+                override fun catalyze() {
+                    SharedCashEditingInteraction.reset()
+                    showDialogFragment(CashEditingDialogFragment.newInstance(), "cash_editing")
                 }
             }
         )
+
+        private fun showDialogFragment(dialogFragment: DialogFragment, tag: String) {
+            mainActivity?.supportFragmentManager?.let { dialogFragment.show(it, tag) }
+        }
     }
 }

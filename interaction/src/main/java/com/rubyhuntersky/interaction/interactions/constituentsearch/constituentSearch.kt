@@ -31,6 +31,8 @@ class ConstituentSearchInteraction(private val rebellionBook: RebellionBook) :
     override val visionStream: Observable<ConstituentSearchVision>
         get() = visionBehavior.distinctUntilChanged()
 
+    override fun reset() = update(ConstituentSearchAction.Clear)
+
     override fun update(action: ConstituentSearchAction) {
         val currentVision = this.vision
         when (currentVision) {

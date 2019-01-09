@@ -12,7 +12,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="16dp">
 
-        <com.rubyhuntersky.indexrebellion.views.StatisticView
+        <com.rubyhuntersky.indexrebellion.common.views.StatisticView
             android:id="@+id/goalInvestmentStatisticView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -33,7 +33,7 @@
             android:textColor="#50ffffff"
             android:textSize="23sp" />
 
-        <com.rubyhuntersky.indexrebellion.views.StatisticView
+        <com.rubyhuntersky.indexrebellion.common.views.StatisticView
             android:id="@+id/currentInvestmentStatisticView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -64,7 +64,7 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1">
 
-            <com.rubyhuntersky.indexrebellion.views.StatisticView
+            <com.rubyhuntersky.indexrebellion.common.views.StatisticView
                 android:id="@+id/newInvestmentStatisticView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
