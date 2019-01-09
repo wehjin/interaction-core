@@ -23,11 +23,13 @@
         android:orientation="horizontal">
 
         <Space
+            android:id="@+id/leftSpace"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="15" />
 
         <View
+            android:id="@+id/leftWing"
             android:layout_width="0dp"
             android:layout_height="16dp"
             android:layout_weight="30"
@@ -42,18 +44,21 @@
             android:backgroundTint="@color/primaryLightColor" />
 
         <View
+            android:id="@+id/rightWing"
             android:layout_width="0dp"
             android:layout_height="16dp"
             android:layout_weight="30"
             android:background="@color/primaryColor" />
 
         <View
+            android:id="@+id/rightSpecial"
             android:layout_width="0dp"
             android:layout_height="16dp"
             android:layout_weight="10"
             android:background="@drawable/bg_outlined_rectangle" />
 
         <Space
+            android:id="@+id/rightSpace"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="5" />
