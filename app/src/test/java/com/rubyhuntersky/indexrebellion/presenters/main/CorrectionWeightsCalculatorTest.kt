@@ -3,11 +3,11 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class CorrectionWeightCalculatorTest {
+class CorrectionWeightsCalculatorTest {
     @Test
     fun highOfZeroAssignsAllWeightToSpace() {
 
-        val result = CorrectionWeightCalculator.calculate(
+        val result = CorrectionWeightsCalculator.calculate(
             highValue = 0.0,
             targetValue = 0.0,
             actualValue = 0.0
@@ -20,7 +20,7 @@ class CorrectionWeightCalculatorTest {
 
     @Test
     fun equalValuesAssignsEqualWeightToWings() {
-        val result = CorrectionWeightCalculator.calculate(
+        val result = CorrectionWeightsCalculator.calculate(
             highValue = .5,
             targetValue = .25,
             actualValue = .25
@@ -33,7 +33,7 @@ class CorrectionWeightCalculatorTest {
 
     @Test
     fun higherTargetSplitsLeftWingBetweenRightWingAndSpecial() {
-        val result = CorrectionWeightCalculator.calculate(
+        val result = CorrectionWeightsCalculator.calculate(
             highValue = .5,
             targetValue = .25,
             actualValue = .125
@@ -46,7 +46,7 @@ class CorrectionWeightCalculatorTest {
 
     @Test
     fun lowerTargetBalancesLeftAndRightWingsWithLeftSpaceEqualToRightWingAndSpecial() {
-        val result = CorrectionWeightCalculator.calculate(
+        val result = CorrectionWeightsCalculator.calculate(
             highValue = .5,
             targetValue = .125,
             actualValue = .25

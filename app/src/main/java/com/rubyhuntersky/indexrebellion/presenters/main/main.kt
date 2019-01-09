@@ -5,7 +5,7 @@ data class CorrectionWeights(
     val rightWing: Double, val rightSpecial: Double, val rightSpace: Double
 )
 
-object CorrectionWeightCalculator {
+object CorrectionWeightsCalculator {
 
     private const val maxWeight: Double = 1000.0
     private const val highWeight = maxWeight * 1.0
