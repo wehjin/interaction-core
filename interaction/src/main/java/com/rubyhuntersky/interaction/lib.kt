@@ -13,4 +13,10 @@ interface InteractionCatalyst {
     fun catalyze()
 }
 
+object NotImplementedCatalyst : InteractionCatalyst {
+    override fun catalyze() {
+        check(false) { "Catalyst not implemented" }
+    }
+}
+
 fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }

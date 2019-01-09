@@ -12,6 +12,7 @@ import org.junit.Test
 class MainInteractionTest {
 
     private val mockConstituentSearchCatalyst = mock<InteractionCatalyst> {}
+    private val mockCashEditingCatalyst = mock<InteractionCatalyst> {}
 
     @Test
     fun startsInLoadingState() {
@@ -19,8 +20,9 @@ class MainInteractionTest {
             override val reader: Observable<Rebellion> get() = Observable.never()
             override fun write(rebellion: Rebellion) = Unit
         }
+        val mainInteraction = MainInteraction(rebellionBook, mockConstituentSearchCatalyst, mockCashEditingCatalyst)
 
-        MainInteraction(rebellionBook, mockConstituentSearchCatalyst).visionStream.test()
+        mainInteraction.visionStream.test()
             .assertSubscribed()
             .assertValues(MainVision.Loading)
             .assertNotComplete()
@@ -33,8 +35,9 @@ class MainInteractionTest {
             override val reader: Observable<Rebellion> get() = Observable.fromArray(Rebellion.SEED)
             override fun write(rebellion: Rebellion) = Unit
         }
+        val mainInteraction = MainInteraction(rebellionBook, mockConstituentSearchCatalyst, mockCashEditingCatalyst)
 
-        MainInteraction(rebellionBook, mockConstituentSearchCatalyst).visionStream.test()
+        mainInteraction.visionStream.test()
             .assertSubscribed()
             .assertValue { it is MainVision.Viewing }
             .assertNotComplete()
@@ -43,8 +46,24 @@ class MainInteractionTest {
 
     @Test
     fun findConstituentActionStartsConstituentSearchInteraction() {
-        val interaction = MainInteraction(MemoryRebellionBook(), mockConstituentSearchCatalyst)
-        interaction.update(MainAction.FindConstituent)
+        val mainInteraction = MainInteraction(
+            rebellionBook = MemoryRebellionBook(),
+            constituentSearchCatalyst = mockConstituentSearchCatalyst,
+            cashEditingCatalyst = mockCashEditingCatalyst
+        )
+
+        mainInteraction.update(MainAction.FindConstituent)
         verify(mockConstituentSearchCatalyst).catalyze()
+    }
+
+    @Test
+    fun openCashEditorActionCatalyzesCashEditingCatalyst() {
+        val mainInteraction = MainInteraction(
+            rebellionBook = MemoryRebellionBook(),
+            constituentSearchCatalyst = mockConstituentSearchCatalyst,
+            cashEditingCatalyst = mockCashEditingCatalyst
+        )
+        mainInteraction.update(MainAction.OpenCashEditor)
+        verify(mockCashEditingCatalyst).catalyze()
     }
 }

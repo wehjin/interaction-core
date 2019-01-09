@@ -73,6 +73,7 @@
                 custom:textColor="@color/secondaryLightColor" />
 
             <android.support.design.button.MaterialButton
+                android:id="@+id/newInvestmentButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

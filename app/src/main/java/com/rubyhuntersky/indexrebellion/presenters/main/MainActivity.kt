@@ -18,6 +18,7 @@ import com.rubyhuntersky.indexrebellion.views.StatisticView
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchAction
+import com.rubyhuntersky.interaction.interactions.main.MainAction
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
 import com.rubyhuntersky.interaction.interactions.main.MainVision
 import io.reactivex.disposables.CompositeDisposable
@@ -56,10 +57,14 @@ class MainActivity : AppCompatActivity() {
     private fun renderViewing(viewing: MainVision.Viewing) {
         supportActionBar!!.title = getString(R.string.funding)
         val report = viewing.rebellionReport
+        renderFundingViews(report)
+        renderCorrectionsView(report.conclusion)
+    }
+
+    private fun renderFundingViews(report: RebellionReport) {
         renderNewInvestment(report.newInvestment)
         currentInvestmentStatisticView.setText(report.currentInvestment)
         goalInvestmentStatisticView.setText(report.fullInvestment)
-        renderCorrectionsView(report.conclusion)
     }
 
     private fun renderCorrectionsView(conclusion: RebellionReport.Conclusion) {
@@ -96,15 +101,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderNewInvestment(newInvestment: CashAmount) {
-        val deposit = newInvestment.toDouble()
+        val cashInAmount = newInvestment.toDouble()
         with(newInvestmentStatisticView) {
-            labelText = if (deposit >= 0) getString(R.string.deposit) else getString(
+            labelText = if (cashInAmount >= 0) getString(R.string.deposit) else getString(
                 R.string.withdrawal
             )
-            text = addDollarToStatString(deposit.toStatString())
+            text = addDollarToStatString(cashInAmount.toStatString())
         }
         with(newInvestmentOperatorTextView) {
-            text = if (deposit >= 0) getString(R.string.plus) else getString(R.string.minus)
+            text = if (cashInAmount >= 0) getString(R.string.plus) else getString(R.string.minus)
+        }
+        with(newInvestmentButton) {
+            setOnClickListener {
+                mainInteraction.update(MainAction.OpenCashEditor)
+            }
         }
     }
 

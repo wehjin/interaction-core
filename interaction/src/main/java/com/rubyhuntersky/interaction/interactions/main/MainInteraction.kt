@@ -3,13 +3,18 @@ package com.rubyhuntersky.interaction.interactions.main
 import com.rubyhuntersky.data.report.RebellionReport
 import com.rubyhuntersky.interaction.Interaction
 import com.rubyhuntersky.interaction.InteractionCatalyst
+import com.rubyhuntersky.interaction.NotImplementedCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.books.RebellionBook
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 
-class MainInteraction(rebellionBook: RebellionBook, private val constituentSearchCatalyst: InteractionCatalyst) :
+class MainInteraction(
+    rebellionBook: RebellionBook,
+    private val constituentSearchCatalyst: InteractionCatalyst = NotImplementedCatalyst,
+    private val cashEditingCatalyst: InteractionCatalyst = NotImplementedCatalyst
+) :
     Interaction<MainVision, MainAction> {
 
     private val visionSubject = BehaviorSubject.createDefault(MainVision.Loading as MainVision)
@@ -38,6 +43,7 @@ class MainInteraction(rebellionBook: RebellionBook, private val constituentSearc
     private fun updateViewing(action: MainAction) {
         when (action) {
             MainAction.FindConstituent -> constituentSearchCatalyst.catalyze()
+            MainAction.OpenCashEditor -> cashEditingCatalyst.catalyze()
         }
     }
 
