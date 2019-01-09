@@ -6,8 +6,12 @@ import android.view.ViewGroup
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.indexrebellion.R
+import com.rubyhuntersky.interaction.interactions.main.MainAction
+import com.rubyhuntersky.interaction.interactions.main.MainInteraction
+import kotlinx.android.synthetic.main.view_corrections_footer.view.*
 
-class CorrectionsRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteraction) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
 
@@ -45,5 +49,11 @@ class CorrectionsRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHol
         return object : RecyclerView.ViewHolder(itemView) {}
     }
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {}
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        if (position == itemCount - 1) {
+            viewHolder.itemView.plusConstituentButton.setOnClickListener {
+                mainInteraction.update(MainAction.FindConstituent)
+            }
+        }
+    }
 }

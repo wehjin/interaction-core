@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.design.button.MaterialButton
+        android:id="@+id/plusConstituentButton"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

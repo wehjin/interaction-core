@@ -16,4 +16,5 @@
     <string name="goalInvestmentStatisticViewLabel">Goal</string>
     <string name="funding">Funding</string>
     <string name="plus_constituent">+ Constituent</string>
+    <string name="save">Save</string>
 </resources>

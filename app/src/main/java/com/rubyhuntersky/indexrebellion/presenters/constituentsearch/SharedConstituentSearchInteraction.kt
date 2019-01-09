@@ -1,0 +1,10 @@
+package com.rubyhuntersky.indexrebellion.presenters.constituentsearch
+
+import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.interaction.Interaction
+import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchAction
+import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchInteraction
+import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchVision
+
+object SharedConstituentSearchInteraction :
+    Interaction<ConstituentSearchVision, ConstituentSearchAction> by ConstituentSearchInteraction(SharedRebellionBook)
