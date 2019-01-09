@@ -11,9 +11,10 @@ import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.views.CorrectionsRecyclerViewAdapter
 import com.rubyhuntersky.indexrebellion.views.StatisticView
+import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
-import com.rubyhuntersky.interaction.interactions.symbolsearch.ConstituentSearchCatalyst
+import com.rubyhuntersky.interaction.interactions.main.MainVision
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
@@ -26,10 +27,10 @@ class MainActivity : AppCompatActivity() {
         mainInteraction.visionStream
             .subscribe {
                 when (it) {
-                    is MainInteraction.Vision.Loading -> {
+                    is MainVision.Loading -> {
                         setContentView(R.id.mainLoading, R.layout.activity_main_loading)
                     }
-                    is MainInteraction.Vision.Viewing -> {
+                    is MainVision.Viewing -> {
                         setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
                         setSupportActionBar(toolbar)
                         renderViewing(it)
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    private fun renderViewing(viewing: MainInteraction.Vision.Viewing) {
+    private fun renderViewing(viewing: MainVision.Viewing) {
         supportActionBar!!.title = getString(R.string.funding)
         val report = viewing.rebellionReport
         renderNewInvestment(report.newInvestment)
@@ -96,10 +97,11 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        private val symbolSearchInteractionCatalyst = object : ConstituentSearchCatalyst {
-            override fun catalyze() {}
-        }
-
-        private val mainInteraction = MainInteraction(SharedRebellionBook, symbolSearchInteractionCatalyst)
+        private val mainInteraction = MainInteraction(
+            rebellionBook = SharedRebellionBook,
+            constituentSearchCatalyst = object : InteractionCatalyst {
+                override fun catalyze() {}
+            }
+        )
     }
 }

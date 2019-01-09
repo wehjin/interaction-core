@@ -3,15 +3,15 @@ package com.rubyhuntersky.interaction.interactions.main
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.data.Rebellion
+import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.interactions.symbolsearch.ConstituentSearchCatalyst
 import io.reactivex.Observable
 import org.junit.Test
 
 class MainInteractionTest {
 
-    private val mockConstituentSearchCatalyst = mock<ConstituentSearchCatalyst> {}
+    private val mockConstituentSearchCatalyst = mock<InteractionCatalyst> {}
 
     @Test
     fun startsInLoadingState() {
@@ -22,7 +22,7 @@ class MainInteractionTest {
 
         MainInteraction(rebellionBook, mockConstituentSearchCatalyst).visionStream.test()
             .assertSubscribed()
-            .assertValues(MainInteraction.Vision.Loading)
+            .assertValues(MainVision.Loading)
             .assertNotComplete()
             .assertNoErrors()
     }
@@ -36,7 +36,7 @@ class MainInteractionTest {
 
         MainInteraction(rebellionBook, mockConstituentSearchCatalyst).visionStream.test()
             .assertSubscribed()
-            .assertValue { it is MainInteraction.Vision.Viewing }
+            .assertValue { it is MainVision.Viewing }
             .assertNotComplete()
             .assertNoErrors()
     }
@@ -44,7 +44,7 @@ class MainInteractionTest {
     @Test
     fun findConstituentActionStartsConstituentSearchInteraction() {
         val interaction = MainInteraction(MemoryRebellionBook(), mockConstituentSearchCatalyst)
-        interaction.update(MainInteraction.Action.FindConstituent)
+        interaction.update(MainAction.FindConstituent)
         verify(mockConstituentSearchCatalyst).catalyze()
     }
 }

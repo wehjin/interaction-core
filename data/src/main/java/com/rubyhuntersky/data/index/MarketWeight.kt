@@ -18,5 +18,6 @@ data class MarketWeight(private val value: BigDecimal) {
 
     companion object {
         val ZERO = MarketWeight(BigDecimal.ZERO)
+        val TEN = MarketWeight(BigDecimal.TEN)
     }
 }
