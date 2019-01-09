@@ -21,4 +21,6 @@
     <string name="hold">Hold</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
+    <string name="buy_format">Buy $%1$s</string>
+    <string name="sell_format">Sell $%1$s</string>
 </resources>

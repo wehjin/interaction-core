@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.LinearLayout
 import com.rubyhuntersky.data.report.Correction
+import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
 import kotlinx.android.synthetic.main.view_corrections_body.view.*
 
@@ -23,7 +24,10 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
         correctionHeadingTextView.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_remove_circle_black_24dp)
-        correctionActionButton.text = context.getString(R.string.sell)
+        correctionActionButton.text = context.getString(
+            R.string.sell_format,
+            correction.surplus.toDouble().toStatString()
+        )
         rightSpecial.setBackgroundResource(R.drawable.bg_outlined_rectangle)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
@@ -38,7 +42,10 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 
         correctionHeadingTextView.text = correction.assetSymbol.toString()
         correctionCircleView.setBackgroundResource(R.drawable.ic_add_circle_black_24dp)
-        correctionActionButton.text = context.getString(R.string.buy)
+        correctionActionButton.text = context.getString(
+            R.string.buy_format,
+            correction.deficit.toDouble().toStatString()
+        )
         rightSpecial.setBackgroundResource(R.color.secondaryColor)
         setCorrectionWeights(
             CorrectionWeightsCalculator.calculate(
