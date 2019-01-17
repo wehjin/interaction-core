@@ -37,9 +37,7 @@ object ConstituentSearch {
 
         private fun updateDone(action: Action) {
             when (action) {
-                is Action.Clear -> setVision(
-                    Vision.Idle
-                )
+                is Action.Clear -> setVision(Vision.Idle)
                 is Action.Search -> Unit
                 is Action.Save -> Unit
             }
@@ -47,9 +45,7 @@ object ConstituentSearch {
 
         private fun updateSearching(action: Action, searching: Vision.Searching) {
             when (action) {
-                is Action.Clear -> setVision(
-                    Vision.Idle
-                )
+                is Action.Clear -> setVision(Vision.Idle)
                 is Action.Search -> beginSearch(action.searchTerm, searching.searchTerm)
                 is Action.Save -> endSearch(action.assetSymbol, action.marketWeight)
             }
@@ -57,9 +53,7 @@ object ConstituentSearch {
 
         private fun updateIdle(action: Action) {
             when (action) {
-                is Action.Clear -> setVision(
-                    Vision.Idle
-                )
+                is Action.Clear -> setVision(Vision.Idle)
                 is Action.Search -> beginSearch(action.searchTerm, "")
                 is Action.Save -> Unit
             }
@@ -74,12 +68,7 @@ object ConstituentSearch {
         private fun beginSearch(newTerm: String, currentTerm: String) {
             val term = newTerm.trim()
             if (term.isNotEmpty() && term != currentTerm) {
-                setVision(
-                    Vision.Searching(
-                        searchTerm = term,
-                        results = emptyList()
-                    )
-                )
+                setVision(Vision.Searching(searchTerm = term, results = emptyList()))
             }
         }
     }
