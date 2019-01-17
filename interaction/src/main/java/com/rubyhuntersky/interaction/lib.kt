@@ -29,6 +29,6 @@ abstract class BasicInteraction<V, A>(startingVision: V, private val resetAction
     private val visionWriter = visionBehavior.toSerialized()
 
     override fun reset() {
-        resetAction?.let(this::update)
+        resetAction?.let(this::onAction)
     }
 }

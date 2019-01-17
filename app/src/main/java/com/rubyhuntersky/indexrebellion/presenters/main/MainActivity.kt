@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
         with(newInvestmentButton) {
             setOnClickListener {
-                mainInteraction.update(MainAction.OpenCashEditor)
+                mainInteraction.onAction(MainAction.OpenCashEditor)
             }
         }
     }

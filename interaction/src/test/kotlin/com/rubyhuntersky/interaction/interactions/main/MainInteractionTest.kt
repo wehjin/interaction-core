@@ -52,7 +52,7 @@ class MainInteractionTest {
             cashEditingCatalyst = mockCashEditingCatalyst
         )
 
-        mainInteraction.update(MainAction.FindConstituent)
+        mainInteraction.onAction(MainAction.FindConstituent)
         verify(mockConstituentSearchCatalyst).catalyze()
     }
 
@@ -63,7 +63,7 @@ class MainInteractionTest {
             constituentSearchCatalyst = mockConstituentSearchCatalyst,
             cashEditingCatalyst = mockCashEditingCatalyst
         )
-        mainInteraction.update(MainAction.OpenCashEditor)
+        mainInteraction.onAction(MainAction.OpenCashEditor)
         verify(mockCashEditingCatalyst).catalyze()
     }
 }

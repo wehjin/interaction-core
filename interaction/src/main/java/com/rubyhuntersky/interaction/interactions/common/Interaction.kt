@@ -6,5 +6,5 @@ interface Interaction<V, in A> {
     fun reset() {}
 
     val visionStream: Observable<V>
-    fun update(action: A)
+    fun onAction(action: A)
 }

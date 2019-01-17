@@ -32,7 +32,7 @@ class MainInteraction(
             .addTo(compositeDisposable)
     }
 
-    override fun update(action: MainAction) {
+    override fun onAction(action: MainAction) {
         val oldVision = this.vision
         when (oldVision) {
             is MainVision.Loading -> updateLoading()

@@ -24,7 +24,7 @@ class CashEditingInteraction(private val rebellionBook: Book<Rebellion>) :
 
     override val visionStream: Observable<CashEditingVision> get() = visionBehavior.distinctUntilChanged()
 
-    override fun update(action: CashEditingAction) {
+    override fun onAction(action: CashEditingAction) {
         val vision = visionBehavior.value!!
         when (vision) {
             is CashEditingVision.Editing -> updateEditing(action)

@@ -34,8 +34,8 @@ class ConstituentSearchTest {
 
     @Test
     fun saveUpdatesRebellionBook() {
-        interaction.update(Action.Search("TSLA"))
-        interaction.update(Action.Save(AssetSymbol("TSLA"), MarketWeight.TEN))
+        interaction.onAction(Action.Search("TSLA"))
+        interaction.onAction(Action.Save(AssetSymbol("TSLA"), MarketWeight.TEN))
 
         argumentCaptor<Rebellion>().apply {
             verify(rebellionBook).write(capture())

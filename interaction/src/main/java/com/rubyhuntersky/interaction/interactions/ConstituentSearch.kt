@@ -26,7 +26,7 @@ object ConstituentSearch {
         startingVision = Vision.Idle, resetAction = Action.Clear
     ) {
 
-        override fun update(action: Action) {
+        override fun onAction(action: Action) {
             val currentVision = this.vision
             when (currentVision) {
                 is Vision.Idle -> updateIdle(action)

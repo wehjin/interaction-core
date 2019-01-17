@@ -19,7 +19,7 @@ abstract class InteractionBottomSheetDialogFragment<V, A>(
     private var visionDisposable: Disposable? = null
 
     protected abstract fun render(vision: V)
-    protected fun sendAction(action: A) = interaction.update(action)
+    protected fun sendAction(action: A) = interaction.onAction(action)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(layoutRes, container, false)

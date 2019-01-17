@@ -67,7 +67,7 @@ class CorrectionsRecyclerViewAdapter(private val mainInteraction: MainInteractio
         when (viewType) {
             CorrectionsViewType.FOOTER -> {
                 viewHolder.itemView.plusConstituentButton.setOnClickListener {
-                    mainInteraction.update(MainAction.FindConstituent)
+                    mainInteraction.onAction(MainAction.FindConstituent)
                 }
             }
             CorrectionsViewType.BODY -> {
