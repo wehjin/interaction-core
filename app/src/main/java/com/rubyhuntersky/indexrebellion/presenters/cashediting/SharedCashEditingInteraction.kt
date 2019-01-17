@@ -1,7 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.interaction.Interaction
+import com.rubyhuntersky.interaction.interactions.common.Interaction
 import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingAction
 import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingInteraction
 import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingVision

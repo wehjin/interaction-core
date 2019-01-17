@@ -1,16 +1,10 @@
 package com.rubyhuntersky.interaction
 
+import com.rubyhuntersky.interaction.interactions.common.Interaction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-
-interface Interaction<V, in A> {
-    fun reset() {}
-
-    val visionStream: Observable<V>
-    fun update(action: A)
-}
 
 interface InteractionCatalyst {
     fun catalyze()

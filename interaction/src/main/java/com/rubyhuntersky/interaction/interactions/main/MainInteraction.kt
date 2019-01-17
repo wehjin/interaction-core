@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.interactions.main
 
 import com.rubyhuntersky.data.report.RebellionReport
-import com.rubyhuntersky.interaction.Interaction
+import com.rubyhuntersky.interaction.interactions.common.Interaction
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.NotImplementedCatalyst
 import com.rubyhuntersky.interaction.addTo

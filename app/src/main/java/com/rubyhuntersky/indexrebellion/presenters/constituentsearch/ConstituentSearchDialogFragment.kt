@@ -4,29 +4,28 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.index.MarketWeight
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchAction
-import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchVision
+import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Action
+import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Vision
 import kotlinx.android.synthetic.main.fragment_constituent_search.*
 
 
-class ConstituentSearchDialogFragment :
-    InteractionBottomSheetDialogFragment<ConstituentSearchVision, ConstituentSearchAction>(
-        layoutRes = R.layout.fragment_constituent_search,
-        interaction = SharedConstituentSearchInteraction
-    ) {
+class ConstituentSearchDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
+    layoutRes = R.layout.fragment_constituent_search,
+    interaction = SharedConstituentSearchInteraction
+) {
 
-    override fun render(vision: ConstituentSearchVision) {
+    override fun render(vision: Vision) {
         when (vision) {
-            is ConstituentSearchVision.Idle -> renderIdle()
-            is ConstituentSearchVision.Searching -> Unit
-            is ConstituentSearchVision.Done -> dismiss()
+            is Vision.Idle -> renderIdle()
+            is Vision.Searching -> Unit
+            is Vision.Done -> dismiss()
         }
     }
 
     private fun renderIdle() {
         saveButton.setOnClickListener {
-            sendAction(ConstituentSearchAction.Search("TSLA"))
-            sendAction(ConstituentSearchAction.Save(AssetSymbol("TSLA"), MarketWeight(50000000000)))
+            sendAction(Action.Search("TSLA"))
+            sendAction(Action.Save(AssetSymbol("TSLA"), MarketWeight(50000000000)))
         }
     }
 
