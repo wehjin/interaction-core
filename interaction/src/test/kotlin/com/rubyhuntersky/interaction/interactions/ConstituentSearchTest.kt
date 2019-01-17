@@ -1,17 +1,15 @@
 package com.rubyhuntersky.interaction.interactions
 
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
-import com.rubyhuntersky.data.index.MarketWeight
 import com.rubyhuntersky.interaction.books.RebellionBook
 import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Action
+import com.rubyhuntersky.stockcatalog.*
 import io.reactivex.subjects.BehaviorSubject
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.math.BigDecimal
 
 class ConstituentSearchTest {
 
@@ -19,6 +17,7 @@ class ConstituentSearchTest {
 
     private val rebellionBook = mock<RebellionBook> {
         on { reader } doReturn rebellionBehavior
+        on { value } doReturn rebellionBehavior.value!!
     }
 
     private val interaction = ConstituentSearch.Interaction(rebellionBook)
@@ -34,8 +33,28 @@ class ConstituentSearchTest {
 
     @Test
     fun saveUpdatesRebellionBook() {
+        val network = mock<HttpNetwork> {
+            on { request(any()) } doAnswer {
+                Thread.sleep(1000)
+                HttpNetworkResponse.ConnectionError("url", Exception("mocked"))
+            }
+        }
+        StockCatalog(network).connect(interaction)
         interaction.onAction(Action.Search("TSLA"))
-        interaction.onAction(Action.Save(AssetSymbol("TSLA"), MarketWeight.TEN))
+        interaction.onStockCatalogResult(
+            StockCatalogResult.Samples(
+                search = "TSLA",
+                samples = listOf(
+                    StockSample(
+                        symbol = "TSLA",
+                        sharePrice = BigDecimal.ONE,
+                        marketCapitalization = BigDecimal.TEN,
+                        issuer = "Tesla Motors"
+                    )
+                )
+            )
+        )
+        interaction.onAction(Action.Save)
 
         argumentCaptor<Rebellion>().apply {
             verify(rebellionBook).write(capture())
