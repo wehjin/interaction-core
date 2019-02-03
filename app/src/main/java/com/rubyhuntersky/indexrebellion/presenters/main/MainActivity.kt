@@ -16,8 +16,7 @@ import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.views.StatisticView
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
-import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchDialogFragment
-import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.SharedConstituentSearchInteraction
+import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchCatalyst
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.interactions.main.MainAction
@@ -145,12 +144,7 @@ class MainActivity : AppCompatActivity() {
 
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
-            constituentSearchCatalyst = object : InteractionCatalyst {
-                override fun catalyze() {
-                    SharedConstituentSearchInteraction.reset()
-                    showDialogFragment(ConstituentSearchDialogFragment.newInstance(), "constituent_search")
-                }
-            },
+            constituentSearchCatalyst = ConstituentSearchCatalyst(Companion::showDialogFragment),
             cashEditingCatalyst = object : InteractionCatalyst {
                 override fun catalyze() {
                     SharedCashEditingInteraction.reset()
