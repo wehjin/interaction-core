@@ -10,5 +10,5 @@ class MemoryRebellionBook : RebellionBook {
     private val rebellionWriter = rebellionSubject.toSerialized()
 
     override val reader: Observable<Rebellion> get() = rebellionSubject.distinctUntilChanged()
-    override fun write(rebellion: Rebellion) = rebellionWriter.onNext(rebellion)
+    override fun write(value: Rebellion) = rebellionWriter.onNext(value)
 }
