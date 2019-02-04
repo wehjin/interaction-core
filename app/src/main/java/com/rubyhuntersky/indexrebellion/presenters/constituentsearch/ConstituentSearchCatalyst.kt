@@ -1,13 +1,12 @@
 package com.rubyhuntersky.indexrebellion.presenters.constituentsearch
 
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.interaction.InteractionCatalyst
 
-class ConstituentSearchCatalyst(private val showDialogFragment: (DialogFragment, String) -> Unit) :
-    InteractionCatalyst {
-
+class ConstituentSearchCatalyst(private val getStarterActivity: () -> FragmentActivity) : InteractionCatalyst {
     override fun catalyze() {
         SharedConstituentSearchInteraction.reset()
-        showDialogFragment(ConstituentSearchDialogFragment.newInstance(), "constituent_search")
+        ConstituentSearchDialogFragment.newInstance()
+            .show(getStarterActivity().supportFragmentManager, "constituent_search")
     }
 }

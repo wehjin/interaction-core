@@ -13,8 +13,7 @@ import io.reactivex.disposables.Disposable
 abstract class InteractionBottomSheetDialogFragment<V, A>(
     @LayoutRes private val layoutRes: Int,
     private val interaction: Interaction<V, A>
-) :
-    BottomSheetDialogFragment() {
+) : BottomSheetDialogFragment() {
 
     private var visionDisposable: Disposable? = null
 

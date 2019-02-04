@@ -2,7 +2,6 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
-import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -144,17 +143,15 @@ class MainActivity : AppCompatActivity() {
 
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
-            constituentSearchCatalyst = ConstituentSearchCatalyst(Companion::showDialogFragment),
+            constituentSearchCatalyst = ConstituentSearchCatalyst { mainActivity!! },
             cashEditingCatalyst = object : InteractionCatalyst {
                 override fun catalyze() {
                     SharedCashEditingInteraction.reset()
-                    showDialogFragment(CashEditingDialogFragment.newInstance(), "cash_editing")
+                    mainActivity?.supportFragmentManager?.let {
+                        CashEditingDialogFragment.newInstance().show(it, "cash_editing")
+                    }
                 }
             }
         )
-
-        private fun showDialogFragment(dialogFragment: DialogFragment, tag: String) {
-            mainActivity?.supportFragmentManager?.let { dialogFragment.show(it, tag) }
-        }
     }
 }

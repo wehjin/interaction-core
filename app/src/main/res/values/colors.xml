@@ -10,4 +10,6 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="primaryStrokeColor">#1effffff</color>
     <color name="secondaryStrokeColor">#1e000000</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
