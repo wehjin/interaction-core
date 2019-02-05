@@ -1,5 +1,6 @@
 package com.rubyhuntersky.data.index
 
+import com.rubyhuntersky.data.toStatString
 import java.math.BigDecimal
 
 data class MarketWeight(private val value: BigDecimal) {
@@ -17,6 +18,8 @@ data class MarketWeight(private val value: BigDecimal) {
     }
 
     override fun hashCode(): Int = value.toDouble().hashCode()
+
+    fun toStatString(): String = value.toDouble().toStatString()
 
     companion object {
         val ZERO = MarketWeight(BigDecimal.ZERO)

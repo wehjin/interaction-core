@@ -24,14 +24,18 @@
     <string name="buy_format">Buy $%1$s</string>
     <string name="sell_format">Sell $%1$s</string>
     <string name="stock_symbol">Stock Symbol</string>
-
+    <string name="none_selected">None selected</string>
+    <string name="choose_a_stock">Choose a stock</string>
     <string name="title_activity_constituent_search">ConstituentSearchActivity</string>
     <string name="find_constituent">Find Constituent</string>
     <string name="add_constituent">Add Constituent</string>
     <string name="market_capitalization">Market capitalization</string>
     <string name="symbol">Symbol</string>
     <string name="not_found">Not found</string>
+    <string name="no_results_found">No results found</string>
     <string name="zero_billion">$0B</string>
+    <string name="not_applicable">N/A</string>
     <string name="new_constituent">New Constituent</string>
+    <string name="searching">Searching…</string>
 
 </resources>

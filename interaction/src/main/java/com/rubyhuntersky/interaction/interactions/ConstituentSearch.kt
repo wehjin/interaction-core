@@ -14,54 +14,63 @@ object ConstituentSearch {
 
     sealed class Vision {
         object Idle : Vision()
-        data class Search(val searchTerm: String, val candidates: List<Candidate>) : Vision()
+        data class Search(val searchTerm: String, val candidates: List<Candidate>?) : Vision()
         object Finished : Vision()
     }
 
     data class Candidate(val assetSymbol: AssetSymbol, val description: String, val marketWeight: MarketWeight)
 
     sealed class Action {
-        object Clear : Action()
-        data class Search(val newSearch: String) : Action()
-        object Save : Action()
+        object ClearSearch : Action()
+        data class BeginSearch(val newSearch: String) : Action()
+        object AddConstituent : Action()
     }
 
     class Interaction(private val rebellionBook: Book<Rebellion>) :
-        BasicInteraction<Vision, Action>(startingVision = Vision.Idle, resetAction = Action.Clear),
+        BasicInteraction<Vision, Action>(startingVision = Vision.Idle, resetAction = Action.ClearSearch),
         StockCatalogClient {
 
         override fun onAction(action: Action) {
-            val currentVision = this.vision
-            when (currentVision) {
-                is Vision.Idle -> updateIdleVision(action)
-                is Vision.Search -> updateSearchVision(action, currentVision)
-                is Vision.Finished -> updateFinishedVision(action)
-            }
-        }
-
-        private fun updateIdleVision(action: Action) {
             when (action) {
-                is Action.Clear -> setVision(Vision.Idle)
-                is Action.Search -> restartSearch(action.newSearch, "")
-                is Action.Save -> Unit
-            }
-        }
-
-        private fun restartSearch(newTerm: String, currentTerm: String) {
-            val term = newTerm.trim()
-            if (term.isNotEmpty() && term != currentTerm) {
-                setVision(Vision.Search(searchTerm = term, candidates = emptyList()))
-                stockCatalog.sendQuery(StockCatalogQuery.FindStock(term))
+                is Action.ClearSearch -> {
+                    stockCatalog.sendQuery(StockCatalogQuery.Clear)
+                    setVision(Vision.Idle)
+                }
+                is Action.BeginSearch -> {
+                    val newTerm = action.newSearch.trim().toLowerCase()
+                    if (newTerm.isBlank()) {
+                        stockCatalog.sendQuery(StockCatalogQuery.Clear)
+                        setVision(Vision.Idle)
+                    } else {
+                        val vision = vision
+                        val oldTerm = if (vision is Vision.Search) vision.searchTerm else ""
+                        if (newTerm != oldTerm) {
+                            setVision(Vision.Search(searchTerm = newTerm, candidates = null))
+                            stockCatalog.sendQuery(StockCatalogQuery.FindStock(newTerm))
+                        }
+                    }
+                }
+                is Action.AddConstituent -> {
+                    stockCatalog.sendQuery(StockCatalogQuery.Clear)
+                    val vision = vision
+                    val choice = if (vision is Vision.Search) vision.candidates?.firstOrNull() else null
+                    choice?.let {
+                        val newRebellion = rebellionBook.value.addConstituent(it.assetSymbol, it.marketWeight)
+                        rebellionBook.write(newRebellion)
+                    }
+                    setVision(Vision.Finished)
+                }
             }
         }
 
         override lateinit var stockCatalog: StockCatalog
 
         override fun onStockCatalogResult(result: StockCatalogResult) {
-            when (result) {
-                is StockCatalogResult.Samples -> setVision(
+            val vision = vision
+            if (vision is Vision.Search) {
+                val newVision = if (result is StockCatalogResult.Samples) {
                     Vision.Search(
-                        searchTerm = result.search,
+                        searchTerm = vision.searchTerm,
                         candidates = result.samples.map {
                             Candidate(
                                 assetSymbol = AssetSymbol(it.symbol.trim().toUpperCase()),
@@ -69,40 +78,10 @@ object ConstituentSearch {
                                 marketWeight = MarketWeight(it.marketCapitalization)
                             )
                         })
-                )
-                is StockCatalogResult.InvalidSymbol -> Unit
-                is StockCatalogResult.NetworkError -> Unit
-                is StockCatalogResult.ParseError -> Unit
-            }
-        }
-
-        private fun updateSearchVision(action: Action, currentVision: Vision.Search) {
-            when (action) {
-                is Action.Clear -> cancelSearch()
-                is Action.Search -> restartSearch(action.newSearch, currentVision.searchTerm)
-                is Action.Save -> endSearch(currentVision.candidates.firstOrNull())
-            }
-        }
-
-
-        private fun cancelSearch() {
-            stockCatalog.sendQuery(StockCatalogQuery.Clear)
-            setVision(Vision.Idle)
-        }
-
-        private fun endSearch(chosenOne: Candidate?) {
-            chosenOne?.let {
-                val newRebellion = rebellionBook.value.addConstituent(it.assetSymbol, it.marketWeight)
-                rebellionBook.write(newRebellion)
-            }
-            setVision(Vision.Finished)
-        }
-
-        private fun updateFinishedVision(action: Action) {
-            when (action) {
-                is Action.Clear -> setVision(Vision.Idle)
-                is Action.Search -> Unit
-                is Action.Save -> Unit
+                } else {
+                    Vision.Search(searchTerm = vision.searchTerm, candidates = emptyList())
+                }
+                setVision(newVision)
             }
         }
     }

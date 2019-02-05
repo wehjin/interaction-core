@@ -15,8 +15,7 @@
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="1dp"
-        app:cardUseCompatPadding="true">
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,32 +23,17 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/new_constituent" />
-
-            <TextView
-                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:id="@+id/symbolTextView"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/not_found" />
+                android:layout_height="wrap_content" />
 
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/market_capitalization" />
-
-            <TextView
-                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:id="@+id/marketCapTextView"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/zero_billion" />
+                android:layout_height="wrap_content" />
 
             <android.support.design.button.MaterialButton
                 android:id="@+id/saveButton"
@@ -57,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:enabled="false"
                 android:text="@string/add_constituent" />
 
         </LinearLayout>
@@ -67,18 +50,17 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
         android:hint="@string/stock_symbol"
         app:boxBackgroundColor="@color/primaryStrokeColor">
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/searchEditText"
             style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:inputType="textFilter"
+            android:inputType="textVisiblePassword"
             android:lines="1"
             android:maxLines="1"
             android:textColor="@color/primaryTextColor" />
