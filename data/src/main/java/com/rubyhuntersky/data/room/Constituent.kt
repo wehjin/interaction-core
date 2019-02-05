@@ -4,23 +4,23 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 
 @Entity(
-    primaryKeys = ["rebellion", "symbol"],
+    primaryKeys = ["rebellionId", "assetSymbol"],
     foreignKeys = [
         ForeignKey(
-            entity = RebellionEntity::class,
+            entity = Rebellion::class,
             parentColumns = ["id"],
-            childColumns = ["rebellion"],
+            childColumns = ["rebellionId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = UnderlyingAssetEntity::class,
+            entity = UnderlyingAsset::class,
             parentColumns = ["symbol"],
-            childColumns = ["symbol"],
+            childColumns = ["assetSymbol"],
             onDelete = ForeignKey.RESTRICT
         )
     ]
 )
-data class ConstituentEntity(
-    var rebellion: Int,
-    var symbol: String
+data class Constituent(
+    var rebellionId: Int,
+    var assetSymbol: String
 )

@@ -9,29 +9,29 @@ import android.arch.persistence.room.Update
 interface MyDao {
 
     @Insert
-    fun insertRebellion(rebellionEntity: RebellionEntity): Long
+    fun insertRebellion(rebellion: Rebellion): Long
 
     @Insert
-    fun insertUnderlyingAsset(vararg underlyingAssetEntities: UnderlyingAssetEntity)
+    fun insertUnderlyingAsset(vararg underlyingAssets: UnderlyingAsset)
 
     @Insert
-    fun insertConstituent(vararg constituentEntities: ConstituentEntity)
+    fun insertConstituent(vararg constituents: Constituent)
 
     @Insert
-    fun insertOwner(ownerEntity: OwnerEntity): Long
+    fun insertOwner(owner: Owner): Long
 
     @Insert
-    fun insertOwnedAsset(vararg ownedAssetEntities: OwnedAssetEntity)
+    fun insertOwnedAsset(vararg ownedAssets: OwnedAsset)
 
     @Update
-    fun updateUnderlyingAsset(vararg underlyingAssetEntities: UnderlyingAssetEntity)
+    fun updateUnderlyingAsset(vararg underlyingAssets: UnderlyingAsset)
 
     @Update
-    fun updateOwnedAssetAndPlannedInvestment(ownedAssetEntity: OwnedAssetEntity, rebellionEntity: RebellionEntity)
+    fun updateOwnedAssetAndPlannedInvestment(ownedAsset: OwnedAsset, rebellion: Rebellion)
 
     @Delete
-    fun deleteOwnedAssets(vararg ownedAssets: OwnedAssetEntity)
+    fun deleteOwnedAssets(vararg ownedAssets: OwnedAsset)
 
     @Delete
-    fun deleteConstituent(vararg constituents: ConstituentEntity)
+    fun deleteConstituent(vararg constituents: Constituent)
 }

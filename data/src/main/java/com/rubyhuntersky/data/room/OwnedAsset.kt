@@ -5,26 +5,26 @@ import android.arch.persistence.room.ForeignKey
 import java.math.BigDecimal
 
 @Entity(
-    primaryKeys = ["owner", "custodian", "account", "symbol"],
+    primaryKeys = ["ownerId", "custodianId", "accountId", "assetSymbol"],
     foreignKeys = [
         ForeignKey(
-            entity = OwnerEntity::class,
+            entity = Owner::class,
             parentColumns = ["id"],
-            childColumns = ["owner"],
+            childColumns = ["ownerId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = UnderlyingAssetEntity::class,
+            entity = UnderlyingAsset::class,
             parentColumns = ["symbol"],
-            childColumns = ["symbol"],
+            childColumns = ["assetSymbol"],
             onDelete = ForeignKey.RESTRICT
         )
     ]
 )
-data class OwnedAssetEntity(
-    var owner: Int,
-    var custodian: String,
-    var account: String,
-    var symbol: String,
+data class OwnedAsset(
+    var ownerId: Int,
+    var custodianId: String,
+    var accountId: String,
+    var assetSymbol: String,
     var shares: BigDecimal
 )

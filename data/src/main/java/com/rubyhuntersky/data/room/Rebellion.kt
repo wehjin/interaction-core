@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity
-data class RebellionEntity(
+data class Rebellion(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var name: String,

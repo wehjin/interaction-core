@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity
-data class UnderlyingAssetEntity(
+data class UnderlyingAsset(
     @PrimaryKey var symbol: String,
     var name: String,
     var marketValue: BigDecimal,
