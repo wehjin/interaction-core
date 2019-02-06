@@ -64,6 +64,7 @@ class RebellionTest {
         val jsonData = Json.stringify(Rebellion.serializer(), rebellion)
         println(jsonData)
         val rebellionReborn = Json.parse(Rebellion.serializer(), jsonData)
+        println(rebellionReborn)
         assertEquals(rebellion, rebellionReborn)
     }
 }

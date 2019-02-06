@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class Constituent(
+data class Constituent constructor(
     val assetSymbol: AssetSymbol,
     val marketWeight: MarketWeight,
     val sharePrice: SharePrice = SharePrice.Unknown(),

@@ -23,10 +23,10 @@
 # Kotlinx serialization rules
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.SerializationKt
--keep,includedescriptorclasses class com.yourcompany.yourpackage.**$$serializer { *; } # <-- change package name to your app's
--keepclassmembers class com.yourcompany.yourpackage.** { # <-- change package name to your app's
+-keep,includedescriptorclasses class com.rubyhuntersky.**$$serializer { *; }
+-keepclassmembers class com.rubyhuntersky.** {
     *** Companion;
 }
--keepclasseswithmembers class com.yourcompany.yourpackage.** { # <-- change package name to your app's
+-keepclasseswithmembers class com.rubyhuntersky.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
