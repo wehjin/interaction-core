@@ -12,6 +12,14 @@ class RebellionReport(private val rebellion: Rebellion) {
     val newInvestment: CashAmount get() = rebellion.newInvestment
     val fullInvestment: CashEquivalent get() = rebellion.fullInvestment
 
+    data class Funding(
+        val currentInvestment: CashEquivalent,
+        val newInvestment: CashAmount,
+        val fullInvestment: CashEquivalent
+    )
+
+    val funding: Funding = Funding(currentInvestment, newInvestment, fullInvestment)
+
     sealed class Conclusion {
         object AddConstituent : Conclusion()
         object RefreshPrices : Conclusion()

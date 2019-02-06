@@ -35,16 +35,10 @@ class MainActivity : AppCompatActivity() {
             .subscribe {
                 when (it) {
                     is MainVision.Loading -> {
-                        setContentView(
-                            R.id.mainLoading,
-                            R.layout.activity_main_loading
-                        )
+                        setContentView(R.id.mainLoading, R.layout.activity_main_loading)
                     }
                     is MainVision.Viewing -> {
-                        setContentView(
-                            R.id.mainViewing,
-                            R.layout.activity_main_viewing
-                        )
+                        setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
                         setSupportActionBar(toolbar)
                         renderViewing(it)
                     }
@@ -56,15 +50,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderViewing(viewing: MainVision.Viewing) {
         supportActionBar!!.title = getString(R.string.funding)
-        val report = viewing.rebellionReport
-        renderFundingViews(report)
-        renderCorrectionsView(report.conclusion)
+        with(viewing.rebellionReport) {
+            renderFundingViews(funding)
+            renderCorrectionsView(conclusion)
+        }
     }
 
-    private fun renderFundingViews(report: RebellionReport) {
-        renderNewInvestment(report.newInvestment)
-        currentInvestmentStatisticView.setText(report.currentInvestment)
-        goalInvestmentStatisticView.setText(report.fullInvestment)
+    private fun renderFundingViews(funding: RebellionReport.Funding) {
+        renderNewInvestment(funding.newInvestment)
+        currentInvestmentStatisticView.setText(funding.currentInvestment)
+        goalInvestmentStatisticView.setText(funding.fullInvestment)
     }
 
     private fun renderCorrectionsView(conclusion: RebellionReport.Conclusion) {
@@ -97,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     private fun StatisticView.setText(cashEquivalent: CashEquivalent) {
         val invested = cashEquivalent.toDouble()
         text = invested?.toStatString()?.let(this@MainActivity::addDollarToStatString)
-                ?: getString(R.string.unknown_quantity)
+            ?: getString(R.string.unknown_quantity)
     }
 
     private fun renderNewInvestment(newInvestment: CashAmount) {
