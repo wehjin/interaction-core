@@ -1,9 +1,14 @@
 package com.rubyhuntersky.data.cash
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class CashEquivalent {
 
-    object Unknown : CashEquivalent()
+    @Serializable
+    data class Unknown(val dummy: Int = 0) : CashEquivalent()
 
+    @Serializable
     data class Amount(val cashAmount: CashAmount) : CashEquivalent() {
         constructor(long: Long) : this(CashAmount(long))
 

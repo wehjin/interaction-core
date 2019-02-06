@@ -21,11 +21,11 @@ class IndexTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.Unknown,
+            sharePrice = SharePrice.Unknown(),
             ownedShares = ShareCount.ONE
         )
         val index = Index(constituents = listOf(constituent), memo = "Unknown share price")
-        assertEquals(CashEquivalent.Unknown, index.cashEquivalentOfAllConstituents)
+        assertEquals(CashEquivalent.Unknown(), index.cashEquivalentOfAllConstituents)
     }
 
     @Test

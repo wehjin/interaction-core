@@ -8,7 +8,7 @@ fun product(sharePrice: SharePrice, shareCount: ShareCount): CashEquivalent =
         CashEquivalent.ZERO
     } else {
         when (sharePrice) {
-            SharePrice.Unknown -> CashEquivalent.Unknown
+            is SharePrice.Unknown -> CashEquivalent.Unknown()
             is SharePrice.Sample -> CashEquivalent.Amount(sharePrice.cashAmount * shareCount.value)
         }
     }

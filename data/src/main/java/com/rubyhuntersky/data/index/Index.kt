@@ -4,7 +4,9 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.cash.sum
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Index(val constituents: List<Constituent>, val memo: String) {
 
     val includedConstituents: List<Constituent> by lazy {

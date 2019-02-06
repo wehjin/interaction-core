@@ -1,9 +1,15 @@
 package com.rubyhuntersky.data.index
 
+import com.rubyhuntersky.data.common.BigDecimalSerializer
 import com.rubyhuntersky.data.toStatString
+import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
-data class MarketWeight(private val value: BigDecimal) {
+@Serializable
+data class MarketWeight(
+    @Serializable(with = BigDecimalSerializer::class)
+    val value: BigDecimal
+) {
     constructor(double: Double) : this(BigDecimal.valueOf(double))
     constructor(long: Long) : this(BigDecimal.valueOf(long))
 
@@ -20,9 +26,11 @@ data class MarketWeight(private val value: BigDecimal) {
     override fun hashCode(): Int = value.toDouble().hashCode()
 
     fun toStatString(): String = value.toDouble().toStatString()
+    fun toDouble(): Double = value.toDouble()
 
     companion object {
         val ZERO = MarketWeight(BigDecimal.ZERO)
+        val ONE = MarketWeight(BigDecimal.ONE)
         val TEN = MarketWeight(BigDecimal.TEN)
     }
 }

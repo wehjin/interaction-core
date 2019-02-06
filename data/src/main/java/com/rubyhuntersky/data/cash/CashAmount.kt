@@ -1,8 +1,14 @@
 package com.rubyhuntersky.data.cash
 
+import com.rubyhuntersky.data.common.BigDecimalSerializer
+import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
-data class CashAmount(private val value: BigDecimal) {
+@Serializable
+data class CashAmount(
+    @Serializable(with = BigDecimalSerializer::class)
+    val value: BigDecimal
+) {
     constructor(long: Long) : this(BigDecimal.valueOf(long))
     constructor(double: Double) : this(BigDecimal.valueOf(double))
 
@@ -19,7 +25,7 @@ data class CashAmount(private val value: BigDecimal) {
 
     operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
     operator fun plus(increment: CashEquivalent): CashEquivalent = when (increment) {
-        is CashEquivalent.Unknown -> CashEquivalent.Unknown
+        is CashEquivalent.Unknown -> CashEquivalent.Unknown()
         is CashEquivalent.Amount -> CashEquivalent.Amount(this + increment.cashAmount)
     }
 

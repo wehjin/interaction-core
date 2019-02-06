@@ -36,12 +36,12 @@ class RebellionTest {
         val constituent = Constituent(
             marketWeight = MarketWeight.ZERO,
             assetSymbol = AssetSymbol("TSLA"),
-            sharePrice = SharePrice.Unknown,
+            sharePrice = SharePrice.Unknown(),
             ownedShares = ShareCount.ONE
         )
         val index = Index(constituents = listOf(constituent), memo = "")
         val rebellion = Rebellion(index = index, newInvestment = CashAmount.TEN)
-        assertEquals(CashEquivalent.Unknown, rebellion.fullInvestment)
+        assertEquals(CashEquivalent.Unknown(), rebellion.fullInvestment)
     }
 
     @Test

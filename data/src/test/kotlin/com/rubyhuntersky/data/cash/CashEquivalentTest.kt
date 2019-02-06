@@ -8,7 +8,7 @@ class CashEquivalentTest {
 
     @Test
     fun toDoubleConvertsUnknownToNull() {
-        val result = CashEquivalent.Unknown.toDouble()
+        val result = CashEquivalent.Unknown().toDouble()
         assertNull(result)
     }
 
