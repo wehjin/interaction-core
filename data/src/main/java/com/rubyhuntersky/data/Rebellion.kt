@@ -6,10 +6,12 @@ import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.index.Index
 import com.rubyhuntersky.data.index.MarketWeight
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class Rebellion(val index: Index, val newInvestment: CashAmount) {
 
+    @Transient
     val fullInvestment: CashEquivalent
         get() = index.cashEquivalentOfAllConstituents + newInvestment
 

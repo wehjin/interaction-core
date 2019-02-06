@@ -5,6 +5,7 @@ import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashEquivalent
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class Constituent(
@@ -15,7 +16,9 @@ data class Constituent(
     val isRemoved: Boolean = false
 ) {
 
-    val cashEquivalent: CashEquivalent get() = ownedShares * sharePrice
+    @Transient
+    val cashEquivalent: CashEquivalent
+        get() = ownedShares * sharePrice
 
     fun reactivate(marketWeight: MarketWeight?): Constituent = Constituent(
         assetSymbol = assetSymbol,

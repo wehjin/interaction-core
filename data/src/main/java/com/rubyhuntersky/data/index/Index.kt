@@ -5,22 +5,27 @@ import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.cash.sum
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class Index(val constituents: List<Constituent>, val memo: String) {
 
+    @Transient
     val includedConstituents: List<Constituent> by lazy {
         constituents.filter { !it.isRemoved }
     }
 
+    @Transient
     val includedOrOwnedConstituents: List<Constituent> by lazy {
         constituents.filter { !it.isRemoved || it.ownedShares > ShareCount.ZERO }
     }
 
+    @Transient
     val totalMarketWeightOfIncludedConstituents: MarketWeight by lazy {
         includedConstituents.map { it.marketWeight }.fold(MarketWeight.ZERO, MarketWeight::plus)
     }
 
+    @Transient
     val cashEquivalentOfAllConstituents: CashEquivalent by lazy {
         if (constituents.isEmpty()) {
             CashEquivalent.ZERO
