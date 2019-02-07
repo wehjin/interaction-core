@@ -13,6 +13,7 @@ class MainInteractionTest {
 
     private val mockConstituentSearchCatalyst = mock<InteractionCatalyst> {}
     private val mockCashEditingCatalyst = mock<InteractionCatalyst> {}
+    private val mockCorrectionDetailsCatalyst = mock<InteractionCatalyst> {}
 
     @Test
     fun startsInLoadingState() {
@@ -48,6 +49,7 @@ class MainInteractionTest {
     fun findConstituentActionStartsConstituentSearchInteraction() {
         val mainInteraction = MainInteraction(
             rebellionBook = MemoryRebellionBook(),
+            correctionDetailCatalyst = mockCorrectionDetailsCatalyst,
             constituentSearchCatalyst = mockConstituentSearchCatalyst,
             cashEditingCatalyst = mockCashEditingCatalyst
         )
@@ -60,6 +62,7 @@ class MainInteractionTest {
     fun openCashEditorActionCatalyzesCashEditingCatalyst() {
         val mainInteraction = MainInteraction(
             rebellionBook = MemoryRebellionBook(),
+            correctionDetailCatalyst = mockCorrectionDetailsCatalyst,
             constituentSearchCatalyst = mockConstituentSearchCatalyst,
             cashEditingCatalyst = mockCashEditingCatalyst
         )

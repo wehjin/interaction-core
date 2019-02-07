@@ -5,12 +5,12 @@ import android.content.SharedPreferences
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.interaction.books.Book
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.books.SubjectBook
+import com.rubyhuntersky.interaction.books.BehaviorBook
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import kotlinx.serialization.json.Json
 
-object SharedRebellionBook : RebellionBook, Book<Rebellion> by SubjectBook(null) {
+object SharedRebellionBook : RebellionBook, Book<Rebellion> by BehaviorBook(null) {
 
     private lateinit var disposable: Disposable
 

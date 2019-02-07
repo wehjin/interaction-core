@@ -3,7 +3,7 @@ package com.rubyhuntersky.interaction.interactions
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.index.MarketWeight
-import com.rubyhuntersky.interaction.BasicInteraction
+import com.rubyhuntersky.interaction.BehaviorInteraction
 import com.rubyhuntersky.interaction.books.Book
 import com.rubyhuntersky.stockcatalog.StockCatalog
 import com.rubyhuntersky.stockcatalog.StockCatalogClient
@@ -27,7 +27,7 @@ object ConstituentSearch {
     }
 
     class Interaction(private val rebellionBook: Book<Rebellion>) :
-        BasicInteraction<Vision, Action>(startingVision = Vision.Idle, resetAction = Action.ClearSearch),
+        BehaviorInteraction<Vision, Action>(startingVision = Vision.Idle, resetAction = Action.ClearSearch),
         StockCatalogClient {
 
         override fun onAction(action: Action) {

@@ -3,7 +3,7 @@ package com.rubyhuntersky.interaction.books
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
-class SubjectBook<T : Any>(start: T? = null) : Book<T> {
+class BehaviorBook<T : Any>(start: T? = null) : Book<T> {
 
     private val subject: BehaviorSubject<T> =
         start?.let { BehaviorSubject.createDefault(start) } ?: BehaviorSubject.create()
