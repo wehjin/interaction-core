@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         mainActivity = this
         mainInteraction.visionStream
             .subscribe {
+                Log.d(this.javaClass.simpleName, "VISION: $it")
                 when (it) {
                     is MainVision.Loading -> {
                         setContentView(R.id.mainLoading, R.layout.activity_main_loading)

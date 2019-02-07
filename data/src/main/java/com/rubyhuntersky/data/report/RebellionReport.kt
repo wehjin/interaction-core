@@ -5,7 +5,7 @@ import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.index.MarketWeight
 
-class RebellionReport(private val rebellion: Rebellion) {
+data class RebellionReport(private val rebellion: Rebellion) {
 
     private val index = rebellion.index
     val currentInvestment: CashEquivalent by lazy { rebellion.index.cashEquivalentOfAllConstituents }

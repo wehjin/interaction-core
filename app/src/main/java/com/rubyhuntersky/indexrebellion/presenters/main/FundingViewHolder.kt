@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.cash.CashEquivalent
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.view_funding.view.*
 class FundingViewHolder(fundingView: View) : RecyclerView.ViewHolder(fundingView) {
 
     fun render(funding: RebellionReport.Funding, onNewInvestmentClick: () -> Unit) {
+        Log.d(this.javaClass.simpleName, "FUNDING: $funding")
         renderNewInvestment(funding.newInvestment, onNewInvestmentClick)
         itemView.currentInvestmentStatisticView.text = funding.currentInvestment.toDollarString()
         itemView.goalInvestmentStatisticView.text = funding.fullInvestment.toDollarString()

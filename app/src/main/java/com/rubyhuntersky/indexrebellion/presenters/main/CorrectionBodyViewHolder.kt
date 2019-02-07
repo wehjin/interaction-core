@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.main
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import com.rubyhuntersky.data.report.Correction
@@ -11,6 +12,7 @@ import kotlinx.android.synthetic.main.view_corrections_body.view.*
 class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindCorrection(correction: Correction, correctionsHighWeight: Double) {
+        Log.d(this.javaClass.simpleName, "CORRECTION: $correction, HIGH WEIGHT: $correctionsHighWeight")
         with(itemView) {
             when (correction) {
                 is Correction.Hold -> bindHold(correction, correctionsHighWeight)
