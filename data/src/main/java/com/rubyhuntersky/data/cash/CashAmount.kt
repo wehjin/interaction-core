@@ -31,7 +31,7 @@ data class CashAmount(
 
     operator fun times(multiplier: Double): CashAmount = CashAmount(value * BigDecimal.valueOf(multiplier))
 
-    operator fun div(divisor: CashAmount): Double = (value / divisor.value).toDouble()
+    operator fun div(divisor: CashAmount): Double = value.divide(divisor.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
 
     fun toDouble(): Double = value.toDouble()
 

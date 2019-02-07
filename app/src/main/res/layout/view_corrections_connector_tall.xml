@@ -6,7 +6,7 @@
 
     <View
         android:layout_width="3dp"
-        android:layout_height="32dp"
+        android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:background="@color/secondaryStrokeColor" />
 </RelativeLayout>

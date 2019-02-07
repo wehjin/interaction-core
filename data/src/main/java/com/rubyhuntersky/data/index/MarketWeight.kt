@@ -15,7 +15,7 @@ data class MarketWeight(
 
     operator fun plus(other: MarketWeight): MarketWeight = MarketWeight(value + other.value)
 
-    operator fun div(other: MarketWeight): Double = (value / other.value).toDouble()
+    operator fun div(other: MarketWeight): Double = value.divide(other.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
 
     override fun equals(other: Any?): Boolean = if (other is MarketWeight) {
         value.compareTo(other.value) == 0

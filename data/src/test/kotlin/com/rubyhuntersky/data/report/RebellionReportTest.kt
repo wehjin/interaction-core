@@ -53,4 +53,29 @@ class RebellionReportTest {
         val report = RebellionReport(rebellion)
         assertEquals(rebellion.index.cashEquivalentOfAllConstituents + newInvestment, report.fullInvestment)
     }
+
+    @Test
+    fun marketWeightIsDividedAmongConstituentsInReport() {
+        val constituent1 = Constituent(
+            marketWeight = MarketWeight(55186399232),
+            assetSymbol = AssetSymbol("TSLA"),
+            sharePrice = SharePrice.Unknown(),
+            ownedShares = ShareCount.ZERO
+        )
+        val constituent2 = Constituent(
+            marketWeight = MarketWeight(11258835968),
+            assetSymbol = AssetSymbol("TWLO"),
+            sharePrice = SharePrice.Unknown(),
+            ownedShares = ShareCount.ZERO
+        )
+        val newInvestment = CashAmount(10000.0)
+        val index = Index(listOf(constituent1, constituent2), "")
+        val rebellion = Rebellion(index, newInvestment)
+        val expectedTargetWeights = listOf(0.8305546525027576, 0.16944534749724235)
+
+        val rebellionReport = RebellionReport(rebellion)
+        val conclusion = rebellionReport.conclusion
+        val maintain = conclusion as RebellionReport.Conclusion.Maintain
+        assertEquals(expectedTargetWeights, maintain.corrections.map { (it as Correction.Buy).targetWeight })
+    }
 }
