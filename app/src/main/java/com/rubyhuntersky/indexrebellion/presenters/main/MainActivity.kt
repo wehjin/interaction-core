@@ -3,11 +3,7 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
-import com.rubyhuntersky.data.report.RebellionReport
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
@@ -46,42 +42,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderViewing(viewing: MainVision.Viewing) {
+        val report = viewing.rebellionReport
         supportActionBar!!.title = getString(R.string.funding)
-        with(viewing.rebellionReport) {
-            fundingView.inFundingViewHolder().render(funding) {
+        FundingViewHolder(fundingView)
+            .render(report.funding, onNewInvestmentClick = {
                 mainInteraction.onAction(MainAction.OpenCashEditor)
-            }
-            renderCorrectionsView(conclusion)
-        }
-    }
+            })
 
-    private fun LinearLayout.inFundingViewHolder(): FundingViewHolder = FundingViewHolder(this)
-
-    private fun renderCorrectionsView(conclusion: RebellionReport.Conclusion) {
-        with(correctionsRecyclerView) {
-            if (layoutManager == null) {
-                layoutManager = object : LinearLayoutManager(context) {}
-            }
-
-            val recyclerViewAdapter: CorrectionsRecyclerViewAdapter =
-                adapter as? CorrectionsRecyclerViewAdapter
-                    ?: CorrectionsRecyclerViewAdapter(mainInteraction).apply { adapter = this }
-
-            Log.d(MainActivity::class.java.simpleName, "conclusion: $conclusion")
-            when (conclusion) {
-                is RebellionReport.Conclusion.AddConstituent -> {
-                    recyclerViewAdapter.setCorrections(emptyList())
-                }
-                is RebellionReport.Conclusion.RefreshPrices -> {
-                }
-                is RebellionReport.Conclusion.Divest -> {
-                    recyclerViewAdapter.setCorrections(conclusion.corrections)
-                }
-                is RebellionReport.Conclusion.Maintain -> {
-                    recyclerViewAdapter.setCorrections(conclusion.corrections)
-                }
-            }
-        }
+        ConclusionViewHolder(correctionsRecyclerView)
+            .render(report.conclusion, onAddConstituentClick = {
+                mainInteraction.onAction(MainAction.FindConstituent)
+            })
     }
 
     override fun onStop() {
