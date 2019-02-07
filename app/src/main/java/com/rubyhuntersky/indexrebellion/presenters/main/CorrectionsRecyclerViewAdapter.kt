@@ -9,7 +9,10 @@ import com.rubyhuntersky.indexrebellion.R
 import kotlinx.android.synthetic.main.view_corrections_footer.view.*
 import kotlin.math.max
 
-class CorrectionsRecyclerViewAdapter(private val onAddConstituentClick: () -> Unit) :
+class CorrectionsRecyclerViewAdapter(
+    private val onAddConstituentClick: () -> Unit,
+    private val onCorrectionDetailsClick: () -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
@@ -67,7 +70,7 @@ class CorrectionsRecyclerViewAdapter(private val onAddConstituentClick: () -> Un
             CorrectionsViewType.BODY -> {
                 val correction = corrections[position / 2 - 1]
                 val bodyViewHolder = viewHolder as CorrectionBodyViewHolder
-                bodyViewHolder.bindCorrection(correction, correctionsHighWeight)
+                bodyViewHolder.bindCorrection(correction, correctionsHighWeight, onCorrectionDetailsClick)
             }
             CorrectionsViewType.HEADER -> Unit
             CorrectionsViewType.CONNECTOR_SHORT -> Unit

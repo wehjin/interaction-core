@@ -18,8 +18,7 @@ object NotImplementedCatalyst : InteractionCatalyst {
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }
 
-abstract class BasicInteraction<V, A>(startingVision: V, private val resetAction: A? = null) :
-    Interaction<V, A> {
+abstract class BasicInteraction<V, A>(startingVision: V, private val resetAction: A? = null) : Interaction<V, A> {
 
     override val visionStream: Observable<V> get() = visionBehavior.distinctUntilChanged()
     private val visionBehavior = BehaviorSubject.createDefault(startingVision)

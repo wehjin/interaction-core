@@ -37,5 +37,6 @@
     <string name="not_applicable">N/A</string>
     <string name="new_constituent">New Constituent</string>
     <string name="searching">Searching…</string>
+    <string name="update_shares">Update Shares</string>
 
 </resources>

@@ -10,6 +10,7 @@ import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchCatalyst
+import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsCatalyst
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.interactions.main.MainAction
@@ -52,9 +53,11 @@ class MainActivity : AppCompatActivity() {
             })
 
         ConclusionViewHolder(correctionsRecyclerView)
-            .render(report.conclusion, onAddConstituentClick = {
-                mainInteraction.onAction(MainAction.FindConstituent)
-            })
+            .render(
+                conclusion = report.conclusion,
+                onAddConstituentClick = { mainInteraction.onAction(MainAction.FindConstituent) },
+                onCorrectionDetailsClick = { mainInteraction.onAction(MainAction.OpenCorrectionDetails) }
+            )
     }
 
     override fun onStop() {
@@ -84,7 +87,8 @@ class MainActivity : AppCompatActivity() {
                         CashEditingDialogFragment.newInstance().show(it, "cash_editing")
                     }
                 }
-            }
+            },
+            correctionDetailCatalyst = CorrectionDetailsCatalyst { mainActivity!! }
         )
     }
 }

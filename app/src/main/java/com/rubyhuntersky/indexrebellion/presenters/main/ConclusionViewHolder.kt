@@ -7,14 +7,18 @@ import com.rubyhuntersky.data.report.RebellionReport
 
 class ConclusionViewHolder(private val conclusionView: RecyclerView) : RecyclerView.ViewHolder(conclusionView) {
 
-    fun render(conclusion: RebellionReport.Conclusion, onAddConstituentClick: () -> Unit) {
+    fun render(
+        conclusion: RebellionReport.Conclusion,
+        onAddConstituentClick: () -> Unit,
+        onCorrectionDetailsClick: () -> Unit
+    ) {
         with(conclusionView) {
             if (layoutManager == null) {
                 layoutManager = object : LinearLayoutManager(context) {}
             }
 
             val adapter: CorrectionsRecyclerViewAdapter = adapter as? CorrectionsRecyclerViewAdapter
-                ?: CorrectionsRecyclerViewAdapter(onAddConstituentClick)
+                ?: CorrectionsRecyclerViewAdapter(onAddConstituentClick, onCorrectionDetailsClick)
                     .also { adapter = it }
 
             Log.d(this.javaClass.simpleName, "conclusion: $conclusion")

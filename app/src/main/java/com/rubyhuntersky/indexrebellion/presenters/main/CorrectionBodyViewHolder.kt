@@ -11,7 +11,11 @@ import kotlinx.android.synthetic.main.view_corrections_body.view.*
 
 class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bindCorrection(correction: Correction, correctionsHighWeight: Double) {
+    fun bindCorrection(
+        correction: Correction,
+        correctionsHighWeight: Double,
+        onCorrectionDetailsClick: () -> Unit
+    ) {
         Log.d(this.javaClass.simpleName, "CORRECTION: $correction, HIGH WEIGHT: $correctionsHighWeight")
         with(itemView) {
             when (correction) {
@@ -19,6 +23,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 is Correction.Buy -> bindBuy(correction, correctionsHighWeight)
                 is Correction.Sell -> bindSell(correction, correctionsHighWeight)
             }
+            correctionActionButton.setOnClickListener { onCorrectionDetailsClick() }
         }
     }
 
