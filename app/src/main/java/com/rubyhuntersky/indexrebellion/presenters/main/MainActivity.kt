@@ -6,13 +6,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
-import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.data.cash.CashEquivalent
+import android.widget.LinearLayout
 import com.rubyhuntersky.data.report.RebellionReport
-import com.rubyhuntersky.data.toStatString
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
-import com.rubyhuntersky.indexrebellion.common.views.StatisticView
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchCatalyst
@@ -51,16 +48,14 @@ class MainActivity : AppCompatActivity() {
     private fun renderViewing(viewing: MainVision.Viewing) {
         supportActionBar!!.title = getString(R.string.funding)
         with(viewing.rebellionReport) {
-            renderFundingViews(funding)
+            fundingView.inFundingViewHolder().render(funding) {
+                mainInteraction.onAction(MainAction.OpenCashEditor)
+            }
             renderCorrectionsView(conclusion)
         }
     }
 
-    private fun renderFundingViews(funding: RebellionReport.Funding) {
-        renderNewInvestment(funding.newInvestment)
-        currentInvestmentStatisticView.setText(funding.currentInvestment)
-        goalInvestmentStatisticView.setText(funding.fullInvestment)
-    }
+    private fun LinearLayout.inFundingViewHolder(): FundingViewHolder = FundingViewHolder(this)
 
     private fun renderCorrectionsView(conclusion: RebellionReport.Conclusion) {
         with(correctionsRecyclerView) {
@@ -87,36 +82,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun StatisticView.setText(cashEquivalent: CashEquivalent) {
-        val invested = cashEquivalent.toDouble()
-        text = invested?.toStatString()?.let(this@MainActivity::addDollarToStatString)
-            ?: getString(R.string.unknown_quantity)
-    }
-
-    private fun renderNewInvestment(newInvestment: CashAmount) {
-        val cashInAmount = newInvestment.toDouble()
-        with(newInvestmentStatisticView) {
-            labelText = if (cashInAmount >= 0) getString(R.string.deposit) else getString(
-                R.string.withdrawal
-            )
-            text = addDollarToStatString(cashInAmount.toStatString())
-        }
-        with(newInvestmentOperatorTextView) {
-            text = if (cashInAmount >= 0) getString(R.string.plus) else getString(R.string.minus)
-        }
-        with(newInvestmentButton) {
-            setOnClickListener {
-                mainInteraction.onAction(MainAction.OpenCashEditor)
-            }
-        }
-    }
-
-    private fun addDollarToStatString(statString: String): String = if (statString.length == 1) {
-        getString(R.string.dollar_space_format, statString)
-    } else {
-        getString(R.string.dollar_format, statString)
     }
 
     override fun onStop() {
