@@ -7,12 +7,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-interface InteractionCatalyst {
-    fun catalyze()
+interface InteractionCatalyst<T> {
+    fun catalyze(seed: T)
 }
 
-object NotImplementedCatalyst : InteractionCatalyst {
-    override fun catalyze() {
+class NotImplementedCatalyst<T> : InteractionCatalyst<T> {
+    override fun catalyze(seed: T) {
         check(false) { "Catalyst not implemented" }
     }
 }
@@ -31,7 +31,7 @@ abstract class BehaviorInteraction<V, A>(startingVision: V? = null, private val 
     private val visionWriter = visionBehavior.toSerialized()
 
     override fun reset() {
-        resetAction?.let(this::onAction)
+        resetAction?.let(this::sendAction)
     }
 
 
@@ -44,12 +44,12 @@ abstract class BehaviorInteraction<V, A>(startingVision: V? = null, private val 
             init {
                 core.visionStream
                     .subscribe { coreVision ->
-                        adapter.onUpstreamVision(coreVision, this::setVision, core::onAction)
+                        adapter.onUpstreamVision(coreVision, this::setVision, core::sendAction)
                     }
                     .addTo(coreVisions)
             }
 
-            override fun onAction(action: EdgeA) = adapter.onAction(action, this::setVision, core::onAction)
+            override fun sendAction(action: EdgeA) = adapter.onAction(action, this::setVision, core::sendAction)
         }
     }
 }

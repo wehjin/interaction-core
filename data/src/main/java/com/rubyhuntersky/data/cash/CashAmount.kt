@@ -1,6 +1,7 @@
 package com.rubyhuntersky.data.cash
 
 import com.rubyhuntersky.data.common.BigDecimalSerializer
+import com.rubyhuntersky.data.toStatString
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
@@ -33,6 +34,7 @@ data class CashAmount(
 
     operator fun div(divisor: CashAmount): Double = value.divide(divisor.value, 50, BigDecimal.ROUND_HALF_UP).toDouble()
 
+    fun toStatString() = toDouble().toStatString()
     fun toDouble(): Double = value.toDouble()
 
     companion object {

@@ -20,7 +20,7 @@ class CorrectionDetailsTest {
     @Test
     fun writeAction() {
         val newCorrection = Correction.Hold(AssetSymbol("TSL"), 0.5)
-        interaction.onAction(CorrectionDetails.Action.Wrap(ReadWrite.Action.Write(newCorrection)))
+        interaction.sendAction(CorrectionDetails.Action.Wrap(ReadWrite.Action.Write(newCorrection)))
         interaction.visionStream.test()
             .assertValue(CorrectionDetails.Vision.Wrap(ReadWrite.Vision.Ready(newCorrection)))
     }

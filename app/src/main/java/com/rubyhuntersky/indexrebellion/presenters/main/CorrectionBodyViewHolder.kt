@@ -14,7 +14,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     fun bindCorrection(
         correction: Correction,
         correctionsHighWeight: Double,
-        onCorrectionDetailsClick: () -> Unit
+        onCorrectionDetailsClick: (Correction) -> Unit
     ) {
         Log.d(this.javaClass.simpleName, "CORRECTION: $correction, HIGH WEIGHT: $correctionsHighWeight")
         with(itemView) {
@@ -23,7 +23,7 @@ class CorrectionBodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
                 is Correction.Buy -> bindBuy(correction, correctionsHighWeight)
                 is Correction.Sell -> bindSell(correction, correctionsHighWeight)
             }
-            correctionActionButton.setOnClickListener { onCorrectionDetailsClick() }
+            correctionActionButton.setOnClickListener { onCorrectionDetailsClick(correction) }
         }
     }
 

@@ -27,7 +27,7 @@ object ReadWrite {
                 .addTo(disposable)
         }
 
-        override fun onAction(action: Action<T>) {
+        override fun sendAction(action: Action<T>) {
             val newStory = (action as Action.Write).value
             if (newStory != value) {
                 book.write(newStory)

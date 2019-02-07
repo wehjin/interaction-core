@@ -49,14 +49,14 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = getString(R.string.funding)
         FundingViewHolder(fundingView)
             .render(report.funding, onNewInvestmentClick = {
-                mainInteraction.onAction(MainAction.OpenCashEditor)
+                mainInteraction.sendAction(MainAction.OpenCashEditor)
             })
 
         ConclusionViewHolder(correctionsRecyclerView)
             .render(
                 conclusion = report.conclusion,
-                onAddConstituentClick = { mainInteraction.onAction(MainAction.FindConstituent) },
-                onCorrectionDetailsClick = { mainInteraction.onAction(MainAction.OpenCorrectionDetails) }
+                onAddConstituentClick = { mainInteraction.sendAction(MainAction.FindConstituent) },
+                onCorrectionDetailsClick = { mainInteraction.sendAction(MainAction.OpenCorrectionDetails(it)) }
             )
     }
 
@@ -80,8 +80,8 @@ class MainActivity : AppCompatActivity() {
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
             constituentSearchCatalyst = ConstituentSearchCatalyst { mainActivity!! },
-            cashEditingCatalyst = object : InteractionCatalyst {
-                override fun catalyze() {
+            cashEditingCatalyst = object : InteractionCatalyst<Unit> {
+                override fun catalyze(seed: Unit) {
                     SharedCashEditingInteraction.reset()
                     mainActivity?.supportFragmentManager?.let {
                         CashEditingDialogFragment.newInstance().show(it, "cash_editing")

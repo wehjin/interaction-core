@@ -9,11 +9,11 @@ import com.rubyhuntersky.interaction.interactions.common.Interaction as CommonIn
 object CorrectionDetails {
 
     sealed class Vision {
-        data class Wrap(val vision: ReadWrite.Vision<Correction>) : Vision()
+        data class Wrap(val unwrap: ReadWrite.Vision<Correction>) : Vision()
     }
 
     sealed class Action {
-        data class Wrap(val action: ReadWrite.Action<Correction>) : Action()
+        data class Wrap(val unwrap: ReadWrite.Action<Correction>) : Action()
     }
 
     class Interaction(book: Book<Correction>) : CommonInteraction<Vision, Action>
@@ -33,7 +33,7 @@ object CorrectionDetails {
             setVision: (vision: Vision) -> Unit,
             sendUpstreamAction: (action: ReadWrite.Action<Correction>) -> Unit
         ) {
-            val upstreamAction = (action as Action.Wrap).action
+            val upstreamAction = (action as Action.Wrap).unwrap
             sendUpstreamAction(upstreamAction)
         }
     })

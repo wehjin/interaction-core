@@ -3,7 +3,6 @@ package com.rubyhuntersky.indexrebellion.presenters.main
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.indexrebellion.R
 import kotlinx.android.synthetic.main.view_corrections_footer.view.*
@@ -11,13 +10,13 @@ import kotlin.math.max
 
 class CorrectionsRecyclerViewAdapter(
     private val onAddConstituentClick: () -> Unit,
-    private val onCorrectionDetailsClick: () -> Unit
+    private val onCorrectionDetailsClick: (Correction) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class CorrectionsViewType { HEADER, FOOTER, BODY, CONNECTOR_SHORT, CONNECTOR_TALL }
 
-    private var corrections: List<Correction> = listOf(Correction.Hold(AssetSymbol("TSLA"), 100.0))
+    private var corrections: List<Correction> = emptyList()
     private var correctionsHighWeight: Double = corrections.highWeight
 
     override fun getItemCount(): Int = 1 + corrections.size * 2 + 2
@@ -69,8 +68,11 @@ class CorrectionsRecyclerViewAdapter(
             CorrectionsViewType.FOOTER -> viewHolder.itemView.plusConstituentButton.setOnClickListener { onAddConstituentClick() }
             CorrectionsViewType.BODY -> {
                 val correction = corrections[position / 2 - 1]
-                val bodyViewHolder = viewHolder as CorrectionBodyViewHolder
-                bodyViewHolder.bindCorrection(correction, correctionsHighWeight, onCorrectionDetailsClick)
+                (viewHolder as CorrectionBodyViewHolder).bindCorrection(
+                    correction,
+                    correctionsHighWeight,
+                    onCorrectionDetailsClick
+                )
             }
             CorrectionsViewType.HEADER -> Unit
             CorrectionsViewType.CONNECTOR_SHORT -> Unit
@@ -78,5 +80,10 @@ class CorrectionsRecyclerViewAdapter(
         }
     }
 
-    private val List<Correction>.highWeight: Double get() = this.map { it.highWeight }.fold(0.0, ::max)
+    private val List<Correction>.highWeight: Double
+        get() = if (this.isEmpty()) {
+            0.0
+        } else {
+            this.map { it.highWeight }.fold(0.0, ::max)
+        }
 }

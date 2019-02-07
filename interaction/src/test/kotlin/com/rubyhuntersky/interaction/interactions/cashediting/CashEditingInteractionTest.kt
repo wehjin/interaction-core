@@ -17,19 +17,19 @@ class CashEditingInteractionTest {
 
     @Test
     fun saveActionWritesRebellionToBook() {
-        cashEditingInteraction.onAction(CashEditingAction.SaveCashChange)
+        cashEditingInteraction.sendAction(CashEditingAction.SaveCashChange)
         assertTrue(rebellionBook.value.newInvestment != CashAmount.ZERO)
     }
 
     @Test
     fun saveActionSetVisionToDone() {
-        cashEditingInteraction.onAction(CashEditingAction.SaveCashChange)
+        cashEditingInteraction.sendAction(CashEditingAction.SaveCashChange)
         cashEditingInteraction.visionStream.test().assertValue(CashEditingVision.Done)
     }
 
     @Test
     fun resetAfterSaveSetsVisionToEditing() {
-        cashEditingInteraction.onAction(CashEditingAction.SaveCashChange)
+        cashEditingInteraction.sendAction(CashEditingAction.SaveCashChange)
         cashEditingInteraction.reset()
         cashEditingInteraction.visionStream.test().assertValue(CashEditingVision.Editing)
     }

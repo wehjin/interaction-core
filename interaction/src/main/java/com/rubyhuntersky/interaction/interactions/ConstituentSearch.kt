@@ -30,7 +30,7 @@ object ConstituentSearch {
         BehaviorInteraction<Vision, Action>(startingVision = Vision.Idle, resetAction = Action.ClearSearch),
         StockCatalogClient {
 
-        override fun onAction(action: Action) {
+        override fun sendAction(action: Action) {
             when (action) {
                 is Action.ClearSearch -> {
                     stockCatalog.sendQuery(StockCatalogQuery.Clear)

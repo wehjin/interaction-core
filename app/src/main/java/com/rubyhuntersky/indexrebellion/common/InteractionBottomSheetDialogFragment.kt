@@ -24,7 +24,7 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
 
     protected fun sendAction(action: A) {
         Log.d(this.javaClass.simpleName, "ACTION: $action")
-        interaction.onAction(action)
+        interaction.sendAction(action)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

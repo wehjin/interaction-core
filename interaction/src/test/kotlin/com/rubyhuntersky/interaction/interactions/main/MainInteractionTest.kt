@@ -3,6 +3,7 @@ package com.rubyhuntersky.interaction.interactions.main
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.data.Rebellion
+import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.books.RebellionBook
@@ -11,17 +12,22 @@ import org.junit.Test
 
 class MainInteractionTest {
 
-    private val mockConstituentSearchCatalyst = mock<InteractionCatalyst> {}
-    private val mockCashEditingCatalyst = mock<InteractionCatalyst> {}
-    private val mockCorrectionDetailsCatalyst = mock<InteractionCatalyst> {}
+    private val mockCorrectionDetailsCatalyst = mock<InteractionCatalyst<Correction>> {}
+    private val mockConstituentSearchCatalyst = mock<InteractionCatalyst<Unit>> {}
+    private val mockCashEditingCatalyst = mock<InteractionCatalyst<Unit>> {}
 
     @Test
     fun startsInLoadingState() {
         val rebellionBook = object : RebellionBook {
             override val reader: Observable<Rebellion> get() = Observable.never()
-            override fun write(rebellion: Rebellion) = Unit
+            override fun write(value: Rebellion) = Unit
         }
-        val mainInteraction = MainInteraction(rebellionBook, mockConstituentSearchCatalyst, mockCashEditingCatalyst)
+        val mainInteraction = MainInteraction(
+            rebellionBook,
+            mockCorrectionDetailsCatalyst,
+            mockConstituentSearchCatalyst,
+            mockCashEditingCatalyst
+        )
 
         mainInteraction.visionStream.test()
             .assertSubscribed()
@@ -34,9 +40,14 @@ class MainInteractionTest {
     fun shiftsToViewingWhenRebellionArrives() {
         val rebellionBook = object : RebellionBook {
             override val reader: Observable<Rebellion> get() = Observable.fromArray(Rebellion.SEED)
-            override fun write(rebellion: Rebellion) = Unit
+            override fun write(value: Rebellion) = Unit
         }
-        val mainInteraction = MainInteraction(rebellionBook, mockConstituentSearchCatalyst, mockCashEditingCatalyst)
+        val mainInteraction = MainInteraction(
+            rebellionBook,
+            mockCorrectionDetailsCatalyst,
+            mockConstituentSearchCatalyst,
+            mockCashEditingCatalyst
+        )
 
         mainInteraction.visionStream.test()
             .assertSubscribed()
@@ -54,8 +65,8 @@ class MainInteractionTest {
             cashEditingCatalyst = mockCashEditingCatalyst
         )
 
-        mainInteraction.onAction(MainAction.FindConstituent)
-        verify(mockConstituentSearchCatalyst).catalyze()
+        mainInteraction.sendAction(MainAction.FindConstituent)
+        verify(mockConstituentSearchCatalyst).catalyze(Unit)
     }
 
     @Test
@@ -66,7 +77,7 @@ class MainInteractionTest {
             constituentSearchCatalyst = mockConstituentSearchCatalyst,
             cashEditingCatalyst = mockCashEditingCatalyst
         )
-        mainInteraction.onAction(MainAction.OpenCashEditor)
-        verify(mockCashEditingCatalyst).catalyze()
+        mainInteraction.sendAction(MainAction.OpenCashEditor)
+        verify(mockCashEditingCatalyst).catalyze(Unit)
     }
 }

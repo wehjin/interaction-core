@@ -40,7 +40,7 @@ class ConstituentSearchTest {
             }
         }
         StockCatalog(network).connect(interaction)
-        interaction.onAction(Action.BeginSearch("TSLA"))
+        interaction.sendAction(Action.BeginSearch("TSLA"))
         interaction.onStockCatalogResult(
             StockCatalogResult.Samples(
                 search = "TSLA",
@@ -54,7 +54,7 @@ class ConstituentSearchTest {
                 )
             )
         )
-        interaction.onAction(Action.AddConstituent)
+        interaction.sendAction(Action.AddConstituent)
 
         argumentCaptor<Rebellion>().apply {
             verify(rebellionBook).write(capture())

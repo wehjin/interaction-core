@@ -1,5 +1,6 @@
 package com.rubyhuntersky.interaction.interactions.main
 
+import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.data.report.RebellionReport
 import com.rubyhuntersky.interaction.InteractionCatalyst
 import com.rubyhuntersky.interaction.NotImplementedCatalyst
@@ -12,9 +13,9 @@ import io.reactivex.subjects.BehaviorSubject
 
 class MainInteraction(
     rebellionBook: RebellionBook,
-    private val correctionDetailCatalyst: InteractionCatalyst,
-    private val constituentSearchCatalyst: InteractionCatalyst = NotImplementedCatalyst,
-    private val cashEditingCatalyst: InteractionCatalyst = NotImplementedCatalyst
+    private val correctionDetailCatalyst: InteractionCatalyst<Correction>,
+    private val constituentSearchCatalyst: InteractionCatalyst<Unit> = NotImplementedCatalyst(),
+    private val cashEditingCatalyst: InteractionCatalyst<Unit> = NotImplementedCatalyst()
 ) :
     Interaction<MainVision, MainAction> {
 
@@ -33,7 +34,7 @@ class MainInteraction(
             .addTo(compositeDisposable)
     }
 
-    override fun onAction(action: MainAction) {
+    override fun sendAction(action: MainAction) {
         val oldVision = this.vision
         when (oldVision) {
             is MainVision.Loading -> updateLoading()
@@ -43,9 +44,9 @@ class MainInteraction(
 
     private fun updateViewing(action: MainAction) {
         when (action) {
-            MainAction.FindConstituent -> constituentSearchCatalyst.catalyze()
-            MainAction.OpenCashEditor -> cashEditingCatalyst.catalyze()
-            MainAction.OpenCorrectionDetails -> correctionDetailCatalyst.catalyze()
+            is MainAction.FindConstituent -> constituentSearchCatalyst.catalyze(Unit)
+            is MainAction.OpenCashEditor -> cashEditingCatalyst.catalyze(Unit)
+            is MainAction.OpenCorrectionDetails -> correctionDetailCatalyst.catalyze(action.correction)
         }
     }
 
