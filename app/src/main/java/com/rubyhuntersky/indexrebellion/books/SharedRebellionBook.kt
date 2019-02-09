@@ -3,9 +3,9 @@ package com.rubyhuntersky.indexrebellion.books
 import android.content.Context
 import android.content.SharedPreferences
 import com.rubyhuntersky.data.Rebellion
+import com.rubyhuntersky.interaction.books.BehaviorBook
 import com.rubyhuntersky.interaction.books.Book
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.books.BehaviorBook
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import kotlinx.serialization.json.Json

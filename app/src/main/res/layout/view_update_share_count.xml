@@ -9,6 +9,7 @@
     android:theme="@style/AppTheme">
 
     <TextView
+        android:id="@+id/symbolTextView"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +23,7 @@
         android:background="@color/secondaryStrokeColor" />
 
     <LinearLayout
+        android:id="@+id/shareCountLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -51,21 +53,27 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/equals"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/secondaryDarkStrokeColor" />
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:id="@+id/oldCountTextView"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:lineSpacingExtra="4dp"
             android:lines="2"
-            tools:text="1000\nshares" />
+            android:textAlignment="center"
+            android:textColor="@color/secondaryDarkStrokeColor"
+            tools:text="@string/old_shares_format" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/plus"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/secondaryDarkStrokeColor" />
 
 
         <android.support.design.widget.TextInputLayout
@@ -81,7 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberSigned"
-
                 android:lines="1"
                 android:singleLine="true"
                 tools:text="10" />

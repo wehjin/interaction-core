@@ -12,9 +12,11 @@ class RebellionConstituentBook(private val rebellionBook: RebellionBook, private
 
     override val reader: Observable<Constituent>
         get() = rebellionBook.reader
-            .switchMap { rebellion ->
-                val constituent = rebellion.index.constituents.find { it.assetSymbol == assetSymbol }
-                constituent?.let { Observable.just(it) } ?: Observable.never()
+            .map { rebellion ->
+                rebellion.index.constituents
+                    .find {
+                        it.assetSymbol == assetSymbol
+                    }!!
             }
             .distinctUntilChanged()
 

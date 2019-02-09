@@ -3,10 +3,12 @@ package com.rubyhuntersky.indexrebellion.common
 import android.app.Application
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.SharePrice
+import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.index.Constituent
 import com.rubyhuntersky.data.index.MarketWeight
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import kotlinx.serialization.json.Json
+import java.util.*
 
 class MyApplication : Application() {
 
@@ -22,6 +24,10 @@ class MyApplication : Application() {
         Json.stringify(
             Constituent.serializer(),
             Constituent(AssetSymbol("DUMMY"), MarketWeight.TEN, SharePrice.Unknown())
+        )
+        Json.stringify(
+            Constituent.serializer(),
+            Constituent(AssetSymbol("DUMMY"), MarketWeight.TEN, SharePrice.Sample(CashAmount.TEN, Date()))
         )
         SharedRebellionBook.open(this)
     }

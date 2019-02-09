@@ -55,6 +55,7 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                     isEnabled = true
                     setOnClickListener {
                         sendAction(CorrectionDetails.Action.UpdateShares)
+                        dismiss()
                     }
                 }
             }

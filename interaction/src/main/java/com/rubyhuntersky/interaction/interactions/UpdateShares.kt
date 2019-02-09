@@ -1,5 +1,6 @@
 package com.rubyhuntersky.interaction.interactions
 
+import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.OwnedAsset
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
@@ -18,6 +19,7 @@ object UpdateShares {
         object Loading : Vision()
 
         data class Prompt(
+            val assetSymbol: AssetSymbol,
             val ownedCount: Int,
             val sharePrice: SharePrice,
             val newPrice: String?,
@@ -117,6 +119,7 @@ object UpdateShares {
         private fun sendPromptVision() = setVision(
 
             Vision.Prompt(
+                assetSymbol = ownedAsset!!.assetSymbol,
                 ownedCount = ownedAsset!!.shareCount.toDouble().toInt(),
                 sharePrice = ownedAsset!!.sharePrice,
                 newPrice = newPrice,
