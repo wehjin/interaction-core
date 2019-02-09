@@ -36,7 +36,7 @@ object UpdateShares {
         data class NewPrice(val newSharePrice: String) : Action()
         data class NewTotalCount(val newTotalCount: String) : Action()
         data class NewChangeCount(val newChangeCount: String) : Action()
-        object Save : Action()
+        data class Save(val date: Date) : Action()
     }
 
 
@@ -67,7 +67,7 @@ object UpdateShares {
                 is Action.NewPrice -> evolvePrompt { newPrice = action.newSharePrice }
                 is Action.NewTotalCount -> evolvePrompt { newTotal = action.newTotalCount }
                 is Action.NewChangeCount -> evolvePrompt { newChange = action.newChangeCount }
-                is Action.Save -> dismissPrompt()
+                is Action.Save -> dismissPrompt(action.date)
             }
         }
 
@@ -83,14 +83,14 @@ object UpdateShares {
             is Vision.Dismissed -> Unit
         }
 
-        private fun dismissPrompt() = when (vision) {
+        private fun dismissPrompt(date: Date) = when (vision) {
             is Vision.Prompt -> {
                 if (canUpdate) {
                     val newPriceDouble = newPrice.toDouble()
                     constituentBook.updateShareCountPriceAndCash(
                         assetSymbol = ownedAsset!!.assetSymbol,
                         shareCount = numberDelta.toShareCount(ownedAsset!!.shareCount),
-                        sharePrice = SharePrice.Sample(CashAmount(newPriceDouble), Date()),
+                        sharePrice = SharePrice.Sample(CashAmount(newPriceDouble), date),
                         cashChange = if (shouldUpdateCash) {
                             val shareDelta = numberDelta.toShareDelta(ownedAsset!!.shareCount)
                             CashAmount(newPriceDouble * shareDelta.value * -1)
