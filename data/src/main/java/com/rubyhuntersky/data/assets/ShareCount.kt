@@ -7,8 +7,12 @@ import kotlinx.serialization.Serializable
 data class ShareCount(val value: Double) {
     constructor(long: Long) : this(long.toDouble())
 
-    operator fun times(sharePrice: SharePrice): CashEquivalent = product(sharePrice, this)
+    operator fun plus(rhs: ShareCount): ShareCount = ShareCount(value + rhs.value)
+    operator fun minus(rhs: ShareCount): ShareCount = ShareCount(value - rhs.value)
+    operator fun times(rhs: SharePrice): CashEquivalent = product(rhs, this)
     operator fun compareTo(other: ShareCount): Int = value.compareTo(other.value)
+
+    fun toDouble(): Double = value
 
     companion object {
         val ZERO = ShareCount(0)

@@ -12,3 +12,9 @@ fun product(sharePrice: SharePrice, shareCount: ShareCount): CashEquivalent =
             is SharePrice.Sample -> CashEquivalent.Amount(sharePrice.cashAmount * shareCount.value)
         }
     }
+
+data class OwnedAsset(
+    val assetSymbol: AssetSymbol,
+    val shareCount: ShareCount,
+    val sharePrice: SharePrice
+)
