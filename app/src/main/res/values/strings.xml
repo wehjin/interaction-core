@@ -39,7 +39,7 @@
     <string name="new_constituent">New Constituent</string>
     <string name="searching">Searching…</string>
     <string name="update_shares">Update Shares</string>
-    <string name="buy_not_advice">Buy $%1$s » $%2$s</string>
+    <string name="buy_not_advice">$0 » Buy $%1$s » $%2$s</string>
     <string name="sell_not_advice">Sell $%1$s » $%2$s</string>
     <string name="hold_not_advice">Hold $%1$s</string>
     <string name="buy_not_advice_short">Buy $%1$s</string>

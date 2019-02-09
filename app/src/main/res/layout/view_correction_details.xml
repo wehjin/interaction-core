@@ -15,17 +15,21 @@
 
         <TextView
             android:id="@+id/symbolTextView"
-            style="@style/TextAppearance.MaterialComponents.Overline"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TSLA" />
+            tools:text="TSLA" />
 
         <TextView
             android:id="@+id/currentSharesTextView"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$ 0, 0 shares" />
+            tools:text="$ 0, 0 shares" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
 
         <TextView
             android:id="@+id/notAdviceTextView"
