@@ -5,7 +5,7 @@ import com.rubyhuntersky.interaction.books.Book
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-object ReadWrite {
+object Persist {
 
     sealed class Vision<T : Any> {
         class Reading<T : Any> : Vision<T>()

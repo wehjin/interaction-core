@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_constituent_search.*
 
 class ConstituentSearchDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.fragment_constituent_search,
-    interaction = SharedConstituentSearchInteraction
+    directInteraction = SharedConstituentSearchInteraction
 ) {
 
     override fun render(vision: Vision) {

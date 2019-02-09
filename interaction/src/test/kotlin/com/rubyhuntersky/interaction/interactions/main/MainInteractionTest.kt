@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.report.Correction
-import com.rubyhuntersky.interaction.InteractionCatalyst
+import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.books.RebellionBook
 import io.reactivex.Observable
@@ -12,9 +12,9 @@ import org.junit.Test
 
 class MainInteractionTest {
 
-    private val mockCorrectionDetailsCatalyst = mock<InteractionCatalyst<Correction>> {}
-    private val mockConstituentSearchCatalyst = mock<InteractionCatalyst<Unit>> {}
-    private val mockCashEditingCatalyst = mock<InteractionCatalyst<Unit>> {}
+    private val mockCorrectionDetailsCatalyst = mock<Catalyst<Correction>> {}
+    private val mockConstituentSearchCatalyst = mock<Catalyst<Unit>> {}
+    private val mockCashEditingCatalyst = mock<Catalyst<Unit>> {}
 
     @Test
     fun startsInLoadingState() {

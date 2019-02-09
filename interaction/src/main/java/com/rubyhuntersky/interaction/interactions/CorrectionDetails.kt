@@ -1,40 +1,48 @@
 package com.rubyhuntersky.interaction.interactions
 
+import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.report.Correction
-import com.rubyhuntersky.interaction.BehaviorInteractionAdapter
+import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.Book
-import com.rubyhuntersky.interaction.interactions.common.ReadWrite
+import com.rubyhuntersky.interaction.interactions.common.Persist
+import com.rubyhuntersky.interaction.BehaviorInteractionAdapter as Adapter
 import com.rubyhuntersky.interaction.interactions.common.Interaction as CommonInteraction
 
 object CorrectionDetails {
 
     sealed class Vision {
-        data class Wrap(val unwrap: ReadWrite.Vision<Correction>) : Vision()
+        data class Wrap(val unwrap: Persist.Vision<Correction>) : Vision()
     }
 
     sealed class Action {
-        data class Wrap(val unwrap: ReadWrite.Action<Correction>) : Action()
+        data class Wrap(val unwrap: Persist.Action<Correction>) : Action()
+        object UpdateShares : Action()
     }
 
-    class Interaction(book: Book<Correction>) : CommonInteraction<Vision, Action>
-    by ReadWrite.Interaction(book).adapt(object :
-        BehaviorInteractionAdapter<ReadWrite.Vision<Correction>, ReadWrite.Action<Correction>, Vision, Action> {
+    class Interaction(correctionBook: Book<Correction>, updateSharesCatalyst: Catalyst<AssetSymbol>) :
+        CommonInteraction<Vision, Action> by Persist.Interaction(correctionBook)
+            .adapt(object : Adapter<Persist.Vision<Correction>, Persist.Action<Correction>, Vision, Action> {
 
-        override fun onUpstreamVision(
-            upstreamVision: ReadWrite.Vision<Correction>,
-            setVision: (vision: Vision) -> Unit,
-            sendUpstreamAction: (action: ReadWrite.Action<Correction>) -> Unit
-        ) {
-            setVision(Vision.Wrap(upstreamVision))
-        }
+                override fun onVision(
+                    vision: Persist.Vision<Correction>,
+                    controller: Adapter.Controller<Vision, Persist.Action<Correction>>
+                ) = controller.setVision(Vision.Wrap(vision))
 
-        override fun onAction(
-            action: Action,
-            setVision: (vision: Vision) -> Unit,
-            sendUpstreamAction: (action: ReadWrite.Action<Correction>) -> Unit
-        ) {
-            val upstreamAction = (action as Action.Wrap).unwrap
-            sendUpstreamAction(upstreamAction)
-        }
-    })
+                override fun onAction(
+                    action: Action,
+                    controller: Adapter.Controller<Vision, Persist.Action<Correction>>
+                ) =
+                    when (action) {
+                        is Action.Wrap -> controller.sendUpstreamAction(action.unwrap)
+                        is Action.UpdateShares -> {
+                            val vision = controller.vision
+                            when (vision) {
+                                is Vision.Wrap -> when (vision.unwrap) {
+                                    is Persist.Vision.Reading -> Unit
+                                    is Persist.Vision.Ready -> updateSharesCatalyst.catalyze(vision.unwrap.value.assetSymbol)
+                                }
+                            }
+                        }
+                    }
+            })
 }

@@ -7,8 +7,8 @@ import com.rubyhuntersky.data.assets.OwnedAsset
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.interaction.books.ConstituentBook
 import com.rubyhuntersky.interaction.books.RebellionBook
+import com.rubyhuntersky.interaction.books.RebellionConstituentBook
 import org.junit.Test
 import java.util.*
 
@@ -18,7 +18,7 @@ class UpdateSharesTest {
     fun happy() {
         val rebellionBook = mock<RebellionBook>()
         val assetSymbol = AssetSymbol("AMD")
-        val constituentBook = ConstituentBook(rebellionBook, assetSymbol)
+        val constituentBook = RebellionConstituentBook(rebellionBook, assetSymbol)
 
         val interaction = UpdateShares.Interaction(constituentBook)
         interaction.visionStream.test().assertValue { it is UpdateShares.Vision.Loading }

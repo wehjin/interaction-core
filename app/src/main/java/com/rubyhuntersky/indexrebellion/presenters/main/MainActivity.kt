@@ -11,7 +11,7 @@ import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialog
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
 import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchCatalyst
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsCatalyst
-import com.rubyhuntersky.interaction.InteractionCatalyst
+import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.interactions.main.MainAction
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
             constituentSearchCatalyst = ConstituentSearchCatalyst { mainActivity!! },
-            cashEditingCatalyst = object : InteractionCatalyst<Unit> {
+            cashEditingCatalyst = object : Catalyst<Unit> {
                 override fun catalyze(seed: Unit) {
                     SharedCashEditingInteraction.reset()
                     mainActivity?.supportFragmentManager?.let {

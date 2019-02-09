@@ -2,7 +2,7 @@ package com.rubyhuntersky.interaction.interactions.main
 
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.data.report.RebellionReport
-import com.rubyhuntersky.interaction.InteractionCatalyst
+import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.NotImplementedCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.books.RebellionBook
@@ -13,9 +13,9 @@ import io.reactivex.subjects.BehaviorSubject
 
 class MainInteraction(
     rebellionBook: RebellionBook,
-    private val correctionDetailCatalyst: InteractionCatalyst<Correction>,
-    private val constituentSearchCatalyst: InteractionCatalyst<Unit> = NotImplementedCatalyst(),
-    private val cashEditingCatalyst: InteractionCatalyst<Unit> = NotImplementedCatalyst()
+    private val correctionDetailCatalyst: Catalyst<Correction>,
+    private val constituentSearchCatalyst: Catalyst<Unit> = NotImplementedCatalyst(),
+    private val cashEditingCatalyst: Catalyst<Unit> = NotImplementedCatalyst()
 ) :
     Interaction<MainVision, MainAction> {
 

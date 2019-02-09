@@ -1,5 +1,6 @@
 package com.rubyhuntersky.indexrebellion.common
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.BottomSheetDialogFragment
@@ -8,13 +9,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rubyhuntersky.interaction.interactions.common.Interaction
+import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
     @LayoutRes private val layoutRes: Int,
-    private val interaction: Interaction<V, A>
+    private val directInteraction: Interaction<V, A>?
 ) : BottomSheetDialogFragment() {
+
+    protected var indirectInteractionKey: Long
+        get() = arguments!!.getLong(INTERACTION_ARGS_KEY)
+        set(value) {
+            arguments = (arguments ?: Bundle()).also { it.putLong(INTERACTION_ARGS_KEY, value) }
+        }
+
+    private val interaction: Interaction<V, A> by lazy {
+        directInteraction ?: InteractionRegistry.findInteraction(indirectInteractionKey)!!
+    }
 
     private var visionDisposable: Disposable? = null
     private var _vision: V? = null
@@ -49,5 +61,16 @@ abstract class InteractionBottomSheetDialogFragment<V : Any, A : Any>(
     override fun onStop() {
         visionDisposable?.dispose()
         super.onStop()
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        if (directInteraction == null) {
+            InteractionRegistry.dropInteraction(indirectInteractionKey)
+        }
+        super.onDismiss(dialog)
+    }
+
+    companion object {
+        private const val INTERACTION_ARGS_KEY = "interaction"
     }
 }

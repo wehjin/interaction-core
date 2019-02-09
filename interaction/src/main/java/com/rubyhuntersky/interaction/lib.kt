@@ -7,11 +7,11 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-interface InteractionCatalyst<T> {
+interface Catalyst<T> {
     fun catalyze(seed: T)
 }
 
-class NotImplementedCatalyst<T> : InteractionCatalyst<T> {
+class NotImplementedCatalyst<T> : Catalyst<T> {
     override fun catalyze(seed: T) {
         check(false) { "Catalyst not implemented" }
     }
@@ -38,28 +38,33 @@ abstract class BehaviorInteraction<V, A>(startingVision: V? = null, private val 
     fun <EdgeV, EdgeA> adapt(adapter: BehaviorInteractionAdapter<V, A, EdgeV, EdgeA>): Interaction<EdgeV, EdgeA> {
         val core = this
         return object : BehaviorInteraction<EdgeV, EdgeA>() {
-
+            private val edge = this
             private val coreVisions = CompositeDisposable()
+            private val controller = object : BehaviorInteractionAdapter.Controller<EdgeV, A> {
+                override val vision: EdgeV get() = edge.vision
+                override fun setVision(vision: EdgeV) = edge.setVision(vision)
+                override fun sendUpstreamAction(action: A) = core.sendAction(action)
+            }
 
             init {
                 core.visionStream
-                    .subscribe { coreVision ->
-                        adapter.onUpstreamVision(coreVision, this::setVision, core::sendAction)
-                    }
+                    .subscribe { adapter.onVision(it, controller) }
                     .addTo(coreVisions)
             }
 
-            override fun sendAction(action: EdgeA) = adapter.onAction(action, this::setVision, core::sendAction)
+            override fun sendAction(action: EdgeA) = adapter.onAction(action, controller)
         }
     }
 }
 
 interface BehaviorInteractionAdapter<CoreV, CoreA, EdgeV, EdgeA> {
-    fun onUpstreamVision(
-        upstreamVision: CoreV,
-        setVision: (vision: EdgeV) -> Unit,
-        sendUpstreamAction: (action: CoreA) -> Unit
-    )
 
-    fun onAction(action: EdgeA, setVision: (vision: EdgeV) -> Unit, sendUpstreamAction: (action: CoreA) -> Unit)
+    fun onVision(vision: CoreV, controller: Controller<EdgeV, CoreA>)
+    fun onAction(action: EdgeA, controller: Controller<EdgeV, CoreA>)
+
+    interface Controller<EdgeV, CoreA> {
+        val vision: EdgeV
+        fun setVision(vision: EdgeV)
+        fun sendUpstreamAction(action: CoreA)
+    }
 }

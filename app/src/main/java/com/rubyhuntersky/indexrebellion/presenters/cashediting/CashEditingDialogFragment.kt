@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.fragment_cash_editing.*
 
 class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditingVision, CashEditingAction>(
     layoutRes = R.layout.fragment_cash_editing,
-    interaction = SharedCashEditingInteraction
+    directInteraction = SharedCashEditingInteraction
 ) {
     override fun render(vision: CashEditingVision) {
         when (vision) {
