@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/symbolTextView"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
+            style="@style/TextAppearance.MaterialComponents.Overline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TSLA" />
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/notAdviceTextView"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="@string/buy_not_advice" />
