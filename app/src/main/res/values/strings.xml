@@ -45,4 +45,9 @@
     <string name="sell_not_advice_short">Sell $%1$s</string>
     <string name="hold_not_advice_short">Hold</string>
     <string name="value_and_shares">$%1$s ⋄ %2$s shares</string>
+    <string name="more">More</string>
+    <string name="total">Total</string>
+    <string name="shares">Shares</string>
+    <string name="share_price">Share price</string>
+    <string name="adjust_cash_in">Subtract value from cash</string>
 </resources>
