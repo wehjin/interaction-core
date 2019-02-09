@@ -6,6 +6,27 @@ import kotlin.math.max
 
 sealed class Correction {
 
+    data class Hold(
+        val holdAssetSymbol: AssetSymbol,
+        val weight: Double
+    ) : Correction() {
+        override val targetWeight get() = weight
+    }
+
+    data class Buy(
+        val buyAssetSymbol: AssetSymbol,
+        override val targetWeight: Double,
+        val actualWeight: Double,
+        val deficit: CashAmount
+    ) : Correction()
+
+    data class Sell(
+        val sellAssetSymbol: AssetSymbol,
+        override val targetWeight: Double,
+        val actualWeight: Double,
+        val surplus: CashAmount
+    ) : Correction()
+
     val assetSymbol: AssetSymbol
         get() {
             val correction = this
@@ -23,22 +44,7 @@ sealed class Correction {
             is Correction.Sell -> max(actualWeight, targetWeight)
         }
 
-    data class Hold(
-        val holdAssetSymbol: AssetSymbol,
-        val weight: Double
-    ) : Correction()
+    abstract val targetWeight: Double
 
-    data class Buy(
-        val buyAssetSymbol: AssetSymbol,
-        val targetWeight: Double,
-        val actualWeight: Double,
-        val deficit: CashAmount
-    ) : Correction()
-
-    data class Sell(
-        val sellAssetSymbol: AssetSymbol,
-        val targetWeight: Double,
-        val actualWeight: Double,
-        val surplus: CashAmount
-    ) : Correction()
+    fun targetValue(fullValue: CashAmount): CashAmount = fullValue * targetWeight
 }

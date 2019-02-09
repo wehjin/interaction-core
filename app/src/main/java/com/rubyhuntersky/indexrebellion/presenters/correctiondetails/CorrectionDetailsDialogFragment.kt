@@ -2,16 +2,16 @@ package com.rubyhuntersky.indexrebellion.presenters.correctiondetails
 
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.data.assets.AssetSymbol
-import com.rubyhuntersky.data.report.Correction
+import com.rubyhuntersky.data.cash.CashAmount
+import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.BehaviorBook
 import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
-import com.rubyhuntersky.interaction.interactions.common.Saver
 import com.rubyhuntersky.interaction.interactions.correctiondetails.Action
-import com.rubyhuntersky.interaction.interactions.correctiondetails.CorrectionDetails
+import com.rubyhuntersky.interaction.interactions.correctiondetails.CorrectionDetailsInteractionImpl
 import com.rubyhuntersky.interaction.interactions.correctiondetails.Vision
 import kotlinx.android.synthetic.main.view_correction_details.*
 import kotlin.random.Random
@@ -23,34 +23,35 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
 ) {
 
     override fun render(vision: Vision) {
-        val unwrappedVision = (vision as Vision.Wrap).unwrap
-        when (unwrappedVision) {
-            is Saver.Vision.Reading -> {
+        when (vision) {
+            is Vision.Loading -> {
                 symbolTextView.text = getString(R.string.loading)
                 symbolTextView.text = null
                 currentSharesTextView.text = null
                 updateSharesTextView.isEnabled = false
             }
-            is Saver.Vision.Ready -> {
-                val correction = unwrappedVision.value
-                symbolTextView.text = correction.assetSymbol.toString().toUpperCase()
-                currentSharesTextView.text = when (correction) {
-                    is Correction.Hold -> getString(R.string.value_and_shares, "???", "???")
-                    is Correction.Buy -> getString(R.string.value_and_shares, "???", "0")
-                    is Correction.Sell -> getString(R.string.value_and_shares, "???", "0")
-                }
-                notAdviceTextView.text = when (correction) {
-                    is Correction.Hold -> getString(R.string.hold_not_advice, "???")
-                    is Correction.Buy -> getString(
+            is Vision.Viewing -> {
+                val details = vision.details
+                symbolTextView.text = details.assetSymbol.toString().toUpperCase()
+                currentSharesTextView.text = getString(
+                    R.string.n_shares,
+                    details.ownedCount.toCountString(),
+                    details.ownedValue.toStatString()
+                )
+                val delta = details.targetValue - details.ownedValue
+                val deltaDirection = delta.compareTo(CashAmount.ZERO)
+                notAdviceTextView.text = when {
+                    deltaDirection > 0 -> getString(
                         R.string.buy_not_advice,
-                        correction.deficit.toStatString(),
-                        correction.deficit.toStatString()
+                        delta.toStatString(),
+                        details.targetValue.toStatString()
                     )
-                    is Correction.Sell -> getString(
-                        R.string.buy_not_advice,
-                        correction.surplus.toStatString(),
-                        correction.surplus.toStatString()
+                    deltaDirection < 0 -> getString(
+                        R.string.sell_not_advice,
+                        (-delta).toStatString(),
+                        details.targetValue.toStatString()
                     )
+                    else -> getString(R.string.hold_not_advice)
                 }
                 with(updateSharesTextView) {
                     isEnabled = true
@@ -66,22 +67,19 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
     companion object {
 
         fun newInstance(
-            correction: Correction,
+            details: CorrectionDetails,
             getFragmentActivity: () -> FragmentActivity
         ): CorrectionDetailsDialogFragment {
-
-            val interaction = CorrectionDetails(
-                correctionBook = BehaviorBook(correction),
-                updateSharesCatalyst = object : Catalyst<AssetSymbol> {
-                    override fun catalyze(seed: AssetSymbol) =
-                        UpdateSharesDialogFragment.catalyze(Pair(seed, getFragmentActivity))
-                })
-
-            return CorrectionDetailsDialogFragment()
-                .also {
-                    it.indirectInteractionKey = Random.nextLong()
-                    InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
-                }
+            val detailsBook = BehaviorBook(details)
+            val updateSharesCatalyst = object : Catalyst<AssetSymbol> {
+                override fun catalyze(seed: AssetSymbol) =
+                    UpdateSharesDialogFragment.catalyze(Pair(seed, getFragmentActivity))
+            }
+            val interaction = CorrectionDetailsInteractionImpl(detailsBook, updateSharesCatalyst)
+            return CorrectionDetailsDialogFragment().also {
+                it.indirectInteractionKey = Random.nextLong()
+                InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)
+            }
         }
     }
 }

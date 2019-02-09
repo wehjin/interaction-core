@@ -13,6 +13,7 @@ data class ShareCount(val value: Double) {
     operator fun compareTo(other: ShareCount): Int = value.compareTo(other.value)
 
     fun toDouble(): Double = value
+    fun toCountString(): String = value.toLong().toString()
 
     companion object {
         val ZERO = ShareCount(0)

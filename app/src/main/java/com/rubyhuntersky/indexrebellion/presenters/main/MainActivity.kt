@@ -13,9 +13,9 @@ import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.Constituent
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsCatalyst
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.addTo
-import com.rubyhuntersky.interaction.interactions.main.MainAction
+import com.rubyhuntersky.interaction.interactions.main.Action
 import com.rubyhuntersky.interaction.interactions.main.MainInteraction
-import com.rubyhuntersky.interaction.interactions.main.MainVision
+import com.rubyhuntersky.interaction.interactions.main.Vision
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
@@ -30,10 +30,10 @@ class MainActivity : AppCompatActivity() {
             .subscribe {
                 Log.d(this.javaClass.simpleName, "VISION: $it")
                 when (it) {
-                    is MainVision.Loading -> {
+                    is Vision.Loading -> {
                         setContentView(R.id.mainLoading, R.layout.activity_main_loading)
                     }
-                    is MainVision.Viewing -> {
+                    is Vision.Viewing -> {
                         setContentView(R.id.mainViewing, R.layout.activity_main_viewing)
                         setSupportActionBar(toolbar)
                         renderViewing(it)
@@ -44,19 +44,19 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    private fun renderViewing(viewing: MainVision.Viewing) {
+    private fun renderViewing(viewing: Vision.Viewing) {
         val report = viewing.rebellionReport
         supportActionBar!!.title = getString(R.string.funding)
         FundingViewHolder(fundingView)
             .render(report.funding, onNewInvestmentClick = {
-                mainInteraction.sendAction(MainAction.OpenCashEditor)
+                mainInteraction.sendAction(Action.OpenCashEditor)
             })
 
         ConclusionViewHolder(correctionsRecyclerView)
             .render(
                 conclusion = report.conclusion,
-                onAddConstituentClick = { mainInteraction.sendAction(MainAction.FindConstituent) },
-                onCorrectionDetailsClick = { mainInteraction.sendAction(MainAction.OpenCorrectionDetails(it)) }
+                onAddConstituentClick = { mainInteraction.sendAction(Action.FindConstituent) },
+                onCorrectionDetailsClick = { mainInteraction.sendAction(Action.OpenCorrectionDetails(it)) }
             )
     }
 

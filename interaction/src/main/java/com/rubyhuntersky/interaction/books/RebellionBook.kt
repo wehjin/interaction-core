@@ -6,6 +6,7 @@ import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.index.Constituent
+import io.reactivex.Observable
 
 interface RebellionBook : Book<Rebellion> {
 
@@ -28,6 +29,17 @@ interface RebellionBook : Book<Rebellion> {
 
     fun updateConstituent(constituent: Constituent) {
         value.updateConstituent(constituent)
+    }
+
+    fun constituentReader(assetSymbol: AssetSymbol): Observable<Constituent> {
+        return reader.switchMap { rebellion ->
+            val constituent = rebellion.index.constituents.find { it.assetSymbol == assetSymbol }
+            if (constituent != null) {
+                Observable.just(constituent)
+            } else {
+                Observable.never()
+            }
+        }
     }
 }
 

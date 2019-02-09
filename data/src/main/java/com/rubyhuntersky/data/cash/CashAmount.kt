@@ -22,13 +22,14 @@ data class CashAmount(
     override fun hashCode(): Int = value.toDouble().hashCode()
 
     fun compareTo(other: CashAmount): Int = value.compareTo(other.value)
-
-
     operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
     operator fun plus(increment: CashEquivalent): CashEquivalent = when (increment) {
         is CashEquivalent.Unknown -> CashEquivalent.Unknown()
         is CashEquivalent.Amount -> CashEquivalent.Amount(this + increment.cashAmount)
     }
+
+    operator fun unaryMinus(): CashAmount = CashAmount(-value)
+    operator fun minus(rhs: CashAmount): CashAmount = CashAmount((value - rhs.value))
 
     operator fun times(multiplier: Double): CashAmount = CashAmount(value * BigDecimal.valueOf(multiplier))
 
