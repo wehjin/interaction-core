@@ -5,7 +5,7 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.indexrebellion.presenters.updatesharecount.UpdateSharesDialogFragment
+import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.BehaviorBook
 import com.rubyhuntersky.interaction.interactions.CorrectionDetails

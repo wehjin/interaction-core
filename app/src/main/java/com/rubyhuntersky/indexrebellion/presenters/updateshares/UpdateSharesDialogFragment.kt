@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.presenters.updatesharecount
+package com.rubyhuntersky.indexrebellion.presenters.updateshares
 
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.data.assets.AssetSymbol
