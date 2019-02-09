@@ -5,7 +5,7 @@ import com.rubyhuntersky.interaction.books.Book
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-object Persist {
+object Saver {
 
     sealed class Vision<T : Any> {
         class Reading<T : Any> : Vision<T>()
@@ -16,7 +16,7 @@ object Persist {
         data class Write<T : Any>(val value: T) : Action<T>()
     }
 
-    class Interaction<T : Any>(private val book: Book<T>) :
+    class InteractionImpl<T : Any>(private val book: Book<T>) :
         BehaviorInteraction<Vision<T>, Action<T>>(startVision = Vision.Reading<T>()) {
 
         private val disposable = CompositeDisposable()

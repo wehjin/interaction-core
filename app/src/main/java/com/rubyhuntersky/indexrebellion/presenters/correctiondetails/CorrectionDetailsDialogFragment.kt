@@ -8,15 +8,16 @@ import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragm
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.BehaviorBook
-import com.rubyhuntersky.interaction.interactions.CorrectionDetails
-import com.rubyhuntersky.interaction.interactions.CorrectionDetails.Vision
 import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
-import com.rubyhuntersky.interaction.interactions.common.Persist
+import com.rubyhuntersky.interaction.interactions.common.Saver
+import com.rubyhuntersky.interaction.interactions.correctiondetails.Action
+import com.rubyhuntersky.interaction.interactions.correctiondetails.CorrectionDetails
+import com.rubyhuntersky.interaction.interactions.correctiondetails.Vision
 import kotlinx.android.synthetic.main.view_correction_details.*
 import kotlin.random.Random
 
 
-class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vision, CorrectionDetails.Action>(
+class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.view_correction_details,
     directInteraction = null
 ) {
@@ -24,13 +25,13 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
     override fun render(vision: Vision) {
         val unwrappedVision = (vision as Vision.Wrap).unwrap
         when (unwrappedVision) {
-            is Persist.Vision.Reading -> {
+            is Saver.Vision.Reading -> {
                 symbolTextView.text = getString(R.string.loading)
                 symbolTextView.text = null
                 currentSharesTextView.text = null
                 updateSharesTextView.isEnabled = false
             }
-            is Persist.Vision.Ready -> {
+            is Saver.Vision.Ready -> {
                 val correction = unwrappedVision.value
                 symbolTextView.text = correction.assetSymbol.toString().toUpperCase()
                 currentSharesTextView.text = when (correction) {
@@ -54,7 +55,7 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                 with(updateSharesTextView) {
                     isEnabled = true
                     setOnClickListener {
-                        sendAction(CorrectionDetails.Action.UpdateShares)
+                        sendAction(Action.UpdateShares)
                         dismiss()
                     }
                 }
@@ -64,10 +65,12 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
 
     companion object {
 
-        fun newInstance(correction: Correction, getFragmentActivity: () -> FragmentActivity):
-                CorrectionDetailsDialogFragment {
+        fun newInstance(
+            correction: Correction,
+            getFragmentActivity: () -> FragmentActivity
+        ): CorrectionDetailsDialogFragment {
 
-            val interaction = CorrectionDetails.Interaction(
+            val interaction = CorrectionDetails(
                 correctionBook = BehaviorBook(correction),
                 updateSharesCatalyst = object : Catalyst<AssetSymbol> {
                     override fun catalyze(seed: AssetSymbol) =

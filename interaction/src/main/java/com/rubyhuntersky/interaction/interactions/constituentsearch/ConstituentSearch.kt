@@ -11,6 +11,8 @@ import com.rubyhuntersky.stockcatalog.StockCatalogClient
 import com.rubyhuntersky.stockcatalog.StockCatalogQuery
 import com.rubyhuntersky.stockcatalog.StockCatalogResult
 
+typealias ConstituentSearchInteraction = Interaction<Vision, Action>
+
 sealed class Vision {
     object Idle : Vision()
     data class Search(val searchTerm: String, val candidates: List<Candidate>?) : Vision()
@@ -24,8 +26,6 @@ sealed class Action {
     data class BeginSearch(val newSearch: String) : Action()
     object AddConstituent : Action()
 }
-
-typealias ConstituentSearchInteraction = Interaction<Vision, Action>
 
 class ConstituentSearch(private val rebellionBook: Book<Rebellion>) : ConstituentSearchInteraction,
     BehaviorInteraction<Vision, Action>(startVision = Vision.Idle, startAction = Action.ClearSearch),
