@@ -19,19 +19,19 @@ class NotImplementedCatalyst<T> : Catalyst<T> {
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }
 
-abstract class BehaviorInteraction<V, A>(startingVision: V? = null, private val resetAction: A? = null) :
+abstract class BehaviorInteraction<V, A>(startVision: V? = null, private val startAction: A? = null) :
     Interaction<V, A> {
 
     override val visionStream: Observable<V> get() = visionBehavior.distinctUntilChanged()
     private val visionBehavior: BehaviorSubject<V> =
-        startingVision?.let { BehaviorSubject.createDefault(startingVision) } ?: BehaviorSubject.create()
+        startVision?.let { BehaviorSubject.createDefault(startVision) } ?: BehaviorSubject.create()
 
     protected val vision get() = visionBehavior.value!!
     protected fun setVision(nextVision: V) = visionWriter.onNext(nextVision)
     private val visionWriter = visionBehavior.toSerialized()
 
     override fun reset() {
-        resetAction?.let(this::sendAction)
+        startAction?.let(this::sendAction)
     }
 
 

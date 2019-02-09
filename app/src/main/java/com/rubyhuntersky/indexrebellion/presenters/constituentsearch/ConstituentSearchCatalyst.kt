@@ -5,7 +5,7 @@ import com.rubyhuntersky.interaction.Catalyst
 
 class ConstituentSearchCatalyst(private val getStarterActivity: () -> FragmentActivity) : Catalyst<Unit> {
     override fun catalyze(seed: Unit) {
-        SharedConstituentSearchInteraction.reset()
+        SharedConstituentSearch.reset()
         ConstituentSearchDialogFragment.newInstance()
             .show(getStarterActivity().supportFragmentManager, "constituent_search")
     }

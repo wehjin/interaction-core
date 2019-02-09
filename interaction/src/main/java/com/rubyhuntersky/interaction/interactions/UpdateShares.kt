@@ -43,7 +43,7 @@ object UpdateShares {
 
 
     class Interaction(private val constituentBook: ConstituentBook) :
-        BehaviorInteraction<Vision, Action>(startingVision = Vision.Loading, resetAction = Action.Reset) {
+        BehaviorInteraction<Vision, Action>(startVision = Vision.Loading, startAction = Action.Reset) {
 
         // TODO Delete these and build Prompt from Prompt
         private var ownedAsset: OwnedAsset? = null

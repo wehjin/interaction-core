@@ -1,10 +1,9 @@
-package com.rubyhuntersky.interaction.interactions
+package com.rubyhuntersky.interaction.interactions.constituentsearch
 
 import com.nhaarman.mockitokotlin2.*
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Action
 import com.rubyhuntersky.stockcatalog.*
 import io.reactivex.subjects.BehaviorSubject
 import org.junit.Assert.assertNotNull
@@ -20,13 +19,13 @@ class ConstituentSearchTest {
         on { value } doReturn rebellionBehavior.value!!
     }
 
-    private val interaction = ConstituentSearch.Interaction(rebellionBook)
+    private val interaction = ConstituentSearch(rebellionBook)
 
     @Test
     fun startingVisionIsIdle() {
         interaction.visionStream.test()
             .assertSubscribed()
-            .assertValue(ConstituentSearch.Vision.Idle)
+            .assertValue(Vision.Idle)
             .assertNoErrors()
             .assertNotComplete()
     }

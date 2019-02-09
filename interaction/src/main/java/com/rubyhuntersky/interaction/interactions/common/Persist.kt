@@ -17,7 +17,7 @@ object Persist {
     }
 
     class Interaction<T : Any>(private val book: Book<T>) :
-        BehaviorInteraction<Vision<T>, Action<T>>(startingVision = Vision.Reading<T>()) {
+        BehaviorInteraction<Vision<T>, Action<T>>(startVision = Vision.Reading<T>()) {
 
         private val disposable = CompositeDisposable()
 

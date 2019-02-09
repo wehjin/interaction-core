@@ -6,14 +6,14 @@ import android.text.TextWatcher
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Action
-import com.rubyhuntersky.interaction.interactions.ConstituentSearch.Vision
+import com.rubyhuntersky.interaction.interactions.constituentsearch.Action
+import com.rubyhuntersky.interaction.interactions.constituentsearch.Vision
 import kotlinx.android.synthetic.main.fragment_constituent_search.*
 
 
 class ConstituentSearchDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.fragment_constituent_search,
-    directInteraction = SharedConstituentSearchInteraction
+    directInteraction = SharedConstituentSearch
 ) {
 
     override fun render(vision: Vision) {

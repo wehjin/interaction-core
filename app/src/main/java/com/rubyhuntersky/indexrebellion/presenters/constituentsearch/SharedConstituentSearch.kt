@@ -1,0 +1,10 @@
+package com.rubyhuntersky.indexrebellion.presenters.constituentsearch
+
+import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
+import com.rubyhuntersky.indexrebellion.common.SharedHttpNetwork
+import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearch
+import com.rubyhuntersky.interaction.interactions.constituentsearch.ConstituentSearchInteraction
+import com.rubyhuntersky.stockcatalog.StockCatalog
+
+object SharedConstituentSearch : ConstituentSearchInteraction
+by ConstituentSearch(rebellionBook = SharedRebellionBook).also(StockCatalog(SharedHttpNetwork)::connect)
