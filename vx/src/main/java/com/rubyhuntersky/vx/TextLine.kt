@@ -12,8 +12,5 @@ enum class TextStyle {
 }
 
 class TextLineDash : Dash<TextLine, Nothing> {
-
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<TextLine, Nothing> {
-        return viewHost.addTextLine(id)
-    }
+    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<TextLine, Nothing> = viewHost.addTextLine(id)
 }

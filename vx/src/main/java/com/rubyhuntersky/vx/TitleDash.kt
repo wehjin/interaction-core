@@ -1,3 +1,3 @@
 package com.rubyhuntersky.vx
 
-abstract class TitleDash : Dash<String, Nothing> {}
+class TitleDash : Dash<String, Nothing> by TextLineDash().transform({ TextLine(it, TextStyle.Highlight5) })
