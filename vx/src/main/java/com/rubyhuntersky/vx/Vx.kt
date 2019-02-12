@@ -1,7 +1,5 @@
 package com.rubyhuntersky.vx
 
-import com.rubyhuntersky.vx.additions.Floor
-import com.rubyhuntersky.vx.additions.plus
 import io.reactivex.Observable
 
 
@@ -50,16 +48,5 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> DashView<CoreC, Ev>.transform(transform
         override val events: Observable<Ev> get() = this@transform.events.map { it }
     }
 }
-
-
-data class FloorMerge<A : Any, B : Any, C : Any, Ev : Any>(
-    val floorDash: Dash<B, Ev>,
-    val onContent: (C) -> Pair<A, B>
-)
-
-operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(seam: FloorMerge<A, B, C, Ev>): Dash<C, Ev> =
-    this + Floor(seam.floorDash, seam.onContent, ::identity, ::identity)
-
-fun <T> identity(t: T): T = t
 
 

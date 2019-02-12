@@ -28,8 +28,7 @@ class FloorTest {
         on { addTextLine(ViewId().extend(0)) } doReturn viewMockA
         on { addTextLine(ViewId().extend(1)) } doReturn viewMockB
     }
-    private val dash =
-        TitleDash + FloorMerge(TitleDash) { content: Pair<String, String> -> content }
+    private val dash = TitleDash + Floor(TitleDash) { content: Pair<String, String> -> content }
     private val view = dash.enview(hostMock, viewId)
 
     @Test
