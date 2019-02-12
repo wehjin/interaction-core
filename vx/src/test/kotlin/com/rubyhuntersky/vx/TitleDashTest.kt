@@ -18,8 +18,7 @@ class TitleDashTest {
     private val hostMock = mock<ViewHost> {
         on { addTextLine(viewId) } doReturn viewMock
     }
-    private val dash = TitleDash()
-    private val view = dash.enview(hostMock, viewId)
+    private val view = TitleDash.enview(hostMock, viewId)
 
     @Test
     fun setContent() {
