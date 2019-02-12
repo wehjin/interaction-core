@@ -14,15 +14,18 @@ interface Dash<Content : Any, Event : Any> {
     interface View<Content : Any, Event : Any> {
         fun setLimit(limit: Limit)
         val latitudes: Observable<Latitude>
+        fun setAnchor(anchor: Anchor)
         fun setContent(content: Content)
         val events: Observable<Event>
     }
 
-    data class Limit(val start: Int, val end: Int, val anchor: Anchor)
-    data class Latitude(val ceiling: Int, val floor: Int)
+    data class Limit(val start: Int, val end: Int)
+    data class Latitude(val height: Int)
 }
 
-data class ViewId(val markers: List<Int> = emptyList())
+data class ViewId(val markers: List<Int> = emptyList()) {
+    fun extend(marker: Int): ViewId = ViewId(markers.toMutableList().also { it.add(marker) })
+}
 
 interface ViewHost {
     fun addTextLine(id: ViewId): DashView<TextLine, Nothing>
@@ -40,6 +43,7 @@ fun <CoreC : Any, Event : Any, EdgeC : Any> DashView<CoreC, Event>.transform(tra
     return object : Dash.View<EdgeC, Event> {
         override fun setLimit(limit: Dash.Limit) = this@transform.setLimit(limit)
         override val latitudes: Observable<Dash.Latitude> get() = this@transform.latitudes
+        override fun setAnchor(anchor: Anchor) = this@transform.setAnchor(anchor)
         override fun setContent(content: EdgeC) = this@transform.setContent(transformer(content))
         override val events: Observable<Event> get() = this@transform.events.map { it }
     }

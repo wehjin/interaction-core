@@ -29,15 +29,22 @@ class TitleDashTest {
 
     @Test
     fun setLimit() {
-        view.setLimit(DashLimit(0, 20, Anchor(0, 0f)))
-        verify(viewMock).setLimit(DashLimit(0, 20, Anchor(0, 0f)))
+        view.setLimit(DashLimit(0, 20))
+        verify(viewMock).setLimit(DashLimit(0, 20))
     }
+
+    @Test
+    fun setAnchor() {
+        view.setAnchor(Anchor(0, 0f))
+        verify(viewMock).setAnchor(Anchor(0, 0f))
+    }
+
 
     @Test
     fun latitudes() {
         val test = view.latitudes.test()
-        latitudeSubject.onNext(DashLatitude(0, 100))
-        test.assertValue(DashLatitude(0, 100))
+        latitudeSubject.onNext(DashLatitude(100))
+        test.assertValue(DashLatitude(100))
     }
 
     @Test
