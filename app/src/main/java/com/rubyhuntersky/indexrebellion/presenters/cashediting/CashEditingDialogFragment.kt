@@ -31,7 +31,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
         val dashView = (TitleDash + Subtitle).enview(screenView, ViewId())
         dashView.setAnchor(Anchor(0, 0f))
         screenView.horizontalBound.subscribe {
-            dashView.setLimit(Dash.Limit(it.first, it.second))
+            dashView.setLimit(Dash.Limit(0, it.second - it.first))
         }.addTo(composite)
         this.dashView = dashView
     }
