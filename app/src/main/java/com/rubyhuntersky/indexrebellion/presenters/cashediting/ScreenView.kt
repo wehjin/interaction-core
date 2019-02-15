@@ -74,7 +74,7 @@ class ScreenView
         adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, Input> {
             override fun buildView(context: Context): BackingViewInputLayout = BackingViewInputLayout(context, null)
             override fun renderView(view: BackingViewInputLayout, content: Input) {
-                view.hint = content.label
+                view.render(content)
             }
         }
     )

@@ -45,13 +45,16 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
 
     private fun renderEditing() {
         val content = FundingEditor(
-            title = "Set funding target",
+            title = "Update Funding",
             targetInput = Input(
-                label = "Funding Goal",
-                text = ""
+                text = "",
+                originalText = "1000",
+                label = "Cash Available",
+                icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
             )
         )
         dashView.setContent(content)
+
         saveButton.setOnClickListener {
             sendAction(CashEditingAction.SaveCashChange)
         }
