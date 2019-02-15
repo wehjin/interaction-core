@@ -56,7 +56,7 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
         }
     }
 
-private data class SizeAnchor(val size: Int, val anchor: Anchor)
+data class SizeAnchor(val size: Int, val anchor: Anchor)
 
-private val toSizeAnchor = BiFunction(::SizeAnchor)
+val toSizeAnchor = BiFunction(::SizeAnchor)
 private val sumLatitudes = BiFunction<Dash.Latitude, Dash.Latitude, Int> { a, b -> a.height + b.height }
