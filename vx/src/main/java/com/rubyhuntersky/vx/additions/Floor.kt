@@ -29,7 +29,7 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
             init {
                 sizeAnchors.distinctUntilChanged()
                     .subscribe { sizeAnchor ->
-                        val ceilFloor = sizeAnchor.second.toBounds(sizeAnchor.first)
+                        val ceilFloor = sizeAnchor.anchor.toBounds(sizeAnchor.size)
                         viewA.setAnchor(Anchor(ceilFloor.first, 0f))
                         viewB.setAnchor(Anchor(ceilFloor.second, 1f))
                     }.addTo(composite)
@@ -56,5 +56,7 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
         }
     }
 
-private val toSizeAnchor = BiFunction<Int, Anchor, Pair<Int, Anchor>>(::Pair)
+private data class SizeAnchor(val size: Int, val anchor: Anchor)
+
+private val toSizeAnchor = BiFunction(::SizeAnchor)
 private val sumLatitudes = BiFunction<Dash.Latitude, Dash.Latitude, Int> { a, b -> a.height + b.height }
