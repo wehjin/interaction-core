@@ -1,7 +1,6 @@
 package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
@@ -28,26 +27,52 @@ class ScreenView
     defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewHost {
 
-    private val widthBehavior: BehaviorSubject<Pair<Int, Int>> = BehaviorSubject.create()
+    fun <C : Any, E : Any> setContentView(dashView: Dash.View<C, E>) {
+        this.contentDashView = dashView
+        beginHBoundUpdatesIfAttachedToWindow()
+    }
+
+    private var contentDashView: DashView<*, *>? = null
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        beginHBoundUpdatesIfAttachedToWindow()
+    }
+
+    private fun beginHBoundUpdatesIfAttachedToWindow() {
+        composite.clear()
+        if (isAttachedToWindow) {
+            contentDashView?.let { dashView ->
+                composite.clear()
+                dashView.setAnchor(Anchor(0, 0f))
+                hboundBehavior.distinctUntilChanged().subscribe {
+                    dashView.setHBound(it.startZero())
+                }.addTo(composite)
+            }
+        }
+    }
+
+    private val composite = CompositeDisposable()
+    private val hboundBehavior: BehaviorSubject<HBound> = BehaviorSubject.create()
+
+    override fun onDetachedFromWindow() {
+        composite.clear()
+        super.onDetachedFromWindow()
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        val leftDip = toDip(left)
-        val rightDip = toDip(left + w)
-        widthBehavior.onNext(Pair(leftDip, rightDip))
+        hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
-
-    val horizontalBound: Observable<Pair<Int, Int>>
-        get() = widthBehavior.distinctUntilChanged()
 
     override fun addTextLine(id: ViewId): DashView<TextLine, Nothing> {
         return object : DashView<TextLine, Nothing> {
 
             private val textView = (findViewWithTag(id)
-                ?: DashViewTextView(context)
+                ?: ScreenViewTextView(context)
                     .also {
                         it.tag = id
-                        addView(it, LayoutParams(1, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        addView(it, LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT))
                     })
 
             init {
@@ -57,13 +82,9 @@ class ScreenView
                         latitudes.map { it.height },
                         anchorBehavior.distinctUntilChanged(),
                         toSizeAnchor
-                    ).subscribe {
-                        Log.d("DashViewTextView", "onSizeAnchor $it $tag")
-                        val limit = it.anchor.toBounds(it.size)
-                        Log.d("DashViewTextView", "    limit $limit")
-                        val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
-                        layoutParams.topMargin = toPixels(limit.first).toInt()
-                        textView.layoutParams = layoutParams
+                    ).subscribe { sizeAnchor ->
+                        Log.d("DashViewTextView", "onSizeAnchor $sizeAnchor $tag")
+                        setVBound(sizeAnchor.anchor.toVBound(sizeAnchor.size))
                     }.addTo(composite)
                 }
                 textView.onDetached = {
@@ -71,13 +92,20 @@ class ScreenView
                 }
             }
 
-            override fun setLimit(limit: Dash.Limit) {
-                Log.d("DashViewTextView", "Set limit $limit")
-                val leftMargin = toPixels(limit.start).toInt()
-                val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
-                layoutParams.marginStart = leftMargin
-                layoutParams.width = toPixels(limit.end - limit.start).toInt()
-                textView.layoutParams = layoutParams
+            private fun setVBound(vbound: VBound) {
+                textView.layoutParams = (textView.layoutParams as FrameLayout.LayoutParams)
+                    .apply {
+                        topMargin = toPixels(vbound.ceiling).toInt()
+                    }
+            }
+
+            override fun setHBound(hbound: HBound) {
+                Log.d("DashViewTextView", "Set limit $hbound")
+                textView.layoutParams = (textView.layoutParams as FrameLayout.LayoutParams)
+                    .apply {
+                        marginStart = toPixels(hbound.start).toInt()
+                        width = toPixels(hbound.end - hbound.start).toInt()
+                    }
             }
 
             override val latitudes: Observable<Dash.Latitude>
@@ -97,7 +125,6 @@ class ScreenView
                     TextStyle.Subtitle1 -> textView.setTextAppearance(R.style.TextAppearance_MaterialComponents_Subtitle1)
                 }
                 textView.text = content.text
-                textView.setBackgroundColor(Color.GREEN)
             }
 
             override val events: Observable<Nothing> get() = Observable.never()
@@ -114,7 +141,7 @@ private fun View.toDip(px: Int): Int {
     return Math.round(px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
 }
 
-class DashViewTextView
+class ScreenViewTextView
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

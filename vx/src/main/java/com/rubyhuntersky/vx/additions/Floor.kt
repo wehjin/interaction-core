@@ -1,9 +1,6 @@
 package com.rubyhuntersky.vx.additions
 
-import com.rubyhuntersky.vx.Anchor
-import com.rubyhuntersky.vx.Dash
-import com.rubyhuntersky.vx.ViewHost
-import com.rubyhuntersky.vx.ViewId
+import com.rubyhuntersky.vx.*
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -29,15 +26,15 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
             init {
                 sizeAnchors.distinctUntilChanged()
                     .subscribe { sizeAnchor ->
-                        val ceilFloor = sizeAnchor.anchor.toBounds(sizeAnchor.size)
+                        val ceilFloor = sizeAnchor.anchor.toBound(sizeAnchor.size)
                         viewA.setAnchor(Anchor(ceilFloor.first, 0f))
                         viewB.setAnchor(Anchor(ceilFloor.second, 1f))
                     }.addTo(composite)
             }
 
-            override fun setLimit(limit: Dash.Limit) {
-                viewA.setLimit(limit)
-                viewB.setLimit(limit)
+            override fun setHBound(hbound: HBound) {
+                viewA.setHBound(hbound)
+                viewB.setHBound(hbound)
             }
 
             override val latitudes: Observable<Dash.Latitude> get() = heights.map { Dash.Latitude(it) }

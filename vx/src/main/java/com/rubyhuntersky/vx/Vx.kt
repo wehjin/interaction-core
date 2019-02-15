@@ -4,7 +4,6 @@ import io.reactivex.Observable
 
 
 typealias DashView<Content, Event> = Dash.View<Content, Event>
-typealias DashLimit = Dash.Limit
 typealias DashLatitude = Dash.Latitude
 
 interface Dash<Content : Any, Event : Any> {
@@ -12,15 +11,20 @@ interface Dash<Content : Any, Event : Any> {
     fun enview(viewHost: ViewHost, id: ViewId): View<Content, Event>
 
     interface View<Content : Any, Event : Any> {
-        fun setLimit(limit: Limit)
+        fun setHBound(hbound: HBound)
         val latitudes: Observable<Latitude>
         fun setAnchor(anchor: Anchor)
         fun setContent(content: Content)
         val events: Observable<Event>
     }
 
-    data class Limit(val start: Int, val end: Int)
     data class Latitude(val height: Int)
+}
+
+data class HBound(val start: Int, val end: Int) {
+    constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
+
+    fun startZero(): HBound = HBound(0, end - start)
 }
 
 data class ViewId(val markers: List<Int> = emptyList()) {
@@ -41,7 +45,7 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> Dash<CoreC, Ev>.transform(transformer: 
 
 fun <CoreC : Any, EdgeC : Any, Ev : Any> DashView<CoreC, Ev>.transform(transformer: (EdgeC) -> CoreC): DashView<EdgeC, Ev> {
     return object : Dash.View<EdgeC, Ev> {
-        override fun setLimit(limit: Dash.Limit) = this@transform.setLimit(limit)
+        override fun setHBound(hbound: HBound) = this@transform.setHBound(hbound)
         override val latitudes: Observable<Dash.Latitude> get() = this@transform.latitudes
         override fun setAnchor(anchor: Anchor) = this@transform.setAnchor(anchor)
         override fun setContent(content: EdgeC) = this@transform.setContent(transformer(content))
@@ -49,4 +53,6 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> DashView<CoreC, Ev>.transform(transform
     }
 }
 
-
+data class VBound(val ceiling: Int, val floor: Int) {
+    constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
+}

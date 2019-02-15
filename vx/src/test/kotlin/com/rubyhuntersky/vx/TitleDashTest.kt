@@ -28,8 +28,8 @@ class TitleDashTest {
 
     @Test
     fun setLimit() {
-        view.setLimit(DashLimit(0, 20))
-        verify(viewMock).setLimit(DashLimit(0, 20))
+        view.setHBound(HBound(0, 20))
+        verify(viewMock).setHBound(HBound(0, 20))
     }
 
     @Test

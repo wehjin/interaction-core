@@ -40,10 +40,10 @@ class FloorTest {
 
     @Test
     fun setLimit() {
-        val limit = DashLimit(0, 20)
-        view.setLimit(limit)
-        verify(viewMockA).setLimit(limit)
-        verify(viewMockB).setLimit(limit)
+        val limit = HBound(0, 20)
+        view.setHBound(limit)
+        verify(viewMockA).setHBound(limit)
+        verify(viewMockB).setHBound(limit)
     }
 
     @Test
