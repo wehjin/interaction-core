@@ -33,6 +33,7 @@ data class ViewId(val markers: List<Int> = emptyList()) {
 
 interface ViewHost {
     fun addTextLine(id: ViewId): DashView<TextLine, Nothing>
+    fun addInput(id: ViewId): Dash.View<Input, Nothing>
 }
 
 
