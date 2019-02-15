@@ -2,8 +2,8 @@ package com.rubyhuntersky.interaction.interactions.cashediting
 
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.interaction.interactions.common.Interaction
 import com.rubyhuntersky.interaction.books.Book
+import com.rubyhuntersky.interaction.interactions.common.Interaction
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 

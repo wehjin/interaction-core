@@ -9,9 +9,6 @@ import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingVision
 import com.rubyhuntersky.vx.Dash
 import com.rubyhuntersky.vx.TitleDash
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.additions.Subtitle
-import com.rubyhuntersky.vx.additions.TitleSubtitle
-import com.rubyhuntersky.vx.additions.plus
 import kotlinx.android.synthetic.main.fragment_cash_editing.*
 import kotlinx.android.synthetic.main.fragment_cash_editing.view.*
 
@@ -19,18 +16,16 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
     layoutRes = R.layout.fragment_cash_editing,
     directInteraction = SharedCashEditingInteraction
 ) {
-    private val dash =
-        TitleDash + Subtitle
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dash = TitleDash
         dashView = dash.enview(view.screenView, ViewId())
             .also {
                 view.screenView.setContentView(it)
             }
     }
 
-    private lateinit var dashView: Dash.View<TitleSubtitle, Nothing>
+    private lateinit var dashView: Dash.View<String, Nothing>
 
     override fun render(vision: CashEditingVision) {
         when (vision) {
@@ -40,7 +35,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
     }
 
     private fun renderEditing() {
-        dashView.setContent(TitleSubtitle("Title", "Subtitle"))
+        dashView.setContent("Set funding target")
         saveButton.setOnClickListener {
             sendAction(CashEditingAction.SaveCashChange)
         }
