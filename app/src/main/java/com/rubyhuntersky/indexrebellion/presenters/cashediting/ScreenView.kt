@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
@@ -13,6 +14,7 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.additions.toSizeAnchor
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
@@ -38,12 +40,69 @@ class ScreenView
     val horizontalBound: Observable<Pair<Int, Int>>
         get() = widthBehavior.distinctUntilChanged()
 
-    override fun addTextLine(id: ViewId): DashView<TextLine, Nothing> = findViewWithTag<DashViewTextView>(id)
-        ?: DashViewTextView(context)
-            .also {
-                it.tag = id
-                addView(it, LayoutParams(320, ViewGroup.LayoutParams.WRAP_CONTENT))
+    override fun addTextLine(id: ViewId): DashView<TextLine, Nothing> {
+        return object : DashView<TextLine, Nothing> {
+
+            private val textView = (findViewWithTag(id)
+                ?: DashViewTextView(context)
+                    .also {
+                        it.tag = id
+                        addView(it, LayoutParams(1, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    })
+
+            init {
+                val composite = CompositeDisposable()
+                textView.onAttached = {
+                    Observable.combineLatest(
+                        latitudes.map { it.height },
+                        anchorBehavior.distinctUntilChanged(),
+                        toSizeAnchor
+                    ).subscribe {
+                        Log.d("DashViewTextView", "onSizeAnchor $it $tag")
+                        val limit = it.anchor.toBounds(it.size)
+                        Log.d("DashViewTextView", "    limit $limit")
+                        val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
+                        layoutParams.topMargin = toPixels(limit.first).toInt()
+                        textView.layoutParams = layoutParams
+                    }.addTo(composite)
+                }
+                textView.onDetached = {
+                    composite.clear()
+                }
             }
+
+            override fun setLimit(limit: Dash.Limit) {
+                Log.d("DashViewTextView", "Set limit $limit")
+                val leftMargin = toPixels(limit.start).toInt()
+                val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
+                layoutParams.marginStart = leftMargin
+                layoutParams.width = toPixels(limit.end - limit.start).toInt()
+                textView.layoutParams = layoutParams
+            }
+
+            override val latitudes: Observable<Dash.Latitude>
+                get() = textView.heights.map { Dash.Latitude(it) }
+
+            private val anchorBehavior = BehaviorSubject.create<Anchor>()
+            override fun setAnchor(anchor: Anchor) {
+                Log.d("DashViewTextView", "Set anchor $anchor")
+                anchorBehavior.onNext(anchor)
+            }
+
+            override fun setContent(content: TextLine) {
+                Log.d("DashViewTextView", "Set content $content")
+                when (content.style) {
+                    TextStyle.Highlight5 -> textView.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
+                    TextStyle.Highlight6 -> textView.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline6)
+                    TextStyle.Subtitle1 -> textView.setTextAppearance(R.style.TextAppearance_MaterialComponents_Subtitle1)
+                }
+                textView.text = content.text
+                textView.setBackgroundColor(Color.GREEN)
+            }
+
+            override val events: Observable<Nothing> get() = Observable.never()
+        }
+    }
 }
 
 
@@ -61,61 +120,29 @@ class DashViewTextView
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : TextView(context, attrs, defStyleAttr, defStyleRes), Dash.View<TextLine, Nothing> {
+) : TextView(context, attrs, defStyleAttr, defStyleRes) {
 
-    override fun setLimit(limit: Dash.Limit) {
-        Log.d(this.javaClass.simpleName, "Set limit $limit")
-//        left = toPixels(limit.start).toInt()
-//        right = toPixels(limit.end).toInt()
-    }
+    val heights: Observable<Int>
+        get() = heightBehavior.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
 
-    private val latitudeBehavior = BehaviorSubject.create<Dash.Latitude>()
-    override val latitudes: Observable<Dash.Latitude>
-        get() {
-            return latitudeBehavior.distinctUntilChanged()
-        }
+    private val heightBehavior = BehaviorSubject.create<Int>()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         Log.d(this.javaClass.simpleName, "onSizeChanged $w $h $tag")
-        latitudeBehavior.onNext(Dash.Latitude(toDip(h)))
+        heightBehavior.onNext(toDip(h))
     }
 
-    private val anchorBehavior = BehaviorSubject.create<Anchor>()
-    override fun setAnchor(anchor: Anchor) {
-        Log.d(this.javaClass.simpleName, "Set anchor $anchor")
-        anchorBehavior.onNext(anchor)
-    }
+    var onAttached: (() -> Unit)? = null
+    var onDetached: (() -> Unit)? = null
 
-    private val composite = CompositeDisposable()
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Observable.combineLatest(latitudes.map { it.height }, anchorBehavior.distinctUntilChanged(), toSizeAnchor)
-            .subscribe {
-                Log.d(this.javaClass.simpleName, "onSizeAnchor $it $tag")
-                val limit = it.anchor.toBounds(it.size)
-                Log.d(this.javaClass.simpleName, "    limit $limit")
-                val pxTop = toPixels(limit.first)
-                (this.layoutParams as FrameLayout.LayoutParams).setMargins(left, pxTop.toInt(), 0, 0)
-            }
-            .addTo(composite)
+        onAttached?.invoke()
     }
 
     override fun onDetachedFromWindow() {
-        composite.clear()
+        onDetached?.invoke()
         super.onDetachedFromWindow()
     }
-
-    override fun setContent(content: TextLine) {
-        Log.d(this.javaClass.simpleName, "Set content $content")
-        when (content.style) {
-            TextStyle.Highlight5 -> setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
-            TextStyle.Highlight6 -> setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline6)
-            TextStyle.Subtitle1 -> setTextAppearance(R.style.TextAppearance_MaterialComponents_Subtitle1)
-        }
-        text = content.text
-        requestLayout()
-    }
-
-    override val events: Observable<Nothing> get() = Observable.never()
 }
