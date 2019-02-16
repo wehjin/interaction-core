@@ -11,6 +11,10 @@ sealed class Icon {
     data class ResId(val resId: Int) : Icon()
 }
 
-object InputDash : Dash<Input, Nothing> {
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Input, Nothing> = viewHost.addInput(id)
+sealed class InputEvent {
+    data class TextChange(val text: String) : InputEvent()
+}
+
+object InputDash : Dash<Input, InputEvent> {
+    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Input, InputEvent> = viewHost.addInput(id)
 }

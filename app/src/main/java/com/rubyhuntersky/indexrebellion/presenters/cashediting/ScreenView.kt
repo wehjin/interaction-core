@@ -68,10 +68,10 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInput(id: ViewId): Dash.View<Input, Nothing> = ViewBackedDashView(
+    override fun addInput(id: ViewId): Dash.View<Input, InputEvent> = ViewBackedDashView(
         frameLayout = this@ScreenView,
         id = id,
-        adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, Input> {
+        adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, Input, InputEvent> {
             override fun buildView(context: Context): BackingViewInputLayout = BackingViewInputLayout(context, null)
             override fun renderView(view: BackingViewInputLayout, content: Input) {
                 view.render(content)
@@ -82,7 +82,7 @@ class ScreenView
     override fun addTextLine(id: ViewId): DashView<TextLine, Nothing> = ViewBackedDashView(
         frameLayout = this@ScreenView,
         id = id,
-        adapter = object : ViewBackedDashView.Adapter<BackingViewTextView, TextLine> {
+        adapter = object : ViewBackedDashView.Adapter<BackingViewTextView, TextLine, Nothing> {
             override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
             override fun renderView(view: BackingViewTextView, content: TextLine) {
                 when (content.style) {

@@ -13,7 +13,10 @@ class BackingViewTextView
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : TextView(context, attrs, defStyleAttr, defStyleRes), ViewBackedDashView.BackingView {
+) : TextView(context, attrs, defStyleAttr, defStyleRes), ViewBackedDashView.BackingView<Nothing> {
+
+    override val events: Observable<Nothing>
+        get() = Observable.never()
 
     override val heights: Observable<Int>
         get() = heightBehavior.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())

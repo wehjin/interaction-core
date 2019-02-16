@@ -12,19 +12,20 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-class ViewBackedDashView<V, C : Any>(
+class ViewBackedDashView<V, C : Any, E : Any>(
     frameLayout: FrameLayout,
     id: ViewId,
-    private val adapter: Adapter<V, C>
-) : DashView<C, Nothing> where V : View, V : ViewBackedDashView.BackingView {
+    private val adapter: Adapter<V, C, E>
+) : DashView<C, E> where V : View, V : ViewBackedDashView.BackingView<E> {
 
-    interface BackingView {
+    interface BackingView<E : Any> {
         var onAttached: (() -> Unit)?
         var onDetached: (() -> Unit)?
         val heights: Observable<Int>
+        val events: Observable<E>
     }
 
-    interface Adapter<V, C : Any> where V : View, V : BackingView {
+    interface Adapter<V, C : Any, E : Any> where V : View, V : BackingView<E> {
         fun buildView(context: Context): V
         fun renderView(view: V, content: C)
     }
@@ -88,5 +89,5 @@ class ViewBackedDashView<V, C : Any>(
         adapter.renderView(view, content)
     }
 
-    override val events: Observable<Nothing> get() = Observable.never()
+    override val events: Observable<E> get() = view.events
 }

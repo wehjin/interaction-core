@@ -10,6 +10,8 @@ import com.rubyhuntersky.interaction.cashediting.Vision
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.additions.Floor
 import com.rubyhuntersky.vx.additions.plus
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_cash_editing.*
 import kotlinx.android.synthetic.main.fragment_cash_editing.view.*
 
@@ -27,19 +29,30 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val dash =
-            TitleDash + Floor(InputDash, FundingEditor::toPair)
+            TitleDash.neverEvent<String, Nothing, InputEvent>() + Floor(InputDash, FundingEditor::toPair)
 
         dashView = dash.enview(view.screenView, ViewId())
             .also {
                 view.screenView.setContentView(it)
             }
+        dashView.events
+            .subscribe {
+                sendAction(Action.SetEdit((it as InputEvent.TextChange).text))
+            }
+            .addTo(composite)
 
         saveButton.setOnClickListener {
             sendAction(Action.Save)
         }
     }
 
-    private lateinit var dashView: Dash.View<FundingEditor, Nothing>
+    private val composite = CompositeDisposable()
+    private lateinit var dashView: Dash.View<FundingEditor, InputEvent>
+
+    override fun onDestroyView() {
+        composite.clear()
+        super.onDestroyView()
+    }
 
     override fun render(vision: Vision) {
         Log.d(this.javaClass.simpleName, "VISION: $vision")

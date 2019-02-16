@@ -2,6 +2,8 @@ package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +13,11 @@ import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.Icon
 import com.rubyhuntersky.vx.Input
+import com.rubyhuntersky.vx.InputEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_input.view.*
 
 class BackingViewInputLayout
@@ -22,7 +26,7 @@ class BackingViewInputLayout
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewBackedDashView.BackingView {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewBackedDashView.BackingView<InputEvent> {
 
     private var layout: TextInputLayout
 
@@ -34,6 +38,11 @@ class BackingViewInputLayout
         )
         layout = view as TextInputLayout
     }
+
+    override val events: Observable<InputEvent>
+        get() = eventPublish.observeOn(AndroidSchedulers.mainThread())
+
+    private val eventPublish = PublishSubject.create<InputEvent>()
 
     fun render(content: Input) {
         Log.d(this.tag.toString(), "render $content")
@@ -82,10 +91,22 @@ class BackingViewInputLayout
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         onAttached?.invoke()
+        editText.addTextChangedListener(textWatcher)
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            eventPublish.onNext(InputEvent.TextChange(s?.toString() ?: ""))
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
 
     override fun onDetachedFromWindow() {
+        editText.removeTextChangedListener(textWatcher)
         onDetached?.invoke()
         super.onDetachedFromWindow()
     }
+
 }
