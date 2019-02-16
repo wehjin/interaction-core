@@ -23,11 +23,7 @@ class CorrectionDetailsInteractionImpl(
     saverBook: Book<CorrectionDetails>,
     updateSharesCatalyst: Catalyst<AssetSymbol>
 ) : CorrectionDetailsInteraction
-by Saver.InteractionImpl(saverBook).adapt(
-    CorrectionDetailsSaverAdapter(
-        updateSharesCatalyst
-    )
-)
+by Saver.InteractionImpl(saverBook).adapt(CorrectionDetailsSaverAdapter(updateSharesCatalyst))
 
 class CorrectionDetailsSaverAdapter(private val updateSharesCatalyst: Catalyst<AssetSymbol>) :
     Adapter<Saver.Vision<CorrectionDetails>, Saver.Action<CorrectionDetails>, Vision, Action> {

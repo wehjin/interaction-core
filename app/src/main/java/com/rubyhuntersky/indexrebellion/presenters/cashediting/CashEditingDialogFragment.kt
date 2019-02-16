@@ -1,6 +1,7 @@
 package com.rubyhuntersky.indexrebellion.presenters.cashediting
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
@@ -32,32 +33,34 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
             .also {
                 view.screenView.setContentView(it)
             }
+
+        saveButton.setOnClickListener {
+            sendAction(Action.Save)
+        }
     }
 
     private lateinit var dashView: Dash.View<FundingEditor, Nothing>
 
     override fun render(vision: Vision) {
+        Log.d(this.javaClass.simpleName, "VISION: $vision")
         when (vision) {
-            is Vision.Editing -> renderEditing()
-            is Vision.Done -> dismiss()
+            is Vision.Editing -> renderEditing(vision)
+            is Vision.Idle -> dismiss()
         }
     }
 
-    private fun renderEditing() {
+    private fun renderEditing(vision: Vision.Editing) {
         val content = FundingEditor(
             title = "Update Funding",
             targetInput = Input(
-                text = "",
-                originalText = "1000",
+                text = vision.edit,
+                originalText = vision.oldCashAmount.toStatString(),
                 label = "Cash Available",
                 icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
             )
         )
         dashView.setContent(content)
-
-        saveButton.setOnClickListener {
-            sendAction(Action.SaveCashChange)
-        }
+        saveButton.isEnabled = vision.canSave
     }
 
     companion object {

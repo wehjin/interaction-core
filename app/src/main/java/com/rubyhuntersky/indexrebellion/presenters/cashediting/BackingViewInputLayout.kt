@@ -36,13 +36,12 @@ class BackingViewInputLayout
     }
 
     fun render(content: Input) {
+        Log.d(this.tag.toString(), "render $content")
         layout.hint = content.label
+
+        renderEditTextHint(editText.hasFocus(), content)
         editText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                editText.hint = content.originalText
-            } else {
-                editText.hint = null
-            }
+            renderEditTextHint(hasFocus, content)
         }
         if (editText.text.toString() != content.text) {
             editText.setText(content.text)
@@ -51,6 +50,14 @@ class BackingViewInputLayout
             resources.getDrawable(it.resId, context.theme)
         }
         editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+    }
+
+    private fun renderEditTextHint(hasFocus: Boolean, content: Input) {
+        if (hasFocus) {
+            editText.hint = content.originalText
+        } else {
+            editText.hint = null
+        }
     }
 
     override val heights: Observable<Int>
