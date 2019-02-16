@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.interactions.common
+package com.rubyhuntersky.interaction.common
 
 import com.rubyhuntersky.interaction.BehaviorInteraction
 import com.rubyhuntersky.interaction.books.Book
@@ -17,13 +17,13 @@ object Saver {
     }
 
     class InteractionImpl<T : Any>(private val book: Book<T>) :
-        BehaviorInteraction<Vision<T>, Action<T>>(startVision = Vision.Reading<T>()) {
+        BehaviorInteraction<Vision<T>, Action<T>>(startVision = Saver.Vision.Reading<T>()) {
 
         private val disposable = CompositeDisposable()
 
         init {
             book.reader
-                .subscribe { setVision(Vision.Ready(it)) }
+                .subscribe { setVision(Saver.Vision.Ready(it)) }
                 .addTo(disposable)
         }
 

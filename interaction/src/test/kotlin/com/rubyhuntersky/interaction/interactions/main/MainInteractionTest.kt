@@ -3,16 +3,19 @@ package com.rubyhuntersky.interaction.interactions.main
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.data.Rebellion
-import com.rubyhuntersky.data.report.Correction
+import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.books.RebellionBook
+import com.rubyhuntersky.interaction.main.Action
+import com.rubyhuntersky.interaction.main.MainInteraction
+import com.rubyhuntersky.interaction.main.Vision
 import io.reactivex.Observable
 import org.junit.Test
 
 class MainInteractionTest {
 
-    private val mockCorrectionDetailsCatalyst = mock<Catalyst<Correction>> {}
+    private val mockCorrectionDetailsCatalyst = mock<Catalyst<CorrectionDetails>> {}
     private val mockConstituentSearchCatalyst = mock<Catalyst<Unit>> {}
     private val mockCashEditingCatalyst = mock<Catalyst<Unit>> {}
 
@@ -31,7 +34,7 @@ class MainInteractionTest {
 
         mainInteraction.visionStream.test()
             .assertSubscribed()
-            .assertValues(MainVision.Loading)
+            .assertValues(Vision.Loading)
             .assertNotComplete()
             .assertNoErrors()
     }
@@ -51,7 +54,7 @@ class MainInteractionTest {
 
         mainInteraction.visionStream.test()
             .assertSubscribed()
-            .assertValue { it is MainVision.Viewing }
+            .assertValue { it is Vision.Viewing }
             .assertNotComplete()
             .assertNoErrors()
     }
@@ -65,7 +68,7 @@ class MainInteractionTest {
             cashEditingCatalyst = mockCashEditingCatalyst
         )
 
-        mainInteraction.sendAction(MainAction.FindConstituent)
+        mainInteraction.sendAction(Action.FindConstituent)
         verify(mockConstituentSearchCatalyst).catalyze(Unit)
     }
 
@@ -77,7 +80,7 @@ class MainInteractionTest {
             constituentSearchCatalyst = mockConstituentSearchCatalyst,
             cashEditingCatalyst = mockCashEditingCatalyst
         )
-        mainInteraction.sendAction(MainAction.OpenCashEditor)
+        mainInteraction.sendAction(Action.OpenCashEditor)
         verify(mockCashEditingCatalyst).catalyze(Unit)
     }
 }

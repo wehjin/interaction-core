@@ -1,16 +1,15 @@
-package com.rubyhuntersky.interaction.interactions
+package com.rubyhuntersky.interaction
 
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.OwnedAsset
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.interaction.BehaviorInteraction
 import com.rubyhuntersky.interaction.books.ConstituentBook
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import java.util.*
-import com.rubyhuntersky.interaction.interactions.common.Interaction as CommonInteraction
+import com.rubyhuntersky.interaction.common.Interaction as CommonInteraction
 
 
 object UpdateShares {
@@ -43,7 +42,7 @@ object UpdateShares {
 
 
     class Interaction(private val constituentBook: ConstituentBook) :
-        BehaviorInteraction<Vision, Action>(startVision = Vision.Loading, startAction = Action.Reset) {
+        BehaviorInteraction<Vision, Action>(startVision = UpdateShares.Vision.Loading, startAction = UpdateShares.Action.Reset) {
 
         // TODO Delete these and build Prompt from Prompt
         private var ownedAsset: OwnedAsset? = null
@@ -57,11 +56,11 @@ object UpdateShares {
         override fun sendAction(action: Action) {
             when (action) {
                 is Action.Reset -> {
-                    setVision(Vision.Loading)
+                    setVision(UpdateShares.Vision.Loading)
                     composite.clear()
                     constituentBook.reader.subscribe {
                         val asset = OwnedAsset(it.assetSymbol, it.ownedShares, it.sharePrice)
-                        sendAction(Action.Load(asset))
+                        sendAction(UpdateShares.Action.Load(asset))
                     }.addTo(composite)
                 }
                 is Action.Load -> startPrompt(action)
@@ -102,7 +101,7 @@ object UpdateShares {
                     )
                 }
                 composite.clear()
-                setVision(Vision.Dismissed)
+                setVision(UpdateShares.Vision.Dismissed)
             }
             is Vision.Loading, is Vision.Dismissed -> Unit
         }
@@ -118,7 +117,7 @@ object UpdateShares {
 
         private fun sendPromptVision() = setVision(
 
-            Vision.Prompt(
+            UpdateShares.Vision.Prompt(
                 assetSymbol = ownedAsset!!.assetSymbol,
                 ownedCount = ownedAsset!!.shareCount.toDouble().toInt(),
                 sharePrice = ownedAsset!!.sharePrice,
@@ -131,9 +130,9 @@ object UpdateShares {
 
         private val numberDelta: NumberDelta
             get() = when {
-                newTotal.isNotBlank() -> NumberDelta.Total(newTotal)
-                newChange.isNotBlank() -> NumberDelta.Change(newChange)
-                else -> NumberDelta.Undecided
+                newTotal.isNotBlank() -> UpdateShares.NumberDelta.Total(newTotal)
+                newChange.isNotBlank() -> UpdateShares.NumberDelta.Change(newChange)
+                else -> UpdateShares.NumberDelta.Undecided
             }
 
         private val canUpdate: Boolean

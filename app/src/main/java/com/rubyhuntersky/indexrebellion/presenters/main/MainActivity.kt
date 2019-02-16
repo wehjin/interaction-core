@@ -13,9 +13,9 @@ import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.Constituent
 import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsCatalyst
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.addTo
-import com.rubyhuntersky.interaction.interactions.main.Action
-import com.rubyhuntersky.interaction.interactions.main.MainInteraction
-import com.rubyhuntersky.interaction.interactions.main.Vision
+import com.rubyhuntersky.interaction.main.Action
+import com.rubyhuntersky.interaction.main.MainInteraction
+import com.rubyhuntersky.interaction.main.Vision
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*

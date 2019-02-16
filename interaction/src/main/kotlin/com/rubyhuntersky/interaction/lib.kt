@@ -1,6 +1,6 @@
 package com.rubyhuntersky.interaction
 
-import com.rubyhuntersky.interaction.interactions.common.Interaction
+import com.rubyhuntersky.interaction.common.Interaction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

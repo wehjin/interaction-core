@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.View
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingAction
-import com.rubyhuntersky.interaction.interactions.cashediting.CashEditingVision
+import com.rubyhuntersky.interaction.cashediting.Action
+import com.rubyhuntersky.interaction.cashediting.Vision
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.additions.Floor
 import com.rubyhuntersky.vx.additions.plus
 import kotlinx.android.synthetic.main.fragment_cash_editing.*
 import kotlinx.android.synthetic.main.fragment_cash_editing.view.*
 
-class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditingVision, CashEditingAction>(
+class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, Action>(
     layoutRes = R.layout.fragment_cash_editing,
     directInteraction = SharedCashEditingInteraction
 ) {
@@ -36,10 +36,10 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
 
     private lateinit var dashView: Dash.View<FundingEditor, Nothing>
 
-    override fun render(vision: CashEditingVision) {
+    override fun render(vision: Vision) {
         when (vision) {
-            is CashEditingVision.Editing -> renderEditing()
-            is CashEditingVision.Done -> dismiss()
+            is Vision.Editing -> renderEditing()
+            is Vision.Done -> dismiss()
         }
     }
 
@@ -56,7 +56,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<CashEditi
         dashView.setContent(content)
 
         saveButton.setOnClickListener {
-            sendAction(CashEditingAction.SaveCashChange)
+            sendAction(Action.SaveCashChange)
         }
     }
 

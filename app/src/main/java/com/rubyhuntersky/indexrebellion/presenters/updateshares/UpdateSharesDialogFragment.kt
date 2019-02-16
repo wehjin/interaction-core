@@ -11,8 +11,8 @@ import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.RebellionConstituentBook
-import com.rubyhuntersky.interaction.interactions.UpdateShares
-import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
+import com.rubyhuntersky.interaction.UpdateShares
+import com.rubyhuntersky.interaction.common.InteractionRegistry
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
 import kotlin.random.Random

@@ -8,6 +8,9 @@ import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.BehaviorBook
+import com.rubyhuntersky.interaction.correctiondetails.Action
+import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
+import com.rubyhuntersky.interaction.correctiondetails.Vision
 import org.junit.Test
 
 class CorrectionDetailsInteractionImplTest {
@@ -17,7 +20,8 @@ class CorrectionDetailsInteractionImplTest {
     private val mockCatalyst = mock<Catalyst<AssetSymbol>>()
     private val saverBook = BehaviorBook(details)
 
-    private val interaction = CorrectionDetailsInteractionImpl(saverBook, mockCatalyst)
+    private val interaction =
+        CorrectionDetailsInteractionImpl(saverBook, mockCatalyst)
 
     @Test
     fun construction() {

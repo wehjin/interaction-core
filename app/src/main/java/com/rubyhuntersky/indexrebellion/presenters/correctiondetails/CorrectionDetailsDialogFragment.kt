@@ -9,10 +9,10 @@ import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragm
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
 import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.books.BehaviorBook
-import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
-import com.rubyhuntersky.interaction.interactions.correctiondetails.Action
-import com.rubyhuntersky.interaction.interactions.correctiondetails.CorrectionDetailsInteractionImpl
-import com.rubyhuntersky.interaction.interactions.correctiondetails.Vision
+import com.rubyhuntersky.interaction.common.InteractionRegistry
+import com.rubyhuntersky.interaction.correctiondetails.Action
+import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
+import com.rubyhuntersky.interaction.correctiondetails.Vision
 import kotlinx.android.synthetic.main.view_correction_details.*
 import kotlin.random.Random
 
@@ -75,7 +75,10 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
                 override fun catalyze(seed: AssetSymbol) =
                     UpdateSharesDialogFragment.catalyze(Pair(seed, getFragmentActivity))
             }
-            val interaction = CorrectionDetailsInteractionImpl(detailsBook, updateSharesCatalyst)
+            val interaction = CorrectionDetailsInteractionImpl(
+                detailsBook,
+                updateSharesCatalyst
+            )
             return CorrectionDetailsDialogFragment().also {
                 it.indirectInteractionKey = Random.nextLong()
                 InteractionRegistry.addInteraction(it.indirectInteractionKey, interaction)

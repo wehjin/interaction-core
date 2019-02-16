@@ -4,6 +4,9 @@ import com.nhaarman.mockitokotlin2.*
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.interaction.books.RebellionBook
+import com.rubyhuntersky.interaction.constituentsearch.Action
+import com.rubyhuntersky.interaction.constituentsearch.ConstituentSearch
+import com.rubyhuntersky.interaction.constituentsearch.Vision
 import com.rubyhuntersky.stockcatalog.*
 import io.reactivex.subjects.BehaviorSubject
 import org.junit.Assert.assertNotNull

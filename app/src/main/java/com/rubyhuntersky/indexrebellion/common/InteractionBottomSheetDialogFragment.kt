@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.rubyhuntersky.interaction.interactions.common.Interaction
-import com.rubyhuntersky.interaction.interactions.common.InteractionRegistry
+import com.rubyhuntersky.interaction.common.Interaction
+import com.rubyhuntersky.interaction.common.InteractionRegistry
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 

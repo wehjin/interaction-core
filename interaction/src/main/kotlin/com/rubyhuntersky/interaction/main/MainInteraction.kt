@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.interactions.main
+package com.rubyhuntersky.interaction.main
 
 import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.report.Correction
@@ -8,7 +8,7 @@ import com.rubyhuntersky.interaction.Catalyst
 import com.rubyhuntersky.interaction.NotImplementedCatalyst
 import com.rubyhuntersky.interaction.addTo
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.interactions.common.Interaction
+import com.rubyhuntersky.interaction.common.Interaction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
