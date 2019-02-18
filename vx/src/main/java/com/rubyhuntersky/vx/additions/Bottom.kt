@@ -7,16 +7,16 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-data class Floor<A : Any, B : Any, C : Any, Ev : Any>(
+data class Bottom<A : Any, B : Any, C : Any, Ev : Any>(
     val dash: Dash<B, Ev>,
     val onSight: (C) -> Pair<A, B>
 )
 
-operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor<A, B, C, Ev>): Dash<C, Ev> =
+operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(bottom: Bottom<A, B, C, Ev>): Dash<C, Ev> =
     object : Dash<C, Ev> {
         override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<C, Ev> = object : Dash.View<C, Ev> {
             private val viewA = this@plus.enview(viewHost, id.extend(0))
-            private val viewB = floor.dash.enview(viewHost, id.extend(1))
+            private val viewB = bottom.dash.enview(viewHost, id.extend(1))
             private val heights = Observable.combineLatest(viewA.latitudes, viewB.latitudes, sumLatitudes)
             private val anchorBehavior = BehaviorSubject.createDefault(Anchor(0, 0f))
             private val sizeAnchors = Observable.combineLatest(heights, anchorBehavior, toSizeAnchor)
@@ -43,7 +43,7 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
             }
 
             override fun setSight(sight: C) {
-                val ab = floor.onSight(sight)
+                val ab = bottom.onSight(sight)
                 viewA.setSight(ab.first)
                 viewB.setSight(ab.second)
             }

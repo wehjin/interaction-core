@@ -10,7 +10,7 @@ import com.rubyhuntersky.vx.dashes.TitleDash
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 
-class FloorTest {
+class BottomTest {
     private val viewId = ViewId()
 
     private val latitudeSubjectA = PublishSubject.create<DashLatitude>()
@@ -31,7 +31,7 @@ class FloorTest {
         on { addTextLine(ViewId().extend(0)) } doReturn viewMockA
         on { addTextLine(ViewId().extend(1)) } doReturn viewMockB
     }
-    private val dash = TitleDash + Floor(TitleDash) { sight: Pair<String, String> -> sight }
+    private val dash = TitleDash + Bottom(TitleDash) { sight: Pair<String, String> -> sight }
     private val view = dash.enview(hostMock, viewId)
 
     @Test

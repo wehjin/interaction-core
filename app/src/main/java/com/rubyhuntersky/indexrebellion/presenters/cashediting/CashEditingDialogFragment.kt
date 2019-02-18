@@ -10,7 +10,7 @@ import com.rubyhuntersky.interaction.cashediting.Action
 import com.rubyhuntersky.interaction.cashediting.Vision
 import com.rubyhuntersky.vx.Dash
 import com.rubyhuntersky.vx.ViewId
-import com.rubyhuntersky.vx.additions.Floor
+import com.rubyhuntersky.vx.additions.Bottom
 import com.rubyhuntersky.vx.additions.Gap
 import com.rubyhuntersky.vx.additions.plus
 import com.rubyhuntersky.vx.dashes.*
@@ -35,7 +35,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
         val dash =
             TitleDash.neverEvent<InputEvent>() +
                     Gap.TitleBody +
-                    Floor(InputDash, FundingEditor::toPair)
+                    Bottom(InputDash, FundingEditor::toPair)
 
         dashView = dash.enview(view.screenView, ViewId())
             .also {

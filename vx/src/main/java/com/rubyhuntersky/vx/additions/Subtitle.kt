@@ -7,7 +7,7 @@ import com.rubyhuntersky.vx.dashes.TextStyle
 import com.rubyhuntersky.vx.dashes.TitleDash
 
 operator fun TitleDash.plus(@Suppress("UNUSED_PARAMETER") subtitle: Subtitle): Dash<TitleSubtitle, Nothing> =
-    TitleAtopSubtitleDash + Floor(SubtitleBelowTitleDash) { Pair(it.title, it.subtitle) }
+    TitleAtopSubtitleDash + Bottom(SubtitleBelowTitleDash) { Pair(it.title, it.subtitle) }
 
 object Subtitle
 data class TitleSubtitle(val title: String, val subtitle: String)
