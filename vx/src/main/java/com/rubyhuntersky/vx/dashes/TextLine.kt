@@ -1,4 +1,8 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.dashes
+
+import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.ViewHost
+import com.rubyhuntersky.vx.ViewId
 
 data class TextLine(
     val text: String,

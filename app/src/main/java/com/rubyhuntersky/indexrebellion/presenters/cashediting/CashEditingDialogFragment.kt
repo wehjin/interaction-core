@@ -10,6 +10,7 @@ import com.rubyhuntersky.interaction.cashediting.Vision
 import com.rubyhuntersky.vx.*
 import com.rubyhuntersky.vx.additions.Floor
 import com.rubyhuntersky.vx.additions.plus
+import com.rubyhuntersky.vx.dashes.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_cash_editing.*

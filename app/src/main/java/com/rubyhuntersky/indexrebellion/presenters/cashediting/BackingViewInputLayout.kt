@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
-import com.rubyhuntersky.vx.Icon
-import com.rubyhuntersky.vx.Input
-import com.rubyhuntersky.vx.InputEvent
+import com.rubyhuntersky.vx.dashes.Icon
+import com.rubyhuntersky.vx.dashes.Input
+import com.rubyhuntersky.vx.dashes.InputEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject

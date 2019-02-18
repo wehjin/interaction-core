@@ -4,6 +4,9 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.TextStyle
+import com.rubyhuntersky.vx.dashes.TitleDash
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 
@@ -34,8 +37,18 @@ class FloorTest {
     @Test
     fun setContent() {
         view.setContent(Pair("Hello", "World"))
-        verify(viewMockA).setContent(TextLine("Hello", TextStyle.Highlight5))
-        verify(viewMockB).setContent(TextLine("World", TextStyle.Highlight5))
+        verify(viewMockA).setContent(
+            TextLine(
+                "Hello",
+                TextStyle.Highlight5
+            )
+        )
+        verify(viewMockB).setContent(
+            TextLine(
+                "World",
+                TextStyle.Highlight5
+            )
+        )
     }
 
     @Test

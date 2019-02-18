@@ -1,8 +1,9 @@
-package com.rubyhuntersky.vx
+package com.rubyhuntersky.vx.dashes
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.rubyhuntersky.vx.*
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 
@@ -23,7 +24,12 @@ class TitleDashTest {
     @Test
     fun setContent() {
         view.setContent("Hello")
-        verify(viewMock).setContent(TextLine("Hello", TextStyle.Highlight5))
+        verify(viewMock).setContent(
+            TextLine(
+                "Hello",
+                TextStyle.Highlight5
+            )
+        )
     }
 
     @Test

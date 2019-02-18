@@ -1,5 +1,8 @@
 package com.rubyhuntersky.vx
 
+import com.rubyhuntersky.vx.dashes.Input
+import com.rubyhuntersky.vx.dashes.InputEvent
+import com.rubyhuntersky.vx.dashes.TextLine
 import io.reactivex.Observable
 
 

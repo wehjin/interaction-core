@@ -8,6 +8,10 @@ import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.dashes.Input
+import com.rubyhuntersky.vx.dashes.InputEvent
+import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.TextStyle
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
