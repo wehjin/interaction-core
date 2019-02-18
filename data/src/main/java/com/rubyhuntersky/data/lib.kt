@@ -12,14 +12,11 @@ fun Double.toStatString(): String {
         value /= 1000
     }
 
-    val valueString = if (value >= 100) {
-        value.roundToLong().toString()
-    } else if (value >= 10) {
-        String.format("%.1f", value)
-    } else if (value >= 1) {
-        String.format("%.2f", value)
-    } else {
-        "0"
+    val valueString = when {
+        value >= 100 -> value.roundToLong().toString()
+        value >= 10 -> String.format("%.1f", value)
+        value >= 1 -> String.format("%.2f", value)
+        else -> "0"
     }
 
     val multiplierString = when (thousandsMultiplier) {

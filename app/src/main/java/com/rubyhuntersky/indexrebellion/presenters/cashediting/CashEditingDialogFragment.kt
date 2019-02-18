@@ -3,6 +3,7 @@ package com.rubyhuntersky.indexrebellion.presenters.cashediting
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.cashediting.Action
@@ -68,12 +69,17 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     }
 
     private fun renderEditing(vision: Vision.Editing) {
+        val labelRes = if (vision.edit.isBlank()) {
+            if (vision.oldCashAmount < CashAmount.ZERO) R.string.withdrawal else R.string.deposit
+        } else {
+            if (vision.edit.startsWith("-")) R.string.withdrawal else R.string.deposit
+        }
         val content = FundingEditor(
             title = "Update Funding",
             targetInput = InputSight(
                 text = vision.edit,
-                originalText = vision.oldCashAmount.toStatString(),
-                label = "Cash Available",
+                originalText = (if (vision.oldCashAmount < CashAmount.ZERO) "-" else "") + vision.oldCashAmount.toStatString(),
+                label = getString(labelRes),
                 icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
             )
         )

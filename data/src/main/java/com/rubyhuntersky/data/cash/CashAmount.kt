@@ -21,7 +21,7 @@ data class CashAmount(
 
     override fun hashCode(): Int = value.toDouble().hashCode()
 
-    fun compareTo(other: CashAmount): Int = value.compareTo(other.value)
+    operator fun compareTo(other: CashAmount): Int = value.compareTo(other.value)
     operator fun plus(increment: CashAmount): CashAmount = CashAmount(value + increment.value)
     operator fun plus(increment: CashEquivalent): CashEquivalent = when (increment) {
         is CashEquivalent.Unknown -> CashEquivalent.Unknown()
