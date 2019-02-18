@@ -84,9 +84,9 @@ class ViewBackedDashView<V, C : Any, E : Any>(
         anchorBehavior.onNext(anchor)
     }
 
-    override fun setContent(content: C) {
-        Log.d(view.tag.toString(), "Set content $content")
-        adapter.renderView(view, content)
+    override fun setSight(sight: C) {
+        Log.d(view.tag.toString(), "Set content $sight")
+        adapter.renderView(view, sight)
     }
 
     override val events: Observable<E> get() = view.events

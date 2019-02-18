@@ -1,23 +1,23 @@
 package com.rubyhuntersky.vx
 
-import com.rubyhuntersky.vx.dashes.Input
 import com.rubyhuntersky.vx.dashes.InputEvent
-import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.InputSight
+import com.rubyhuntersky.vx.dashes.TextLineSight
 import io.reactivex.Observable
 
 
-typealias DashView<Content, Event> = Dash.View<Content, Event>
+typealias DashView<Sight, Event> = Dash.View<Sight, Event>
 typealias DashLatitude = Dash.Latitude
 
-interface Dash<Content : Any, Event : Any> {
+interface Dash<Sight : Any, Event : Any> {
 
-    fun enview(viewHost: ViewHost, id: ViewId): View<Content, Event>
+    fun enview(viewHost: ViewHost, id: ViewId): View<Sight, Event>
 
-    interface View<Content : Any, Event : Any> {
+    interface View<Sight : Any, Event : Any> {
         fun setHBound(hbound: HBound)
         val latitudes: Observable<Latitude>
         fun setAnchor(anchor: Anchor)
-        fun setContent(content: Content)
+        fun setSight(sight: Sight)
         val events: Observable<Event>
     }
 
@@ -37,8 +37,8 @@ data class ViewId(val markers: List<Int> = emptyList()) {
 }
 
 interface ViewHost {
-    fun addTextLine(id: ViewId): DashView<TextLine, Nothing>
-    fun addInput(id: ViewId): Dash.View<Input, InputEvent>
+    fun addTextLine(id: ViewId): DashView<TextLineSight, Nothing>
+    fun addInput(id: ViewId): Dash.View<InputSight, InputEvent>
 }
 
 
@@ -54,7 +54,7 @@ fun <CoreC : Any, EdgeC : Any, Ev : Any> DashView<CoreC, Ev>.transform(transform
         override fun setHBound(hbound: HBound) = this@transform.setHBound(hbound)
         override val latitudes: Observable<Dash.Latitude> get() = this@transform.latitudes
         override fun setAnchor(anchor: Anchor) = this@transform.setAnchor(anchor)
-        override fun setContent(content: EdgeC) = this@transform.setContent(transformer(content))
+        override fun setSight(sight: EdgeC) = this@transform.setSight(transformer(sight))
         override val events: Observable<Ev> get() = this@transform.events.map { it }
     }
 }
@@ -63,15 +63,15 @@ data class VBound(val ceiling: Int, val floor: Int) {
     constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
 }
 
-fun <Content : Any, Event : Any, NeverE : Any> Dash<Content, Event>.neverEvent(): Dash<Content, NeverE> {
-    return object : Dash<Content, NeverE> {
-        override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Content, NeverE> {
+fun <Sight : Any, Event : Any, NeverE : Any> Dash<Sight, Event>.neverEvent(): Dash<Sight, NeverE> {
+    return object : Dash<Sight, NeverE> {
+        override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Sight, NeverE> {
             val coreView = this@neverEvent.enview(viewHost, id)
-            return object : Dash.View<Content, NeverE> {
+            return object : Dash.View<Sight, NeverE> {
                 override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
                 override val latitudes: Observable<Dash.Latitude> get() = coreView.latitudes
                 override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
-                override fun setContent(content: Content) = coreView.setContent(content)
+                override fun setSight(sight: Sight) = coreView.setSight(sight)
                 override val events: Observable<NeverE> get() = Observable.never()
             }
         }

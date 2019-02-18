@@ -12,7 +12,7 @@ import org.junit.Test
 class TextLineDashTest {
 
     private val id = ViewId()
-    private val viewMock = mock<DashView<TextLine, Nothing>>()
+    private val viewMock = mock<DashView<TextLineSight, Nothing>>()
     private val hostMock = mock<ViewHost> {
         on { addTextLine(id) } doReturn viewMock
     }

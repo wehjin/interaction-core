@@ -10,7 +10,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 data class Floor<A : Any, B : Any, C : Any, Ev : Any>(
     val dash: Dash<B, Ev>,
-    val onContent: (C) -> Pair<A, B>
+    val onSight: (C) -> Pair<A, B>
 )
 
 operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor<A, B, C, Ev>): Dash<C, Ev> =
@@ -43,10 +43,10 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
                 anchorBehavior.onNext(anchor)
             }
 
-            override fun setContent(content: C) {
-                val ab = floor.onContent(content)
-                viewA.setContent(ab.first)
-                viewB.setContent(ab.second)
+            override fun setSight(sight: C) {
+                val ab = floor.onSight(sight)
+                viewA.setSight(ab.first)
+                viewB.setSight(ab.second)
             }
 
             override val events: Observable<Ev> get() = viewA.events.mergeWith(viewB.events)

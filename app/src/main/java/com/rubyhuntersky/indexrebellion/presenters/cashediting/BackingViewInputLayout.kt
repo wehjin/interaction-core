@@ -12,7 +12,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.dashes.Icon
-import com.rubyhuntersky.vx.dashes.Input
+import com.rubyhuntersky.vx.dashes.InputSight
 import com.rubyhuntersky.vx.dashes.InputEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +44,7 @@ class BackingViewInputLayout
 
     private val eventPublish = PublishSubject.create<InputEvent>()
 
-    fun render(content: Input) {
+    fun render(content: InputSight) {
         Log.d(this.tag.toString(), "render $content")
         layout.hint = content.label
 
@@ -61,7 +61,7 @@ class BackingViewInputLayout
         editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
     }
 
-    private fun renderEditTextHint(hasFocus: Boolean, content: Input) {
+    private fun renderEditTextHint(hasFocus: Boolean, content: InputSight) {
         if (hasFocus) {
             editText.hint = content.originalText
         } else {

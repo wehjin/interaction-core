@@ -12,7 +12,7 @@ class TitleDashTest {
     private val viewId = ViewId()
     private val latitudeSubject = PublishSubject.create<DashLatitude>()
     private val eventSubject = PublishSubject.create<Nothing>()
-    private val viewMock = mock<Dash.View<TextLine, Nothing>> {
+    private val viewMock = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubject
         on { events } doReturn eventSubject
     }
@@ -22,10 +22,10 @@ class TitleDashTest {
     private val view = TitleDash.enview(hostMock, viewId)
 
     @Test
-    fun setContent() {
-        view.setContent("Hello")
-        verify(viewMock).setContent(
-            TextLine(
+    fun setSight() {
+        view.setSight("Hello")
+        verify(viewMock).setSight(
+            TextLineSight(
                 "Hello",
                 TextStyle.Highlight5
             )

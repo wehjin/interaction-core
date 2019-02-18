@@ -4,7 +4,7 @@ import com.rubyhuntersky.vx.Dash
 import com.rubyhuntersky.vx.ViewHost
 import com.rubyhuntersky.vx.ViewId
 
-data class TextLine(
+data class TextLineSight(
     val text: String,
     val style: TextStyle
 )
@@ -15,6 +15,6 @@ enum class TextStyle {
     Subtitle1,
 }
 
-class TextLineDash : Dash<TextLine, Nothing> {
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<TextLine, Nothing> = viewHost.addTextLine(id)
+class TextLineDash : Dash<TextLineSight, Nothing> {
+    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<TextLineSight, Nothing> = viewHost.addTextLine(id)
 }

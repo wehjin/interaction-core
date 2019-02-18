@@ -22,7 +22,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
 ) {
     data class FundingEditor(
         val title: String,
-        val targetInput: Input
+        val targetInput: InputSight
     ) {
         fun toPair() = Pair(title, targetInput)
     }
@@ -34,7 +34,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
 
         dashView = dash.enview(view.screenView, ViewId())
             .also {
-                view.screenView.setContentView(it)
+                view.screenView.render(it)
             }
         dashView.events
             .subscribe {
@@ -66,14 +66,14 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     private fun renderEditing(vision: Vision.Editing) {
         val content = FundingEditor(
             title = "Update Funding",
-            targetInput = Input(
+            targetInput = InputSight(
                 text = vision.edit,
                 originalText = vision.oldCashAmount.toStatString(),
                 label = "Cash Available",
                 icon = Icon.ResId(R.drawable.ic_attach_money_black_24dp)
             )
         )
-        dashView.setContent(content)
+        dashView.setSight(content)
         saveButton.isEnabled = vision.canSave
     }
 

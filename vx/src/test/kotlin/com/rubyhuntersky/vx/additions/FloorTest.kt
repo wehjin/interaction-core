@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.vx.*
-import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.TextLineSight
 import com.rubyhuntersky.vx.dashes.TextStyle
 import com.rubyhuntersky.vx.dashes.TitleDash
 import io.reactivex.subjects.PublishSubject
@@ -15,14 +15,14 @@ class FloorTest {
 
     private val latitudeSubjectA = PublishSubject.create<DashLatitude>()
     private val eventSubjectA = PublishSubject.create<Nothing>()
-    private val viewMockA = mock<Dash.View<TextLine, Nothing>> {
+    private val viewMockA = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectA
         on { events } doReturn eventSubjectA
     }
 
     private val latitudeSubjectB = PublishSubject.create<DashLatitude>()
     private val eventSubjectB = PublishSubject.create<Nothing>()
-    private val viewMockB = mock<Dash.View<TextLine, Nothing>> {
+    private val viewMockB = mock<Dash.View<TextLineSight, Nothing>> {
         on { latitudes } doReturn latitudeSubjectB
         on { events } doReturn eventSubjectB
     }
@@ -31,20 +31,20 @@ class FloorTest {
         on { addTextLine(ViewId().extend(0)) } doReturn viewMockA
         on { addTextLine(ViewId().extend(1)) } doReturn viewMockB
     }
-    private val dash = TitleDash + Floor(TitleDash) { content: Pair<String, String> -> content }
+    private val dash = TitleDash + Floor(TitleDash) { sight: Pair<String, String> -> sight }
     private val view = dash.enview(hostMock, viewId)
 
     @Test
-    fun setContent() {
-        view.setContent(Pair("Hello", "World"))
-        verify(viewMockA).setContent(
-            TextLine(
+    fun setSight() {
+        view.setSight(Pair("Hello", "World"))
+        verify(viewMockA).setSight(
+            TextLineSight(
                 "Hello",
                 TextStyle.Highlight5
             )
         )
-        verify(viewMockB).setContent(
-            TextLine(
+        verify(viewMockB).setSight(
+            TextLineSight(
                 "World",
                 TextStyle.Highlight5
             )

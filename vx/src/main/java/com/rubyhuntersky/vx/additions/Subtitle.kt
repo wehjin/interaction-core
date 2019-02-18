@@ -1,7 +1,7 @@
 package com.rubyhuntersky.vx.additions
 
 import com.rubyhuntersky.vx.*
-import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.TextLineSight
 import com.rubyhuntersky.vx.dashes.TextLineDash
 import com.rubyhuntersky.vx.dashes.TextStyle
 import com.rubyhuntersky.vx.dashes.TitleDash
@@ -14,7 +14,7 @@ data class TitleSubtitle(val title: String, val subtitle: String)
 
 private object TitleAtopSubtitleDash :
     Dash<String, Nothing> by TextLineDash().transform({
-        TextLine(
+        TextLineSight(
             it,
             TextStyle.Highlight6
         )
@@ -22,7 +22,7 @@ private object TitleAtopSubtitleDash :
 
 private object SubtitleBelowTitleDash :
     Dash<String, Nothing> by TextLineDash().transform({
-        TextLine(
+        TextLineSight(
             it,
             TextStyle.Subtitle1
         )

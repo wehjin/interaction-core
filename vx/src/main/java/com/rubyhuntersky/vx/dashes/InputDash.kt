@@ -4,7 +4,7 @@ import com.rubyhuntersky.vx.Dash
 import com.rubyhuntersky.vx.ViewHost
 import com.rubyhuntersky.vx.ViewId
 
-data class Input(
+data class InputSight(
     val text: String,
     val originalText: String,
     val label: String,
@@ -20,6 +20,6 @@ sealed class InputEvent {
 }
 
 object InputDash :
-    Dash<Input, InputEvent> {
-    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Input, InputEvent> = viewHost.addInput(id)
+    Dash<InputSight, InputEvent> {
+    override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<InputSight, InputEvent> = viewHost.addInput(id)
 }

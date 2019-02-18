@@ -8,9 +8,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.vx.*
-import com.rubyhuntersky.vx.dashes.Input
 import com.rubyhuntersky.vx.dashes.InputEvent
-import com.rubyhuntersky.vx.dashes.TextLine
+import com.rubyhuntersky.vx.dashes.InputSight
+import com.rubyhuntersky.vx.dashes.TextLineSight
 import com.rubyhuntersky.vx.dashes.TextStyle
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -34,12 +34,12 @@ class ScreenView
     defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), ViewHost {
 
-    fun <C : Any, E : Any> setContentView(dashView: Dash.View<C, E>) {
-        this.contentDashView = dashView
+    fun <C : Any, E : Any> render(dashView: Dash.View<C, E>) {
+        this.renderedDashView = dashView
         beginHBoundUpdatesIfAttachedToWindow()
     }
 
-    private var contentDashView: DashView<*, *>? = null
+    private var renderedDashView: DashView<*, *>? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -49,7 +49,7 @@ class ScreenView
     private fun beginHBoundUpdatesIfAttachedToWindow() {
         composite.clear()
         if (isAttachedToWindow) {
-            contentDashView?.let { dashView ->
+            renderedDashView?.let { dashView ->
                 composite.clear()
                 dashView.setAnchor(Anchor(0, 0f))
                 hboundBehavior.distinctUntilChanged().subscribe {
@@ -72,23 +72,23 @@ class ScreenView
         hboundBehavior.onNext(HBound(toDip(left), toDip(left + w)))
     }
 
-    override fun addInput(id: ViewId): Dash.View<Input, InputEvent> = ViewBackedDashView(
+    override fun addInput(id: ViewId): Dash.View<InputSight, InputEvent> = ViewBackedDashView(
         frameLayout = this@ScreenView,
         id = id,
-        adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, Input, InputEvent> {
+        adapter = object : ViewBackedDashView.Adapter<BackingViewInputLayout, InputSight, InputEvent> {
             override fun buildView(context: Context): BackingViewInputLayout = BackingViewInputLayout(context, null)
-            override fun renderView(view: BackingViewInputLayout, content: Input) {
+            override fun renderView(view: BackingViewInputLayout, content: InputSight) {
                 view.render(content)
             }
         }
     )
 
-    override fun addTextLine(id: ViewId): DashView<TextLine, Nothing> = ViewBackedDashView(
+    override fun addTextLine(id: ViewId): DashView<TextLineSight, Nothing> = ViewBackedDashView(
         frameLayout = this@ScreenView,
         id = id,
-        adapter = object : ViewBackedDashView.Adapter<BackingViewTextView, TextLine, Nothing> {
+        adapter = object : ViewBackedDashView.Adapter<BackingViewTextView, TextLineSight, Nothing> {
             override fun buildView(context: Context): BackingViewTextView = BackingViewTextView(context)
-            override fun renderView(view: BackingViewTextView, content: TextLine) {
+            override fun renderView(view: BackingViewTextView, content: TextLineSight) {
                 when (content.style) {
                     TextStyle.Highlight5 -> view.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
                     TextStyle.Highlight6 -> view.setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline6)
