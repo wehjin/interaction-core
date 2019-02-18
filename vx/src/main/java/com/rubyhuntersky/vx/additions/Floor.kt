@@ -7,7 +7,6 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
-
 data class Floor<A : Any, B : Any, C : Any, Ev : Any>(
     val dash: Dash<B, Ev>,
     val onSight: (C) -> Pair<A, B>
@@ -53,7 +52,4 @@ operator fun <A : Any, B : Any, C : Any, Ev : Any> Dash<A, Ev>.plus(floor: Floor
         }
     }
 
-data class SizeAnchor(val size: Int, val anchor: Anchor)
-
-val toSizeAnchor = BiFunction(::SizeAnchor)
 private val sumLatitudes = BiFunction<Dash.Latitude, Dash.Latitude, Int> { a, b -> a.height + b.height }
