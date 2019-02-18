@@ -23,6 +23,19 @@ interface Dash<Sight : Any, Event : Any> {
 
     data class Latitude(val height: Int)
 
+    fun <NeverE : Any> neverEvent(): Dash<Sight, NeverE> =
+        object : Dash<Sight, NeverE> {
+            override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Sight, NeverE> {
+                val coreView = this@Dash.enview(viewHost, id)
+                return object : Dash.View<Sight, NeverE> {
+                    override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
+                    override val latitudes: Observable<Dash.Latitude> get() = coreView.latitudes
+                    override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
+                    override fun setSight(sight: Sight) = coreView.setSight(sight)
+                    override val events: Observable<NeverE> get() = Observable.never()
+                }
+            }
+        }
 }
 
 
@@ -63,17 +76,3 @@ data class VBound(val ceiling: Int, val floor: Int) {
     constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
 }
 
-fun <Sight : Any, Event : Any, NeverE : Any> Dash<Sight, Event>.neverEvent(): Dash<Sight, NeverE> {
-    return object : Dash<Sight, NeverE> {
-        override fun enview(viewHost: ViewHost, id: ViewId): Dash.View<Sight, NeverE> {
-            val coreView = this@neverEvent.enview(viewHost, id)
-            return object : Dash.View<Sight, NeverE> {
-                override fun setHBound(hbound: HBound) = coreView.setHBound(hbound)
-                override val latitudes: Observable<Dash.Latitude> get() = coreView.latitudes
-                override fun setAnchor(anchor: Anchor) = coreView.setAnchor(anchor)
-                override fun setSight(sight: Sight) = coreView.setSight(sight)
-                override val events: Observable<NeverE> get() = Observable.never()
-            }
-        }
-    }
-}

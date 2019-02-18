@@ -7,7 +7,8 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.interaction.cashediting.Action
 import com.rubyhuntersky.interaction.cashediting.Vision
-import com.rubyhuntersky.vx.*
+import com.rubyhuntersky.vx.Dash
+import com.rubyhuntersky.vx.ViewId
 import com.rubyhuntersky.vx.additions.Floor
 import com.rubyhuntersky.vx.additions.plus
 import com.rubyhuntersky.vx.dashes.*
@@ -30,7 +31,7 @@ class CashEditingDialogFragment : InteractionBottomSheetDialogFragment<Vision, A
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val dash =
-            TitleDash.neverEvent<String, Nothing, InputEvent>() + Floor(InputDash, FundingEditor::toPair)
+            TitleDash.neverEvent<InputEvent>() + Floor(InputDash, FundingEditor::toPair)
 
         dashView = dash.enview(view.screenView, ViewId())
             .also {
