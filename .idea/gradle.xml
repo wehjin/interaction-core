@@ -8,10 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/data" />
-            <option value="$PROJECT_DIR$/interaction" />
-            <option value="$PROJECT_DIR$/vx" />
+            <option value="$PROJECT_DIR$/interaction-core-app" />
+            <option value="$PROJECT_DIR$/interaction-core-lib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
