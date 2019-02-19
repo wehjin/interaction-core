@@ -16,4 +16,8 @@ object InteractionRegistry {
     fun dropInteraction(key: Long) {
         interactions.remove(key)
     }
+
+    fun clearInteractions() {
+        interactions.clear()
+    }
 }
