@@ -6,8 +6,8 @@ import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.report.CorrectionDetails
-import com.rubyhuntersky.interaction.Catalyst
-import com.rubyhuntersky.interaction.books.BehaviorBook
+import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.BehaviorBook
 import com.rubyhuntersky.interaction.correctiondetails.Action
 import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
 import com.rubyhuntersky.interaction.correctiondetails.Vision
@@ -17,7 +17,7 @@ class CorrectionDetailsInteractionImplTest {
 
     private val assetSymbol = AssetSymbol("TSL")
     private val details = CorrectionDetails(assetSymbol, ShareCount.ONE, CashAmount.ONE, CashAmount.TEN)
-    private val mockCatalyst = mock<Catalyst<AssetSymbol>>()
+    private val mockCatalyst = mock<Portal<AssetSymbol>>()
     private val saverBook = BehaviorBook(details)
 
     private val interaction =
@@ -40,6 +40,6 @@ class CorrectionDetailsInteractionImplTest {
     @Test
     fun updateShares() {
         interaction.sendAction(Action.UpdateShares)
-        verify(mockCatalyst).catalyze(assetSymbol)
+        verify(mockCatalyst).jump(assetSymbol)
     }
 }

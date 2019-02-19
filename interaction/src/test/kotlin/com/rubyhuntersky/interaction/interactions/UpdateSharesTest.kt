@@ -7,7 +7,7 @@ import com.rubyhuntersky.data.assets.OwnedAsset
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.interaction.UpdateShares
+import com.rubyhuntersky.interaction.updateshares.UpdateShares
 import com.rubyhuntersky.interaction.books.RebellionBook
 import com.rubyhuntersky.interaction.books.RebellionConstituentBook
 import org.junit.Test

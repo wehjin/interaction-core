@@ -5,6 +5,7 @@ import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
 import com.rubyhuntersky.data.index.Constituent
+import com.rubyhuntersky.interaction.core.Book
 import io.reactivex.Observable
 
 class RebellionConstituentBook(private val rebellionBook: RebellionBook, private val assetSymbol: AssetSymbol) :

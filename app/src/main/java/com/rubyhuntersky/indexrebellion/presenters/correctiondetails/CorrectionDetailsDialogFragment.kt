@@ -7,9 +7,9 @@ import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.updateshares.UpdateSharesDialogFragment
-import com.rubyhuntersky.interaction.Catalyst
-import com.rubyhuntersky.interaction.books.BehaviorBook
-import com.rubyhuntersky.interaction.common.InteractionRegistry
+import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.BehaviorBook
+import com.rubyhuntersky.interaction.core.InteractionRegistry
 import com.rubyhuntersky.interaction.correctiondetails.Action
 import com.rubyhuntersky.interaction.correctiondetails.CorrectionDetailsInteractionImpl
 import com.rubyhuntersky.interaction.correctiondetails.Vision
@@ -71,9 +71,9 @@ class CorrectionDetailsDialogFragment : InteractionBottomSheetDialogFragment<Vis
             getFragmentActivity: () -> FragmentActivity
         ): CorrectionDetailsDialogFragment {
             val detailsBook = BehaviorBook(details)
-            val updateSharesCatalyst = object : Catalyst<AssetSymbol> {
-                override fun catalyze(seed: AssetSymbol) =
-                    UpdateSharesDialogFragment.catalyze(Pair(seed, getFragmentActivity))
+            val updateSharesCatalyst = object : Portal<AssetSymbol> {
+                override fun jump(carry: AssetSymbol) =
+                    UpdateSharesDialogFragment.jump(Pair(carry, getFragmentActivity))
             }
             val interaction = CorrectionDetailsInteractionImpl(
                 detailsBook,

@@ -1,8 +1,6 @@
-package com.rubyhuntersky.interaction.common
+package com.rubyhuntersky.interaction.core
 
 import io.reactivex.Observable
-
-typealias CommonInteraction<V, A> = Interaction<V, A>
 
 interface Interaction<V, A> {
     fun reset() {}

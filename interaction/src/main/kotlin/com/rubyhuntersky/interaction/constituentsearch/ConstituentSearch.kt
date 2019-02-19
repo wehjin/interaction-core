@@ -3,9 +3,9 @@ package com.rubyhuntersky.interaction.constituentsearch
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.index.MarketWeight
-import com.rubyhuntersky.interaction.BehaviorInteraction
-import com.rubyhuntersky.interaction.books.Book
-import com.rubyhuntersky.interaction.common.Interaction
+import com.rubyhuntersky.interaction.core.BehaviorInteraction
+import com.rubyhuntersky.interaction.core.Book
+import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.stockcatalog.StockCatalog
 import com.rubyhuntersky.stockcatalog.StockCatalogClient
 import com.rubyhuntersky.stockcatalog.StockCatalogQuery

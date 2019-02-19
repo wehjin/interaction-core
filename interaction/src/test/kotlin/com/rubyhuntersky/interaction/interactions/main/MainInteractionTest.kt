@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.report.CorrectionDetails
-import com.rubyhuntersky.interaction.Catalyst
+import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.books.MemoryRebellionBook
 import com.rubyhuntersky.interaction.books.RebellionBook
 import com.rubyhuntersky.interaction.main.Action
@@ -15,9 +15,9 @@ import org.junit.Test
 
 class MainInteractionTest {
 
-    private val mockCorrectionDetailsCatalyst = mock<Catalyst<CorrectionDetails>> {}
-    private val mockConstituentSearchCatalyst = mock<Catalyst<Unit>> {}
-    private val mockCashEditingCatalyst = mock<Catalyst<Unit>> {}
+    private val mockCorrectionDetailsCatalyst = mock<Portal<CorrectionDetails>> {}
+    private val mockConstituentSearchCatalyst = mock<Portal<Unit>> {}
+    private val mockCashEditingCatalyst = mock<Portal<Unit>> {}
 
     @Test
     fun startsInLoadingState() {
@@ -63,24 +63,24 @@ class MainInteractionTest {
     fun findConstituentActionStartsConstituentSearchInteraction() {
         val mainInteraction = MainInteraction(
             rebellionBook = MemoryRebellionBook(),
-            correctionDetailCatalyst = mockCorrectionDetailsCatalyst,
-            constituentSearchCatalyst = mockConstituentSearchCatalyst,
-            cashEditingCatalyst = mockCashEditingCatalyst
+            correctionDetailPortal = mockCorrectionDetailsCatalyst,
+            constituentSearchPortal = mockConstituentSearchCatalyst,
+            cashEditingPortal = mockCashEditingCatalyst
         )
 
         mainInteraction.sendAction(Action.FindConstituent)
-        verify(mockConstituentSearchCatalyst).catalyze(Unit)
+        verify(mockConstituentSearchCatalyst).jump(Unit)
     }
 
     @Test
     fun openCashEditorActionCatalyzesCashEditingCatalyst() {
         val mainInteraction = MainInteraction(
             rebellionBook = MemoryRebellionBook(),
-            correctionDetailCatalyst = mockCorrectionDetailsCatalyst,
-            constituentSearchCatalyst = mockConstituentSearchCatalyst,
-            cashEditingCatalyst = mockCashEditingCatalyst
+            correctionDetailPortal = mockCorrectionDetailsCatalyst,
+            constituentSearchPortal = mockConstituentSearchCatalyst,
+            cashEditingPortal = mockCashEditingCatalyst
         )
         mainInteraction.sendAction(Action.OpenCashEditor)
-        verify(mockCashEditingCatalyst).catalyze(Unit)
+        verify(mockCashEditingCatalyst).jump(Unit)
     }
 }

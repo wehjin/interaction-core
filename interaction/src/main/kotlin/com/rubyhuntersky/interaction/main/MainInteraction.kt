@@ -4,13 +4,13 @@ import com.rubyhuntersky.data.cash.CashEquivalent
 import com.rubyhuntersky.data.report.Correction
 import com.rubyhuntersky.data.report.CorrectionDetails
 import com.rubyhuntersky.data.report.RebellionReport
-import com.rubyhuntersky.interaction.Catalyst
-import com.rubyhuntersky.interaction.NotImplementedCatalyst
-import com.rubyhuntersky.interaction.addTo
+import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.NotImplementedPortal
 import com.rubyhuntersky.interaction.books.RebellionBook
-import com.rubyhuntersky.interaction.common.Interaction
+import com.rubyhuntersky.interaction.core.Interaction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 
 
@@ -30,9 +30,9 @@ sealed class Action {
 
 class MainInteraction(
     private val rebellionBook: RebellionBook,
-    private val correctionDetailCatalyst: Catalyst<CorrectionDetails>,
-    private val constituentSearchCatalyst: Catalyst<Unit> = NotImplementedCatalyst(),
-    private val cashEditingCatalyst: Catalyst<Unit> = NotImplementedCatalyst()
+    private val correctionDetailPortal: Portal<CorrectionDetails>,
+    private val constituentSearchPortal: Portal<Unit> = NotImplementedPortal(),
+    private val cashEditingPortal: Portal<Unit> = NotImplementedPortal()
 ) : Interaction<MainVision, MainAction> {
 
     private val visionSubject = BehaviorSubject.createDefault(Vision.Loading as MainVision)
@@ -59,8 +59,8 @@ class MainInteraction(
     }
 
     private fun updateViewing(action: MainAction) = when (action) {
-        is Action.FindConstituent -> constituentSearchCatalyst.catalyze(Unit)
-        is Action.OpenCashEditor -> cashEditingCatalyst.catalyze(Unit)
+        is Action.FindConstituent -> constituentSearchPortal.jump(Unit)
+        is Action.OpenCashEditor -> cashEditingPortal.jump(Unit)
         is Action.OpenCorrectionDetails -> openCorrectionDetails(action.correction)
     }
 
@@ -73,7 +73,7 @@ class MainInteraction(
         val fullInvestment = (rebellion.fullInvestment as? CashEquivalent.Amount)?.cashAmount ?: return
         val targetValue = correction.targetValue(fullInvestment)
         val details = CorrectionDetails(assetSymbol, ownedShares, ownedValue, targetValue)
-        correctionDetailCatalyst.catalyze(details)
+        correctionDetailPortal.jump(details)
     }
 
     private fun updateLoading() {}

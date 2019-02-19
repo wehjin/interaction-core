@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.books
+package com.rubyhuntersky.interaction.core
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject

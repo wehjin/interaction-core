@@ -2,11 +2,11 @@ package com.rubyhuntersky.interaction.correctiondetails
 
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.report.CorrectionDetails
-import com.rubyhuntersky.interaction.Catalyst
-import com.rubyhuntersky.interaction.books.Book
-import com.rubyhuntersky.interaction.common.Interaction
-import com.rubyhuntersky.interaction.common.Saver
-import com.rubyhuntersky.interaction.BehaviorInteractionAdapter as Adapter
+import com.rubyhuntersky.interaction.core.Portal
+import com.rubyhuntersky.interaction.core.Book
+import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Saver
+import com.rubyhuntersky.interaction.core.BehaviorInteractionAdapter as Adapter
 
 typealias CorrectionDetailsInteraction = Interaction<Vision, Action>
 
@@ -21,11 +21,11 @@ sealed class Action {
 
 class CorrectionDetailsInteractionImpl(
     saverBook: Book<CorrectionDetails>,
-    updateSharesCatalyst: Catalyst<AssetSymbol>
+    updateSharesPortal: Portal<AssetSymbol>
 ) : CorrectionDetailsInteraction
-by Saver.InteractionImpl(saverBook).adapt(CorrectionDetailsSaverAdapter(updateSharesCatalyst))
+by Saver.InteractionImpl(saverBook).adapt(CorrectionDetailsSaverAdapter(updateSharesPortal))
 
-class CorrectionDetailsSaverAdapter(private val updateSharesCatalyst: Catalyst<AssetSymbol>) :
+class CorrectionDetailsSaverAdapter(private val updateSharesPortal: Portal<AssetSymbol>) :
     Adapter<Saver.Vision<CorrectionDetails>, Saver.Action<CorrectionDetails>, Vision, Action> {
 
     override fun onVision(
@@ -46,7 +46,7 @@ class CorrectionDetailsSaverAdapter(private val updateSharesCatalyst: Catalyst<A
                 val vision = controller.vision
                 when (vision) {
                     is Vision.Loading -> Unit
-                    is Vision.Viewing -> updateSharesCatalyst.catalyze(vision.details.assetSymbol)
+                    is Vision.Viewing -> updateSharesPortal.jump(vision.details.assetSymbol)
                 }
             }
         }

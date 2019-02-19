@@ -1,23 +1,9 @@
-package com.rubyhuntersky.interaction
+package com.rubyhuntersky.interaction.core
 
-import com.rubyhuntersky.interaction.common.Interaction
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
-
-interface Catalyst<T> {
-    fun catalyze(seed: T)
-}
-
-class NotImplementedCatalyst<T> : Catalyst<T> {
-    override fun catalyze(seed: T) {
-        check(false) { "Catalyst not implemented" }
-    }
-}
-
-fun Disposable.addTo(compositeDisposable: CompositeDisposable): Disposable = apply { compositeDisposable.add(this) }
 
 abstract class BehaviorInteraction<V, A>(startVision: V? = null, private val startAction: A? = null) :
     Interaction<V, A> {
@@ -40,7 +26,8 @@ abstract class BehaviorInteraction<V, A>(startVision: V? = null, private val sta
         return object : BehaviorInteraction<EdgeV, EdgeA>() {
             private val edge = this
             private val coreVisions = CompositeDisposable()
-            private val controller = object : BehaviorInteractionAdapter.Controller<EdgeV, A> {
+            private val controller = object :
+                BehaviorInteractionAdapter.Controller<EdgeV, A> {
                 override val vision: EdgeV get() = edge.vision
                 override fun setVision(vision: EdgeV) = edge.setVision(vision)
                 override fun sendUpstreamAction(action: A) = core.sendAction(action)

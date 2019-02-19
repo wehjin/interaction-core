@@ -1,15 +1,16 @@
-package com.rubyhuntersky.interaction
+package com.rubyhuntersky.interaction.updateshares
 
 import com.rubyhuntersky.data.assets.AssetSymbol
 import com.rubyhuntersky.data.assets.OwnedAsset
 import com.rubyhuntersky.data.assets.ShareCount
 import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.data.cash.CashAmount
+import com.rubyhuntersky.interaction.core.BehaviorInteraction
 import com.rubyhuntersky.interaction.books.ConstituentBook
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import java.util.*
-import com.rubyhuntersky.interaction.common.Interaction as CommonInteraction
+import com.rubyhuntersky.interaction.core.Interaction as CommonInteraction
 
 
 object UpdateShares {
@@ -130,8 +131,12 @@ object UpdateShares {
 
         private val numberDelta: NumberDelta
             get() = when {
-                newTotal.isNotBlank() -> UpdateShares.NumberDelta.Total(newTotal)
-                newChange.isNotBlank() -> UpdateShares.NumberDelta.Change(newChange)
+                newTotal.isNotBlank() -> UpdateShares.NumberDelta.Total(
+                    newTotal
+                )
+                newChange.isNotBlank() -> UpdateShares.NumberDelta.Change(
+                    newChange
+                )
                 else -> UpdateShares.NumberDelta.Undecided
             }
 

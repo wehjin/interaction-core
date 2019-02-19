@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.common
+package com.rubyhuntersky.interaction.core
 
 object InteractionRegistry {
 

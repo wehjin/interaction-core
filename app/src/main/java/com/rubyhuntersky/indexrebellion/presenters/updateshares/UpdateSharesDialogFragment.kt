@@ -9,10 +9,10 @@ import com.rubyhuntersky.data.assets.SharePrice
 import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.common.InteractionBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.Catalyst
+import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.books.RebellionConstituentBook
-import com.rubyhuntersky.interaction.UpdateShares
-import com.rubyhuntersky.interaction.common.InteractionRegistry
+import com.rubyhuntersky.interaction.updateshares.UpdateShares
+import com.rubyhuntersky.interaction.core.InteractionRegistry
 import kotlinx.android.synthetic.main.view_update_share_count.*
 import java.util.*
 import kotlin.random.Random
@@ -145,9 +145,9 @@ class UpdateSharesDialogFragment : InteractionBottomSheetDialogFragment<UpdateSh
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
 
-    companion object : Catalyst<Pair<AssetSymbol, () -> FragmentActivity>> {
+    companion object : Portal<Pair<AssetSymbol, () -> FragmentActivity>> {
 
-        override fun catalyze(seed: Pair<AssetSymbol, () -> FragmentActivity>) {
+        override fun jump(seed: Pair<AssetSymbol, () -> FragmentActivity>) {
             Log.d(this::class.java.simpleName, "Catalyzing UpdateShares: ${seed.first}")
             val key = Random.nextLong()
             val fragment = UpdateSharesDialogFragment()

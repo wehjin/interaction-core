@@ -2,8 +2,8 @@ package com.rubyhuntersky.interaction.cashediting
 
 import com.rubyhuntersky.data.Rebellion
 import com.rubyhuntersky.data.cash.CashAmount
-import com.rubyhuntersky.interaction.BehaviorInteraction
-import com.rubyhuntersky.interaction.books.Book
+import com.rubyhuntersky.interaction.core.BehaviorInteraction
+import com.rubyhuntersky.interaction.core.Book
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 

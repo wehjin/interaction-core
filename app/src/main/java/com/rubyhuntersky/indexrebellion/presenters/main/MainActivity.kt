@@ -9,14 +9,14 @@ import com.rubyhuntersky.indexrebellion.R
 import com.rubyhuntersky.indexrebellion.books.SharedRebellionBook
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.CashEditingDialogFragment
 import com.rubyhuntersky.indexrebellion.presenters.cashediting.SharedCashEditingInteraction
-import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchCatalyst
-import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsCatalyst
-import com.rubyhuntersky.interaction.Catalyst
-import com.rubyhuntersky.interaction.addTo
+import com.rubyhuntersky.indexrebellion.presenters.constituentsearch.ConstituentSearchPortal
+import com.rubyhuntersky.indexrebellion.presenters.correctiondetails.CorrectionDetailsPortal
+import com.rubyhuntersky.interaction.core.Portal
 import com.rubyhuntersky.interaction.main.Action
 import com.rubyhuntersky.interaction.main.MainInteraction
 import com.rubyhuntersky.interaction.main.Vision
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main_viewing.*
 import kotlinx.android.synthetic.main.view_funding.*
 
@@ -79,16 +79,16 @@ class MainActivity : AppCompatActivity() {
 
         private val mainInteraction = MainInteraction(
             rebellionBook = SharedRebellionBook,
-            constituentSearchCatalyst = ConstituentSearchCatalyst { mainActivity!! },
-            cashEditingCatalyst = object : Catalyst<Unit> {
-                override fun catalyze(seed: Unit) {
+            constituentSearchPortal = ConstituentSearchPortal { mainActivity!! },
+            cashEditingPortal = object : Portal<Unit> {
+                override fun jump(carry: Unit) {
                     SharedCashEditingInteraction.reset()
                     mainActivity?.supportFragmentManager?.let {
                         CashEditingDialogFragment.newInstance().show(it, "cash_editing")
                     }
                 }
             },
-            correctionDetailCatalyst = CorrectionDetailsCatalyst { mainActivity!! }
+            correctionDetailPortal = CorrectionDetailsPortal { mainActivity!! }
         )
     }
 }

@@ -1,7 +1,5 @@
-package com.rubyhuntersky.interaction.common
+package com.rubyhuntersky.interaction.core
 
-import com.rubyhuntersky.interaction.BehaviorInteraction
-import com.rubyhuntersky.interaction.books.Book
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
