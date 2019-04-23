@@ -2,8 +2,8 @@ package com.rubyhuntersky.interaction.core
 
 import io.reactivex.Observable
 
-interface Interaction<V, A> {
-    val visionStream: Observable<V>
+interface Reporter<R, A> {
+    val name: String
+    val reportStream: Observable<R>
     fun sendAction(action: A)
-    fun reset() {}
 }

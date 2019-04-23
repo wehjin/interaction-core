@@ -1,29 +1,16 @@
 package com.rubyhuntersky.interaction.core
 
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.subjects.BehaviorSubject
 
-abstract class BehaviorInteraction<V, A>(startVision: V? = null, private val startAction: A? = null) :
-    Interaction<V, A> {
-
-    override val visionStream: Observable<V> get() = visionBehavior.distinctUntilChanged()
-    private val visionBehavior: BehaviorSubject<V> =
-        startVision?.let { BehaviorSubject.createDefault(startVision) } ?: BehaviorSubject.create()
-
-    protected val vision get() = visionBehavior.value!!
-    protected fun setVision(nextVision: V) = visionWriter.onNext(nextVision)
-    private val visionWriter = visionBehavior.toSerialized()
-
-    override fun reset() {
-        startAction?.let(this::sendAction)
-    }
-
+abstract class BehaviorInteraction<V, A>(
+    startVision: V? = null, startAction: A? = null
+) : SubjectQuantum<V, A, Unit>(startVision, startAction) {
 
     fun <EdgeV, EdgeA> adapt(adapter: BehaviorInteractionAdapter<V, A, EdgeV, EdgeA>): Interaction<EdgeV, EdgeA> {
         val core = this
         return object : BehaviorInteraction<EdgeV, EdgeA>() {
+            override val name: String = "Adapted${core.name}"
             private val edge = this
             private val coreVisions = CompositeDisposable()
             private val controller = object :
@@ -41,17 +28,5 @@ abstract class BehaviorInteraction<V, A>(startVision: V? = null, private val sta
 
             override fun sendAction(action: EdgeA) = adapter.onAction(action, controller)
         }
-    }
-}
-
-interface BehaviorInteractionAdapter<CoreV, CoreA, EdgeV, EdgeA> {
-
-    fun onVision(vision: CoreV, controller: Controller<EdgeV, CoreA>)
-    fun onAction(action: EdgeA, controller: Controller<EdgeV, CoreA>)
-
-    interface Controller<EdgeV, CoreA> {
-        val vision: EdgeV
-        fun setVision(vision: EdgeV)
-        fun sendUpstreamAction(action: CoreA)
     }
 }
