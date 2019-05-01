@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion
+package com.rubyhuntersky.interaction.core
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

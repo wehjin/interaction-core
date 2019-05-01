@@ -1,4 +1,4 @@
-package com.rubyhuntersky.indexrebellion.common
+package com.rubyhuntersky.interaction.core.app.common
 
 import android.app.Application
 
