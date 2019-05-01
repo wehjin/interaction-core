@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IndexRebellion</string>
+    <string name="app_name">Interaction Core Demo</string>
     <string name="dismissed">Dismissed</string>
     <string name="loading">Loading…</string>
     <string name="plus">+</string>
@@ -49,7 +49,7 @@
     <string name="more">More</string>
     <string name="total">Total</string>
     <string name="shares">Shares</string>
-    <string name="n_shares">%1$s shares — $%2$s </string>
+    <string name="n_shares">%1$s shares — $%2$s</string>
     <string name="share_price">Share price</string>
     <string name="adjust_cash_in">Subtract value from cash</string>
     <string name="old_shares_format">%1$s\nshares</string>
