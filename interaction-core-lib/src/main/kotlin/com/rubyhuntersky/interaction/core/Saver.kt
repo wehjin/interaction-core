@@ -26,9 +26,9 @@ object Saver {
         }
 
         override fun sendAction(action: Action<T>) {
-            val newStory = (action as Action.Write).value
-            if (newStory != value) {
-                book.write(newStory)
+            val newValue = (action as Action.Write).value
+            if (newValue != value) {
+                book.write(newValue)
             }
         }
 

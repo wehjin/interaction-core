@@ -17,22 +17,22 @@ class MainActivity : AppCompatActivity() {
             is MainVision.Idle -> {
                 updateContentView(R.id.main_idle, R.layout.view_main_idle)
                 this.selectButton.setOnClickListener {
-                    story.update(vision.toSelectAction())
+                    interaction.sendAction(vision.toSelectAction())
                 }
             }
         }
     }
 
-    private lateinit var story: MainStory
+    private lateinit var interaction: MainInteraction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        story = MainStory.locateInEdge(edge)
+        interaction = MainInteraction.locateInEdge(edge)
     }
 
     override fun onStart() {
         super.onStart()
-        visions = story.visions
+        visions = interaction.visionStream
             .doOnNext(this::render)
             .doOnComplete {
                 visions?.dispose()

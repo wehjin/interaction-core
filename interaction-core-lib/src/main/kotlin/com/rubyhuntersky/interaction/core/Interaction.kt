@@ -4,8 +4,8 @@ import io.reactivex.Observable
 
 interface Interaction<V, A> {
 
-    val name: String
+    val name: String get() = this.javaClass.simpleName
     val visionStream: Observable<V>
-    fun sendAction(action: A)
-    fun reset() {}
+    fun sendAction(action: A): Unit = throw UnsupportedOperationException()
+    fun reset() = Unit
 }
