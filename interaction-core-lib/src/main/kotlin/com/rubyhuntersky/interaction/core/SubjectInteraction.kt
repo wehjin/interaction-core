@@ -7,23 +7,23 @@ import io.reactivex.subjects.BehaviorSubject
 
 abstract class SubjectInteraction<V, A>(
     startVision: V? = null,
-    private val startAction: A? = null
+    @Deprecated("Use sendAction") private val startAction: A? = null
 ) : Interaction<V, A> {
 
     override val name: String get() = this.javaClass.simpleName
 
     private val visionBehavior: BehaviorSubject<V> =
-        startVision?.let {
-            BehaviorSubject.createDefault(startVision)
-        } ?: BehaviorSubject.create()
-
+        startVision?.let { BehaviorSubject.createDefault(startVision) } ?: BehaviorSubject.create()
     protected val vision get() = visionBehavior.value!!
     override val visionStream: Observable<V> get() = visionBehavior.distinctUntilChanged()
     private val visionWriter = visionBehavior.toSerialized()
-    protected fun setVision(nextVision: V) = visionWriter.onNext(nextVision)
 
-    override fun reset() {
-        startAction?.let(this::sendAction)
+    protected fun setVision(nextVision: V) = visionWriter.onNext(nextVision)
+    protected fun endVisions() = visionWriter.onComplete()
+
+    @Deprecated("Use sendAction")
+    fun reset() {
+        startAction?.let { sendAction(it) }
     }
 }
 

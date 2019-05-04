@@ -10,10 +10,16 @@ open class Edge {
 
     fun presentInteraction(interaction: Interaction<*, *>): Long = addInteraction(interaction)
 
-    fun addInteraction(interaction: Interaction<*, *>): Long {
-        val key = nextKey++
+    fun addInteraction(interaction: Interaction<*, *>, key: Long = nextKey++): Long {
         interactions[key] = interaction
-        disposables[key] = interaction.visionStream.doOnComplete { removeInteraction(key) }.subscribe()
+        disposables[key] = interaction.visionStream
+            .doOnComplete { removeInteraction(key) }
+            .doOnNext {
+                if (interaction.isTailVision(it)) {
+                    removeInteraction(key)
+                }
+            }
+            .subscribe()
         return key
     }
 

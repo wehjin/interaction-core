@@ -14,11 +14,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun render(vision: MainVision) {
         when (vision) {
-            is MainVision.Idle -> {
+            is MainVision.Message -> {
                 updateContentView(R.id.main_idle, R.layout.view_main_idle)
-                this.selectButton.setOnClickListener {
-                    interaction.sendAction(vision.toSelectAction())
-                }
+                selectionTextView.text = vision.message
+                selectButton.setOnClickListener { interaction.sendAction(MainAction.Select) }
             }
         }
     }
