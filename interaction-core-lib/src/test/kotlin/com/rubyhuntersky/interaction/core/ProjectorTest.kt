@@ -7,7 +7,7 @@ import org.junit.Test
 class ProjectorTest {
     @Test
     fun fallback() {
-        val interaction = object : BehaviorInteraction<Int, Nothing>(17) {
+        val interaction = object : SubjectInteraction<Int, Nothing>(17) {
             override fun sendAction(action: Nothing) {
             }
         }

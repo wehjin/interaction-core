@@ -15,7 +15,7 @@ object Saver {
     }
 
     class InteractionImpl<T : Any>(private val book: Book<T>) :
-        BehaviorInteraction<Vision<T>, Action<T>>(startVision = Saver.Vision.Reading<T>()) {
+        SubjectInteraction<Vision<T>, Action<T>>(startVision = Saver.Vision.Reading<T>()) {
 
         private val disposable = CompositeDisposable()
 
