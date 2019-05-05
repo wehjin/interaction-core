@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        edge.setActivity(this)
         visions = interaction.visionStream
             .doOnNext(this::render)
             .doOnComplete {
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         visions?.dispose()
+        edge.unsetActivity(this)
         super.onStop()
     }
 

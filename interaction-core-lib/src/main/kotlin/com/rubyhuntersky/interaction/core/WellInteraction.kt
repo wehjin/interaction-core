@@ -4,11 +4,15 @@ class WellInteraction<V, A>(
     well: Well,
     start: () -> V,
     private val update: (V, A) -> WellResult<V, A>,
+    private val isTail: (someVision: Any?) -> Boolean,
     private val customName: String? = null
 ) : Interaction<V, A>
 by object : SubjectInteraction<V, A>(startVision = start()) {
 
     override val name: String get() = customName ?: super.name
+
+    override fun isTailVision(someVision: Any?): Boolean = isTail(someVision)
+
     override fun sendAction(action: A) {
         val result = update(vision, action)
         setVision(result.newVision)

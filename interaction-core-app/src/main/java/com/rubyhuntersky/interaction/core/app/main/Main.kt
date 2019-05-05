@@ -17,23 +17,30 @@ by WellInteraction(
     well,
     start = { MainVision.Message("Idle") },
     update = { oldVision, action ->
-        if (action is MainAction.Select) {
-            Log.d(tag, "SELECT")
-            val interaction = SelectInteraction(well, "A", "B", "C")
-            edge.presentInteraction(interaction)
-            val response = interaction.result { "Cancelled" }.map { MainAction.SetMessage(it) as MainAction }
-            WellResult(oldVision, Wish(response, name = "${this}/${interaction.name}"))
-        } else {
-            WellResult(oldVision)
+        Log.d(tag, "ACTION: $action")
+        when (action) {
+            is MainAction.Select -> {
+                val interaction = SelectInteraction(well, "A", "B", "C")
+                edge.presentInteraction(interaction)
+                val wishAction = interaction.result { "Cancelled" }
+                    .map {
+                        MainAction.SetMessage(it) as MainAction
+                    }
+                WellResult(oldVision, Wish(wishAction, name = "${this}/${interaction.name}"))
+            }
+            is MainAction.SetMessage -> {
+                WellResult(MainVision.Message(action.message))
+            }
         }
     },
+    isTail = { false },
     customName = tag
 ) {
     companion object {
         private val tag = this::class.java.simpleName
         fun locateInEdge(edge: Edge): MainInteraction {
             val search = InteractionSearch.ByName(tag)
-            return edge.findInteraction<MainVision, MainAction, Void>(search) as MainInteraction
+            return edge.findInteraction<MainVision, MainAction>(search) as MainInteraction
         }
     }
 }

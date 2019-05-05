@@ -6,7 +6,7 @@ import io.reactivex.Single
 interface Interaction<V, A> {
 
     val name: String
-        get() = this.javaClass.simpleName
+        get() = this::class.java.simpleName
 
     val visionStream: Observable<V>
 
@@ -15,5 +15,10 @@ interface Interaction<V, A> {
     fun isTailVision(someVision: Any?) = false
 
     val tailVision: Single<V>
-        get() = visionStream.filter { isTailVision(it) }.firstOrError()
+        get() = visionStream
+            .filter {
+                val isTail = isTailVision(it)
+                isTail
+            }
+            .firstOrError()
 }

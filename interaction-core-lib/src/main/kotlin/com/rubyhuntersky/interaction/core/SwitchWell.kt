@@ -10,11 +10,20 @@ class SwitchWell : Well {
         wishes.forEach { wish ->
             val name = wish.name
             if (name == null) {
-                wish.action.subscribe(interaction::sendAction)
+                wish.action.subscribe { action ->
+                    fulfillWish(interaction, action)
+                }
             } else {
                 wishDisposables.remove(name)?.dispose()
-                wishDisposables[name] = wish.action.subscribe(interaction::sendAction)
+                wishDisposables[name] = wish.action.subscribe { action ->
+                    wishDisposables.remove(name)
+                    fulfillWish(interaction, action)
+                }
             }
         }
+    }
+
+    private fun <A> fulfillWish(interaction: Interaction<*, A>, action: A) {
+        interaction.sendAction(action)
     }
 }

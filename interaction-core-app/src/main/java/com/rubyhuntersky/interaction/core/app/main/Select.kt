@@ -17,9 +17,19 @@ by WellInteraction(
         } else {
             WellResult(oldVision)
         }
-    }
+    },
+    isTail = { some -> some is SelectVision.Choice },
+    customName = TAG
 ) {
-    fun result(fill: () -> String) = tailVision.map { (it as SelectVision.Choice).choice ?: fill() }
+
+    fun result(fill: () -> String) = tailVision.map {
+        val value = (it as SelectVision.Choice).choice ?: fill()
+        value
+    }
+
+    companion object {
+        val TAG: String = this::class.java.simpleName
+    }
 }
 
 sealed class SelectVision {
