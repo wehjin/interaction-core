@@ -1,9 +1,11 @@
 package com.rubyhuntersky.interaction.core.app.common
 
+import android.annotation.SuppressLint
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 
+@SuppressLint("StaticFieldLeak")
 object AndroidEdge : Edge() {
 
     private val projectionBuilders = mutableMapOf<String, ProjectionBuilder>()
