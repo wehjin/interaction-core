@@ -4,12 +4,7 @@ import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 
-interface ProjectionBuilder {
-    val name: String
-    fun <V, A> startProjection(fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long)
-}
-
-class AndroidEdge : Edge() {
+object AndroidEdge : Edge() {
 
     private val projectionBuilders = mutableMapOf<String, ProjectionBuilder>()
     private var fragmentActivity: FragmentActivity? = null

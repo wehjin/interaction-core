@@ -2,6 +2,7 @@ package com.rubyhuntersky.interaction.core.app.main
 
 import android.util.Log
 import com.rubyhuntersky.interaction.core.*
+import com.rubyhuntersky.interaction.core.app.select.SelectInteraction
 
 sealed class MainVision {
     data class Message(val message: String) : MainVision()
@@ -17,7 +18,7 @@ by WellInteraction(
     well,
     start = { MainVision.Message("Idle") },
     update = { oldVision, action ->
-        Log.d(tag, "ACTION: $action")
+        Log.d(TAG, "ACTION: $action")
         when (action) {
             is MainAction.Select -> {
                 val interaction = SelectInteraction(well, "A", "B", "C")
@@ -34,13 +35,9 @@ by WellInteraction(
         }
     },
     isTail = { false },
-    customName = tag
+    customName = TAG
 ) {
     companion object {
-        private val tag = this::class.java.simpleName
-        fun locateInEdge(edge: Edge): MainInteraction {
-            val search = InteractionSearch.ByName(tag)
-            return edge.findInteraction<MainVision, MainAction>(search) as MainInteraction
-        }
+        val TAG = this::class.java.simpleName
     }
 }

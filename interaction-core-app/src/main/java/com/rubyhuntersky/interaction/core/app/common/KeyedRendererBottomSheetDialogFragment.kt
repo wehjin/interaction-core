@@ -1,12 +1,9 @@
 package com.rubyhuntersky.interaction.core.app.common
 
-import com.rubyhuntersky.interaction.core.Edge
-
-abstract class RendererBottomSheetDialogFragment<V : Any, A : Any, Data : Any>(
-    private val renderer: Renderer<V, A, Data>,
-    edge: Edge,
-    closeAction: (() -> A)?
-) : EdgeBottomSheetDialogFragment<V, A>(renderer.layoutRes, edge, closeAction) {
+abstract class KeyedRendererBottomSheetDialogFragment<V : Any, A : Any, Data : Any>(
+    closeAction: (() -> A)?,
+    private val renderer: Renderer<V, A, Data>
+) : KeyedInteractionBottomSheetDialogFragment<V, A>(renderer.layoutRes, closeAction) {
 
     private lateinit var data: Data
 

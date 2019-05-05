@@ -8,15 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
-abstract class EdgeBottomSheetDialogFragment<V : Any, A : Any>(
+abstract class KeyedInteractionBottomSheetDialogFragment<V : Any, A : Any>(
     @LayoutRes private val layoutRes: Int,
-    private val edge: Edge,
     private val closeAction: (() -> A)?
 ) : BottomSheetDialogFragment() {
 
@@ -26,20 +24,20 @@ abstract class EdgeBottomSheetDialogFragment<V : Any, A : Any>(
             arguments = (arguments ?: Bundle()).also { it.putLong(EDGE_INTERACTION_ARGS_KEY, value) }
         }
 
-    private val interaction: Interaction<V, A> by lazy {
-        edge.findInteraction<V, A>(InteractionSearch.ByKey(edgeKey))
-    }
-
     private var visionDisposable: Disposable? = null
+
     private var _vision: V? = null
     protected val renderedVision get() = _vision
-
     protected abstract fun render(vision: V)
-    protected open fun erase() = Unit
 
+    protected open fun erase() = Unit
     protected fun sendAction(action: A) {
         Log.d(this.javaClass.simpleName, "ACTION: $action")
         interaction.sendAction(action)
+    }
+
+    private val interaction: Interaction<V, A> by lazy {
+        AndroidEdge.findInteraction<V, A>(InteractionSearch.ByKey(edgeKey))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

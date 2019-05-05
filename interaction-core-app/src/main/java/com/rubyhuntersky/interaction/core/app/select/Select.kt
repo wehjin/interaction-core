@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.core.app.main
+package com.rubyhuntersky.interaction.core.app.select
 
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.Well
