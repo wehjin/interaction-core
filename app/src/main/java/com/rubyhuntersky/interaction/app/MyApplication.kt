@@ -1,6 +1,7 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.app
 
 import android.app.Application
+import com.rubyhuntersky.interaction.android.AndroidEdge
 import com.rubyhuntersky.interaction.core.SwitchWell
 import com.rubyhuntersky.interaction.app.main.MainInteraction
 import com.rubyhuntersky.interaction.app.select.SelectProjectionBuilder

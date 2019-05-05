@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.app.main
 
 import com.rubyhuntersky.interaction.app.R
-import com.rubyhuntersky.interaction.app.common.NamedInteractionActivity
+import com.rubyhuntersky.interaction.android.NamedInteractionActivity
 import kotlinx.android.synthetic.main.view_main_idle.*
 
 class MainActivity : NamedInteractionActivity<MainVision, MainAction>() {

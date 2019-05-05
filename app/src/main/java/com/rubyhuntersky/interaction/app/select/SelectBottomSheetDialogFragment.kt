@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.rubyhuntersky.interaction.app.R
-import com.rubyhuntersky.interaction.app.common.KeyedRendererBottomSheetDialogFragment
-import com.rubyhuntersky.interaction.app.common.RenderResult
-import com.rubyhuntersky.interaction.app.common.Renderer
+import com.rubyhuntersky.interaction.android.KeyedRendererBottomSheetDialogFragment
+import com.rubyhuntersky.interaction.android.RenderResult
+import com.rubyhuntersky.interaction.android.Renderer
 import kotlinx.android.synthetic.main.view_select.view.*
 import kotlinx.android.synthetic.main.view_select_item.view.*
 

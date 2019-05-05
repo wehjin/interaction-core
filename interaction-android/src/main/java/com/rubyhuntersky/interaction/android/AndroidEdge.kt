@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.android
 
 import android.annotation.SuppressLint
 import android.support.v4.app.FragmentActivity
@@ -23,12 +23,12 @@ object AndroidEdge : Edge() {
     }
 
     fun setActivity(fragmentActivity: FragmentActivity) {
-        this.fragmentActivity = fragmentActivity
+        AndroidEdge.fragmentActivity = fragmentActivity
     }
 
     fun unsetActivity(fragmentActivity: FragmentActivity) {
-        if (this.fragmentActivity == fragmentActivity) {
-            this.fragmentActivity = null
+        if (AndroidEdge.fragmentActivity == fragmentActivity) {
+            AndroidEdge.fragmentActivity = null
         }
     }
 }

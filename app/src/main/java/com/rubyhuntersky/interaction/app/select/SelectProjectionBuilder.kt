@@ -2,7 +2,7 @@ package com.rubyhuntersky.interaction.app.select
 
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.app.common.ProjectionBuilder
+import com.rubyhuntersky.interaction.android.ProjectionBuilder
 
 class SelectProjectionBuilder : ProjectionBuilder {
     override val name: String = SelectInteraction.TAG

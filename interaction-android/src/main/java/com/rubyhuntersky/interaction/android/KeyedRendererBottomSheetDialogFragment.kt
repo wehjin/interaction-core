@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.android
 
 abstract class KeyedRendererBottomSheetDialogFragment<V : Any, A : Any, Data : Any>(
     closeAction: (() -> A)?,

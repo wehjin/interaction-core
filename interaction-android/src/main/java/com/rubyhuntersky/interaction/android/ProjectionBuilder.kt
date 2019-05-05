@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.android
 
 import android.support.v4.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Interaction

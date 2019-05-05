@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.android
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes

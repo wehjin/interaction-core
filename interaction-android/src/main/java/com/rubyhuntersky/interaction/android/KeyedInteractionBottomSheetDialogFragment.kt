@@ -1,4 +1,4 @@
-package com.rubyhuntersky.interaction.app.common
+package com.rubyhuntersky.interaction.android
 
 import android.content.DialogInterface
 import android.os.Bundle
