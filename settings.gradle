@@ -1,1 +1,1 @@
-include ':app', ':interaction-core-lib'
+include ':app', ':interaction-core'
