@@ -27,7 +27,10 @@ by WellInteraction(
                     .map {
                         MainAction.SetMessage(it) as MainAction
                     }
-                WellResult(oldVision, Wish(wishAction, name = "${this}/${interaction.name}"))
+                WellResult(
+                    oldVision,
+                    Wish(wishAction, name = "${this}/${interaction.name}")
+                )
             }
             is MainAction.SetMessage -> {
                 WellResult(MainVision.Message(action.message))

@@ -1,1 +1,1 @@
-include ':app', ':interaction-core', ':interaction-android'
+include ':app', ':interaction-android'
