@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionSearch
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 abstract class NamedInteractionActivity<V : Any, A : Any> : AppCompatActivity() {
@@ -22,6 +23,7 @@ abstract class NamedInteractionActivity<V : Any, A : Any> : AppCompatActivity() 
         super.onStart()
         AndroidEdge.setActivity(this)
         visions = interaction.visions
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 if (interaction.isEnding(it)) {
                     finish()

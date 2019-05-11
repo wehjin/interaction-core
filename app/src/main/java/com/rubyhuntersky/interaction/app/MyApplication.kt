@@ -21,7 +21,7 @@ class MyApplication : Application() {
 
         private val well = SwitchWell()
 
-        fun selectOption(vararg options: String) =
+        fun selectionInteraction(vararg options: String) =
             SelectOptionStory(well, *options).also { AndroidEdge.presentInteraction(it) }
     }
 }

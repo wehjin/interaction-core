@@ -4,26 +4,29 @@ import io.reactivex.disposables.Disposable
 
 class SwitchWell : Well {
 
-    private val wishDisposables = mutableMapOf<String, Disposable>()
+    private val disposables = mutableMapOf<String, Disposable>()
 
     override fun <A> addWishes(wishes: List<Wish<A>>, interaction: Interaction<*, A>) {
         wishes.forEach { wish ->
-            val name = wish.name
-            if (name == null) {
-                wish.action.subscribe { action ->
-                    fulfillWish(interaction, action)
+            val name = toName(wish, interaction)
+            disposables.remove(name)?.dispose()
+            when (wish) {
+                is Wish.None -> Unit
+                is Wish.One -> {
+                    disposables[name] = wish.action.subscribe { action ->
+                        disposables.remove(name)?.dispose()
+                        interaction.sendAction(action)
+                    }
                 }
-            } else {
-                wishDisposables.remove(name)?.dispose()
-                wishDisposables[name] = wish.action.subscribe { action ->
-                    wishDisposables.remove(name)
-                    fulfillWish(interaction, action)
+                is Wish.Many -> {
+                    disposables[name] = wish.actions.subscribe(
+                        { action -> interaction.sendAction(action) },
+                        { IllegalStateException(it) },
+                        { disposables.remove(name)?.dispose() })
                 }
             }
         }
     }
 
-    private fun <A> fulfillWish(interaction: Interaction<*, A>, action: A) {
-        interaction.sendAction(action)
-    }
+    private fun toName(wish: Wish<*>, interaction: Interaction<*, *>): String = "${interaction.hashCode()}/${wish.name}"
 }

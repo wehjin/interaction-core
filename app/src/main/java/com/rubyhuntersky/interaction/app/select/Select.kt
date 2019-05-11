@@ -5,16 +5,25 @@ import com.rubyhuntersky.interaction.core.Revision
 import com.rubyhuntersky.interaction.core.Story
 import com.rubyhuntersky.interaction.core.Well
 
-class SelectOptionStory(well: Well, vararg options: String) : Interaction<SelectVision, SelectAction>
+sealed class Vision {
+    data class Options(val options: List<String>) : Vision()
+    data class Choice(val choice: String?) : Vision()
+}
+
+sealed class Action {
+    data class SetChoice(val choice: Int?) : Action()
+}
+
+class SelectOptionStory(well: Well, vararg options: String) : Interaction<Vision, Action>
 by Story(
     well,
-    start = { SelectVision.Options(options.toList()) },
-    isEnding = { some -> some is SelectVision.Choice },
+    start = { Vision.Options(options.toList()) },
+    isEnding = { some -> some is Vision.Choice },
     revise = { oldVision, action ->
-        if (oldVision is SelectVision.Options) {
-            val setChoiceAction = action as SelectAction.SetChoice
+        if (oldVision is Vision.Options) {
+            val setChoiceAction = action as Action.SetChoice
             val choice = setChoiceAction.choice?.let { oldVision.options[it] }
-            Revision(SelectVision.Choice(choice))
+            Revision(Vision.Choice(choice))
         } else {
             Revision(oldVision)
         }
@@ -25,14 +34,5 @@ by Story(
     companion object {
         val TAG: String = this::class.java.simpleName
     }
-}
-
-sealed class SelectVision {
-    data class Options(val options: List<String>) : SelectVision()
-    data class Choice(val choice: String?) : SelectVision()
-}
-
-sealed class SelectAction {
-    data class SetChoice(val choice: Int?) : SelectAction()
 }
 
