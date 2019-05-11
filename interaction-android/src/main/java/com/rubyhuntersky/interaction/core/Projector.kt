@@ -4,6 +4,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
+@Deprecated("Use ProjectionSource instead")
 class Projector<V : Any, A : Any>(
     private val interaction: Interaction<V, A>,
     private val observeOn: Scheduler,
@@ -36,7 +37,7 @@ class Projector<V : Any, A : Any>(
     }
 
     fun start() {
-        interaction.visionStream
+        interaction.visions
             .observeOn(observeOn)
             .subscribe { vision ->
                 log?.invoke(vision)

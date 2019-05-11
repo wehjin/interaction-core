@@ -13,15 +13,19 @@ open class Edge {
     fun addInteraction(interaction: Interaction<*, *>, key: Long = nextKey++): Long {
         println("Edge adding key: $key")
         interactions[key] = interaction
-        disposables[key] = interaction.visionStream
+        disposables[key] = interaction.visions
             .doOnComplete { removeInteraction(key) }
             .doOnNext {
-                if (interaction.isTailVision(it)) {
+                if (interaction.isEnding(it)) {
                     removeInteraction(key)
                 }
             }
             .subscribe()
         return key
+    }
+
+    operator fun plusAssign(interaction: Interaction<*, *>) {
+        addInteraction(interaction)
     }
 
     private fun removeInteraction(key: Long) {
@@ -35,7 +39,7 @@ open class Edge {
             is InteractionSearch.ByKey ->
                 interactions[search.key]!!
             is InteractionSearch.ByName ->
-                interactions.entries.find { it.value.name == search.name }!!.value
+                interactions.entries.find { it.value.group == search.name }!!.value
         }
         @Suppress("UNCHECKED_CAST")
         return interaction as Interaction<V, A>

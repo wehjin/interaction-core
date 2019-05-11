@@ -4,21 +4,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface Interaction<V, A> {
-
-    val name: String
-        get() = this::class.java.simpleName
-
-    val visionStream: Observable<V>
-
+    val group: String get() = this::class.java.simpleName
+    val visions: Observable<V>
+    val ending: Single<V> get() = visions.filter(this::isEnding).firstOrError()
+    fun isEnding(someVision: Any?) = false
     fun sendAction(action: A)
-
-    fun isTailVision(someVision: Any?) = false
-
-    val tailVision: Single<V>
-        get() = visionStream
-            .filter {
-                val isTail = isTailVision(it)
-                isTail
-            }
-            .firstOrError()
 }

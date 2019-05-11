@@ -10,12 +10,12 @@ abstract class SubjectInteraction<V, A>(
     @Deprecated("Use sendAction") private val startAction: A? = null
 ) : Interaction<V, A> {
 
-    override val name: String get() = this.javaClass.simpleName
+    override val group: String get() = this.javaClass.simpleName
 
     private val visionBehavior: BehaviorSubject<V> =
         startVision?.let { BehaviorSubject.createDefault(startVision) } ?: BehaviorSubject.create()
     protected val vision get() = visionBehavior.value!!
-    override val visionStream: Observable<V> get() = visionBehavior.distinctUntilChanged()
+    override val visions: Observable<V> get() = visionBehavior.distinctUntilChanged()
     private val visionWriter = visionBehavior.toSerialized()
 
     protected fun setVision(nextVision: V) = visionWriter.onNext(nextVision)
@@ -33,7 +33,7 @@ fun <V, A, EdgeV, EdgeA> SubjectInteraction<V, A>.adapt(adapter: SubjectInteract
     val core = this
 
     return object : SubjectInteraction<EdgeV, EdgeA>() {
-        override val name: String = "Adapted${core.name}"
+        override val group: String = "Adapted${core.group}"
         private val edge = this
         private val coreVisions = CompositeDisposable()
 
@@ -45,7 +45,7 @@ fun <V, A, EdgeV, EdgeA> SubjectInteraction<V, A>.adapt(adapter: SubjectInteract
             }
 
         init {
-            core.visionStream
+            core.visions
                 .subscribe { adapter.onVision(it, controller) }
                 .addTo(coreVisions)
         }

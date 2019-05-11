@@ -12,7 +12,7 @@ class SubjectInteractionTest {
             override fun sendAction(action: SetVision) = setVision(action.vision)
         }
 
-        quantum.visionStream.test()
+        quantum.visions.test()
             .also { quantum.sendAction(SetVision(2)) }
             .assertValues(1, 2)
     }

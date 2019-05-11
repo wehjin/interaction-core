@@ -45,14 +45,14 @@ abstract class KeyedInteractionBottomSheetDialogFragment<V : Any, A : Any>(
 
     override fun onStart() {
         super.onStart()
-        visionDisposable = interaction.visionStream
+        visionDisposable = interaction.visions
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::renderVision, this::renderError, this::renderComplete)
     }
 
     private fun renderVision(v: V) {
         Log.d(this.javaClass.simpleName, "VISION: $v")
-        if (interaction.isTailVision(v)) {
+        if (interaction.isEnding(v)) {
             renderComplete()
         } else {
             this.render(v)

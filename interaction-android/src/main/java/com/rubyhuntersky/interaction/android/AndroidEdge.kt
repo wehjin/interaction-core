@@ -8,17 +8,18 @@ import com.rubyhuntersky.interaction.core.Interaction
 @SuppressLint("StaticFieldLeak")
 object AndroidEdge : Edge() {
 
-    private val projectionBuilders = mutableMapOf<String, ProjectionBuilder>()
+    private val projectionBuilders = mutableMapOf<String, ProjectionSource>()
     private var fragmentActivity: FragmentActivity? = null
 
-    fun addProjectionBuilder(projectionBuilder: ProjectionBuilder) {
-        projectionBuilders[projectionBuilder.name] = projectionBuilder
+    operator fun plusAssign(projectionSource: ProjectionSource) = addProjectionBuilder(projectionSource)
+
+    fun addProjectionBuilder(projectionSource: ProjectionSource) {
+        projectionBuilders[projectionSource.group] = projectionSource
     }
 
     override fun presentInteraction(interaction: Interaction<*, *>): Long {
         val key = super.presentInteraction(interaction)
-        val name = interaction.name
-        projectionBuilders[name]!!.startProjection(fragmentActivity!!, interaction, key)
+        projectionBuilders[interaction.group]!!.startProjection(fragmentActivity!!, interaction, key)
         return key
     }
 

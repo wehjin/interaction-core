@@ -21,9 +21,9 @@ abstract class NamedInteractionActivity<V : Any, A : Any> : AppCompatActivity() 
     override fun onStart() {
         super.onStart()
         AndroidEdge.setActivity(this)
-        visions = interaction.visionStream
+        visions = interaction.visions
             .doOnNext {
-                if (interaction.isTailVision(it)) {
+                if (interaction.isEnding(it)) {
                     finish()
                 } else {
                     renderVision(it)

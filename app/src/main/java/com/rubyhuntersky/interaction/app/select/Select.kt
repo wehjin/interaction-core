@@ -1,31 +1,26 @@
 package com.rubyhuntersky.interaction.app.select
 
 import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Revision
+import com.rubyhuntersky.interaction.core.Story
 import com.rubyhuntersky.interaction.core.Well
-import com.rubyhuntersky.interaction.core.WellInteraction
-import com.rubyhuntersky.interaction.core.WellResult
 
-class SelectInteraction(well: Well, vararg options: String) : Interaction<SelectVision, SelectAction>
-by WellInteraction(
+class SelectOptionStory(well: Well, vararg options: String) : Interaction<SelectVision, SelectAction>
+by Story(
     well,
     start = { SelectVision.Options(options.toList()) },
-    update = { oldVision, action ->
+    isEnding = { some -> some is SelectVision.Choice },
+    revise = { oldVision, action ->
         if (oldVision is SelectVision.Options) {
             val setChoiceAction = action as SelectAction.SetChoice
             val choice = setChoiceAction.choice?.let { oldVision.options[it] }
-            WellResult(SelectVision.Choice(choice))
+            Revision(SelectVision.Choice(choice))
         } else {
-            WellResult(oldVision)
+            Revision(oldVision)
         }
     },
-    isTail = { some -> some is SelectVision.Choice },
-    customName = TAG
+    customGroup = TAG
 ) {
-
-    fun result(fill: () -> String) = tailVision.map {
-        val value = (it as SelectVision.Choice).choice ?: fill()
-        value
-    }
 
     companion object {
         val TAG: String = this::class.java.simpleName
