@@ -13,8 +13,10 @@ object AndroidEdge : Edge() {
 
     operator fun plusAssign(projectionSource: ProjectionSource) = addProjectionBuilder(projectionSource)
 
-    fun addProjectionBuilder(projectionSource: ProjectionSource) {
-        projectionBuilders[projectionSource.group] = projectionSource
+    fun addProjectionBuilder(vararg projectionSource: ProjectionSource) {
+        projectionSource.forEach {
+            projectionBuilders[it.group] = it
+        }
     }
 
     override fun presentInteraction(interaction: Interaction<*, *>): Long {
