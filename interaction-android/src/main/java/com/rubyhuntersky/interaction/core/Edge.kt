@@ -8,10 +8,19 @@ open class Edge {
     private val interactions = mutableMapOf<Long, Interaction<*, *>>()
     private val disposables = mutableMapOf<Long, Disposable>()
 
-    open fun presentInteraction(interaction: Interaction<*, *>): Long = addInteraction(interaction)
+    open fun <V, A : Any> wish(name: String, interaction: Interaction<V, *>, mapper: (V) -> A): Wish<A> {
+        return interaction.ending
+            .doOnSubscribe { presentInteraction(interaction) }
+            .toWish(name, mapper, { throw it })
+    }
+
+    open fun presentInteraction(interaction: Interaction<*, *>): Long {
+        return addInteraction(interaction)
+    }
 
     fun addInteraction(interaction: Interaction<*, *>, key: Long = nextKey++): Long {
         println("Edge adding key: $key")
+        interaction.edge = this
         interactions[key] = interaction
         disposables[key] = interaction.visions
             .doOnComplete { removeInteraction(key) }

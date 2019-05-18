@@ -26,12 +26,12 @@ object AndroidEdge : Edge() {
     }
 
     fun setActivity(fragmentActivity: FragmentActivity) {
-        AndroidEdge.fragmentActivity = fragmentActivity
+        this.fragmentActivity = fragmentActivity
     }
 
     fun unsetActivity(fragmentActivity: FragmentActivity) {
-        if (AndroidEdge.fragmentActivity == fragmentActivity) {
-            AndroidEdge.fragmentActivity = null
+        if (this.fragmentActivity == fragmentActivity) {
+            this.fragmentActivity = null
         }
     }
 }

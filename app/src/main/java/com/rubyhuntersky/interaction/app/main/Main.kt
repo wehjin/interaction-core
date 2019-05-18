@@ -22,16 +22,16 @@ sealed class Action {
     object Cancel : Action()
 }
 
-private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
+private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
     Log.d(MainStory.TAG, "ACTION: $action")
     return when (action) {
         is Action.Select -> {
-            val selectionWish = MyApplication.selectionInteraction("A", "B", "C")
-                .toWish("selection") {
-                    val choice = it as SelectionVision.Choice
-                    Action.ReceiveSelection(choice.choice ?: "Cancelled") as Action
-                }
-            Revision(vision, selectionWish)
+            val interaction = MyApplication.selectionInteraction("A", "B", "C")
+            val wish = edge.wish("selection", interaction) {
+                val choice = it as SelectionVision.Choice
+                Action.ReceiveSelection(choice.choice ?: "Cancelled") as Action
+            }
+            Revision(vision, wish)
         }
         is Action.ReceiveSelection -> {
             val newVision = Vision.Message(action.selection)

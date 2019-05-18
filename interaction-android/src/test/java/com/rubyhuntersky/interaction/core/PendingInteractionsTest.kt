@@ -8,9 +8,11 @@ import org.junit.Test
 class PendingInteractionsTest {
 
     private val subject = BehaviorSubject.createDefault(1)
+
     private val interaction = object : Interaction<Int, Unit> {
-        override val visions: Observable<Int>
-            get() = subject
+
+        override var edge: Edge = Edge()
+        override val visions: Observable<Int> get() = subject
 
         override fun isEnding(someVision: Any?): Boolean = (someVision as? Int)?.equals(2) ?: false
         override fun sendAction(action: Unit) = Unit
