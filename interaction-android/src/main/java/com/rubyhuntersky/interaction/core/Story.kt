@@ -1,6 +1,6 @@
 package com.rubyhuntersky.interaction.core
 
-class Story<V, A>(
+class Story<V, A : Any>(
     well: Well,
     start: () -> V,
     private val isEnding: (Any?) -> Boolean,

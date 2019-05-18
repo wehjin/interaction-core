@@ -6,7 +6,7 @@ class SwitchWell : Well {
 
     private val disposables = mutableMapOf<String, Disposable>()
 
-    override fun <A> addWishes(wishes: List<Wish<A>>, interaction: Interaction<*, A>) {
+    override fun <A : Any> addWishes(wishes: List<Wish<A>>, interaction: Interaction<*, A>) {
         wishes.forEach { wish ->
             val name = toName(wish, interaction)
             disposables.remove(name)?.dispose()

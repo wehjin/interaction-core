@@ -13,12 +13,13 @@ sealed class Vision {
 
 private fun start() = Vision.Message("Idle")
 
-private fun isEnding(maybe: Any?) = false
+private fun isEnding(maybe: Any?) = maybe is Nothing
 
 sealed class Action {
     object Select : Action()
     data class ReceiveSelection(val selection: String) : Action()
     data class SetMessage(val message: String) : Action()
+    object Cancel : Action()
 }
 
 private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
@@ -40,8 +41,12 @@ private fun revise(vision: Vision, action: Action): Revision<Vision, Action> {
                 }, { throw it })
             Revision(newVision, intervalWish)
         }
-        is Action.SetMessage ->
+        is Action.SetMessage -> {
             Revision(Vision.Message(action.message))
+        }
+        is Action.Cancel -> {
+            Revision(Vision.Message("Cancelled"), Wish.None("selection"), Wish.None("interval"))
+        }
     }
 }
 
