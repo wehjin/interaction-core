@@ -1,10 +1,11 @@
 package com.rubyhuntersky.interaction.app.main
 
 import android.util.Log
-import com.rubyhuntersky.interaction.app.MyApplication
+import com.rubyhuntersky.interaction.app.select.SelectOptionStory
 import com.rubyhuntersky.interaction.core.*
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
+import com.rubyhuntersky.interaction.app.select.Action as SelectOptionAction
 import com.rubyhuntersky.interaction.app.select.Vision as SelectionVision
 
 sealed class Vision {
@@ -26,8 +27,11 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
     Log.d(MainStory.TAG, "ACTION: $action")
     return when (action) {
         is Action.Select -> {
-            val interaction = MyApplication.selectionInteraction("A", "B", "C")
-            val wish = edge.wish("selection", interaction) {
+            val wish = edge.wish(
+                name = "selection",
+                interaction = SelectOptionStory("A", "B", "C"),
+                startAction = SelectOptionAction.Start
+            ) {
                 val choice = it as SelectionVision.Choice
                 Action.ReceiveSelection(choice.choice ?: "Cancelled") as Action
             }
@@ -50,8 +54,8 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
     }
 }
 
-class MainStory(well: Well) : Interaction<Vision, Action>
-by Story(well, ::start, ::isEnding, ::revise, TAG) {
+class MainStory : Interaction<Vision, Action>
+by Story(::start, ::isEnding, ::revise, TAG) {
 
     companion object {
         val TAG: String = MainStory::javaClass.name

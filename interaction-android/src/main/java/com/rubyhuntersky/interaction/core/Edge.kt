@@ -7,10 +7,16 @@ open class Edge {
     private var nextKey = 1L
     private val interactions = mutableMapOf<Long, Interaction<*, *>>()
     private val disposables = mutableMapOf<Long, Disposable>()
+    internal val well: Well = SwitchWell()
 
-    open fun <V, A : Any> wish(name: String, interaction: Interaction<V, *>, mapper: (V) -> A): Wish<A> {
+    open fun <V, A : Any, AFinal : Any> wish(
+        name: String, interaction: Interaction<V, A>, startAction: A? = null, mapper: (V) -> AFinal
+    ): Wish<AFinal> {
         return interaction.ending
-            .doOnSubscribe { presentInteraction(interaction) }
+            .doOnSubscribe {
+                presentInteraction(interaction)
+                startAction?.let { interaction.sendAction(it) }
+            }
             .toWish(name, mapper, { throw it })
     }
 

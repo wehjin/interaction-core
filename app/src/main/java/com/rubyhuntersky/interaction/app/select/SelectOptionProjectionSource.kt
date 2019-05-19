@@ -6,7 +6,7 @@ import com.rubyhuntersky.interaction.core.Interaction
 
 object SelectOptionProjectionSource : ProjectionSource {
 
-    override val group: String = SelectOptionStory.TAG
+    override val group: String = SELECT_OPTION
 
     override fun <V, A> startProjection(fragmentActivity: FragmentActivity, interaction: Interaction<V, A>, key: Long) {
         val dialog = SelectBottomSheetDialogFragment().also { it.edgeKey = key }
