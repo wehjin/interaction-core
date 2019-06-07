@@ -2,8 +2,13 @@ package com.rubyhuntersky.interaction.app.main
 
 import android.util.Log
 import com.rubyhuntersky.interaction.app.select.SelectOptionStory
-import com.rubyhuntersky.interaction.core.*
-import io.reactivex.Observable
+import com.rubyhuntersky.interaction.core.Edge
+import com.rubyhuntersky.interaction.core.Interaction
+import com.rubyhuntersky.interaction.core.Revision
+import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.wish.Wish
+import com.rubyhuntersky.interaction.core.wish.interval.Interval
+import com.rubyhuntersky.interaction.core.wish.interval.IntervalDjinn
 import java.util.concurrent.TimeUnit
 import com.rubyhuntersky.interaction.app.select.Action as SelectOptionAction
 import com.rubyhuntersky.interaction.app.select.Vision as SelectionVision
@@ -39,17 +44,18 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
         }
         is Action.ReceiveSelection -> {
             val newVision = Vision.Message(action.selection)
-            val intervalWish = Observable.interval(3, TimeUnit.SECONDS)
-                .toWish("interval", { interval ->
-                    Action.SetMessage("${action.selection}: $interval") as Action
-                }, { throw it })
-            Revision(newVision, intervalWish)
+            val wish = IntervalDjinn.newWish(
+                name = "interval",
+                interval = Interval(3, TimeUnit.SECONDS),
+                indexToAction = { index -> Action.SetMessage("${action.selection}: $index") as Action }
+            )
+            Revision(newVision, wish)
         }
         is Action.SetMessage -> {
             Revision(Vision.Message(action.message))
         }
         is Action.Cancel -> {
-            Revision(Vision.Message("Cancelled"), Wish.None("selection"), Wish.None("interval"))
+            Revision(Vision.Message("Cancelled"), Wish.none("selection"), Wish.none("interval"))
         }
     }
 }

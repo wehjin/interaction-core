@@ -1,32 +1,43 @@
 package com.rubyhuntersky.interaction.core
 
+import com.rubyhuntersky.interaction.core.wish.Lamp
+import com.rubyhuntersky.interaction.core.wish.Wish
+import com.rubyhuntersky.interaction.core.wish.WishKind
 import io.reactivex.disposables.Disposable
 
-class SwitchWell : Well {
+class SwitchWell(private val lamp: Lamp) : Well {
 
     private val disposables = mutableMapOf<String, Disposable>()
 
-    override fun <A : Any> addWishes(wishes: List<Wish<A>>, interaction: Interaction<*, A>) {
+    override fun <A : Any> addWishes(wishes: List<Wish<*, A>>, interaction: Interaction<*, A>) {
         wishes.forEach { wish ->
-            val name = toName(wish, interaction)
+            val name = "${interaction.hashCode()}/${wish.name}"
             disposables.remove(name)?.dispose()
-            when (wish) {
-                is Wish.None -> Unit
-                is Wish.One -> {
-                    disposables[name] = wish.action.subscribe { action ->
+            when (wish.kind) {
+
+                is WishKind.None<A> -> Unit
+
+                is WishKind.One<*, A> -> {
+                    val single = lamp.toSingle(wish.params, wish.kind)
+                    disposables[name] = single.subscribe { action ->
                         disposables.remove(name)?.dispose()
                         interaction.sendAction(action)
                     }
                 }
-                is Wish.Many -> {
-                    disposables[name] = wish.actions.subscribe(
-                        { action -> interaction.sendAction(action) },
-                        { IllegalStateException(it) },
-                        { disposables.remove(name)?.dispose() })
+
+                is WishKind.Many<*, A> -> {
+                    val toObservable = lamp.toObservable(wish.params, wish.kind)
+                    disposables[name] = toObservable.subscribe(
+                        { action ->
+                            interaction.sendAction(action)
+                        }, { throwable ->
+                            throw throwable
+                        }, {
+                            disposables.remove(name)?.dispose()
+                        })
                 }
             }
         }
     }
 
-    private fun toName(wish: Wish<*>, interaction: Interaction<*, *>): String = "${interaction.hashCode()}/${wish.name}"
 }

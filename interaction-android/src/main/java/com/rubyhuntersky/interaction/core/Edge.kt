@@ -1,5 +1,10 @@
 package com.rubyhuntersky.interaction.core
 
+import com.rubyhuntersky.interaction.core.wish.Genie
+import com.rubyhuntersky.interaction.core.wish.Lamp
+import com.rubyhuntersky.interaction.core.wish.Wish
+import com.rubyhuntersky.interaction.core.wish.WishKind
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 
 open class Edge {
@@ -7,17 +12,23 @@ open class Edge {
     private var nextKey = 1L
     private val interactions = mutableMapOf<Long, Interaction<*, *>>()
     private val disposables = mutableMapOf<Long, Disposable>()
-    internal val well: Well = SwitchWell()
+    val lamp = Lamp()
+    internal val well: Well = SwitchWell(lamp)
 
-    open fun <V, A : Any, AFinal : Any> wish(
-        name: String, interaction: Interaction<V, A>, startAction: A? = null, mapper: (V) -> AFinal
-    ): Wish<AFinal> {
-        return interaction.ending
-            .doOnSubscribe {
-                presentInteraction(interaction)
-                startAction?.let { interaction.sendAction(it) }
-            }
-            .toWish(name, mapper, { throw it })
+    open fun <V : Any, A : Any, AFinal : Any> wish(
+        name: String, interaction: Interaction<V, A>, startAction: A? = null, endVisionToAction: (V) -> AFinal
+    ): Wish<Interaction<V, A>, AFinal> {
+        lamp.add(object : Genie<Interaction<V, A>, V> {
+            override val paramsClass: Class<Interaction<V, A>> = interaction.javaClass
+
+            override fun toSingle(params: Interaction<V, A>): Single<V> =
+                params.ending
+                    .doOnSubscribe {
+                        presentInteraction(interaction)
+                        startAction?.let { interaction.sendAction(it) }
+                    }
+        })
+        return Wish(name, interaction, WishKind.One(endVisionToAction, { throw it }))
     }
 
     open fun presentInteraction(interaction: Interaction<*, *>): Long {

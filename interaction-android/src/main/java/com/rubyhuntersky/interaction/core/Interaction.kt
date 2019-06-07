@@ -3,7 +3,7 @@ package com.rubyhuntersky.interaction.core
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface Interaction<V, A> {
+interface Interaction<V, in A> {
     val group: String get() = this::class.java.simpleName
     var edge: Edge
     val visions: Observable<V>
