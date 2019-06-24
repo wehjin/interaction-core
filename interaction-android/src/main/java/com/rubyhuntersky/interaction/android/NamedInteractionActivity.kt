@@ -1,51 +1,23 @@
 package com.rubyhuntersky.interaction.android
 
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.InteractionSearch
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 
-abstract class NamedInteractionActivity<V : Any, A : Any> : AppCompatActivity() {
-
-    protected abstract val name: String
+abstract class NamedInteractionActivity<V : Any, A : Any>(
+    private val interactionName: String
+) : AppCompatActivity() {
 
     protected abstract fun renderVision(vision: V)
 
-    protected val interaction: Interaction<V, A> by lazy {
-        AndroidEdge.findInteraction<V, A>(InteractionSearch.ByName(name))
-    }
+    protected fun sendAction(action: A) = activityInteraction.sendAction(action)
 
-    override fun onStart() {
-        super.onStart()
-        AndroidEdge.setActivity(this)
-        visions = interaction.visions
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                if (interaction.isEnding(it)) {
-                    finish()
-                } else {
-                    renderVision(it)
-                }
+    private val activityInteraction
+            by lazy {
+                ActivityInteraction<V, A>(this, interactionName, this::renderVision)
             }
-            .doOnComplete(this::finish)
-            .subscribe()
-    }
 
-    private var visions: Disposable? = null
-
-    override fun onStop() {
-        visions?.dispose()
-        AndroidEdge.unsetActivity(this)
-        super.onStop()
-    }
-
-    protected fun updateContentView(@IdRes id: Int, @LayoutRes layout: Int) {
-        if (findViewById<View>(id) == null) {
-            setContentView(layout)
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(activityInteraction)
     }
 }
