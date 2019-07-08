@@ -31,7 +31,7 @@ open class Edge {
         return Wish(name, interaction, WishKind.One(endVisionToAction, { throw it }))
     }
 
-    open fun presentInteraction(interaction: Interaction<*, *>): Long {
+    open fun <V : Any, A : Any> presentInteraction(interaction: Interaction<V, A>): Long {
         return addInteraction(interaction)
     }
 
@@ -69,5 +69,9 @@ open class Edge {
         }
         @Suppress("UNCHECKED_CAST")
         return interaction as Interaction<V, A>
+    }
+
+    companion object {
+        const val NULL_KEY: Long = 0L
     }
 }

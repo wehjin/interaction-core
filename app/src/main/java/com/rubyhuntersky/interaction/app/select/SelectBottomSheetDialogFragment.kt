@@ -1,13 +1,16 @@
 package com.rubyhuntersky.interaction.app.select
 
+import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.rubyhuntersky.interaction.app.R
 import com.rubyhuntersky.interaction.android.KeyedRendererBottomSheetDialogFragment
+import com.rubyhuntersky.interaction.android.ProjectionSource
 import com.rubyhuntersky.interaction.android.RenderResult
 import com.rubyhuntersky.interaction.android.Renderer
+import com.rubyhuntersky.interaction.app.R
+import com.rubyhuntersky.interaction.core.Interaction
 import kotlinx.android.synthetic.main.view_select.view.*
 import kotlinx.android.synthetic.main.view_select_item.view.*
 
@@ -59,4 +62,15 @@ class SelectBottomSheetDialogFragment : KeyedRendererBottomSheetDialogFragment<V
             }
         }
     }
-)
+) {
+    companion object : ProjectionSource<Vision, Action> {
+
+        override val group: String = SELECT_OPTION
+
+        override fun startProjection(activity: FragmentActivity, interaction: Interaction<Vision, Action>, key: Long) {
+            val dialog = SelectBottomSheetDialogFragment().also { it.edgeKey = key }
+            val tag = "${interaction.group}/key"
+            dialog.show(activity.supportFragmentManager, tag)
+        }
+    }
+}

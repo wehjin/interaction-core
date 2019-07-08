@@ -1,11 +1,9 @@
 package com.rubyhuntersky.interaction.app.main
 
 import android.util.Log
+import com.rubyhuntersky.interaction.app.main.MainStory.Companion.groupId
 import com.rubyhuntersky.interaction.app.select.SelectOptionStory
-import com.rubyhuntersky.interaction.core.Edge
-import com.rubyhuntersky.interaction.core.Interaction
-import com.rubyhuntersky.interaction.core.Revision
-import com.rubyhuntersky.interaction.core.Story
+import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
 import com.rubyhuntersky.interaction.core.wish.interval.Interval
 import com.rubyhuntersky.interaction.core.wish.interval.IntervalDjinn
@@ -29,7 +27,7 @@ sealed class Action {
 }
 
 private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision, Action> {
-    Log.d(MainStory.TAG, "ACTION: $action")
+    Log.d(groupId, "ACTION: $action")
     return when (action) {
         is Action.Select -> {
             val wish = edge.wish(
@@ -60,10 +58,10 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
     }
 }
 
-class MainStory : Interaction<Vision, Action>
-by Story(::start, ::isEnding, ::revise, TAG) {
+class MainStory :
+    Interaction<Vision, Action> by Story(::start, ::isEnding, ::revise, groupId) {
 
-    companion object {
-        val TAG: String = MainStory::javaClass.name
+    companion object : InteractionCompanion<Vision, Action> {
+        override val groupId: String = MainStory::javaClass.name
     }
 }
