@@ -5,10 +5,8 @@ data class Wish<out Params : Any, out Action : Any>(
     val params: Params,
     val kind: WishKind<Action>
 ) {
-
     companion object {
-        fun <Action : Any> none(name: String): Wish<Unit, Action> {
-            return Wish(name, Unit, WishKind.None())
-        }
+        fun <Action : Any> none(name: String): Wish<Unit, Action> = cancel(name)
+        fun <Action : Any> cancel(name: String): Wish<Unit, Action> = Wish(name, Unit, WishKind.None())
     }
 }

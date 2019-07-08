@@ -1,6 +1,6 @@
 package com.rubyhuntersky.interaction.core.wish
 
-import com.rubyhuntersky.interaction.core.wish.interval.IntervalDjinn
+import com.rubyhuntersky.interaction.core.wish.interval.Intervals
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -30,7 +30,7 @@ class Lamp {
     }
 
     init {
-        add(IntervalDjinn)
+        add(Intervals.DJINN)
     }
 
     fun <Params : Any, Result : Any, Action : Any> toSingle(
@@ -39,6 +39,11 @@ class Lamp {
         @Suppress("UNCHECKED_CAST")
         val genie = genies[lookup(params)] as Genie<Params, Result>
         return genie.toSingle(params).map(one.resultToAction).onErrorReturn(one.errorToAction)
+    }
+
+    fun <Params : GenieParams<Result>, Result : Any, Action : Any> toSingle(wish: Wish<Params, Action>): Single<Action> {
+        @Suppress("UNCHECKED_CAST") val one = wish.kind as WishKind.One<Result, Action>
+        return toSingle(wish.params, one)
     }
 
     private fun lookup(find: Any): Class<*> {

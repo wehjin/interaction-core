@@ -5,8 +5,7 @@ import com.rubyhuntersky.interaction.app.main.MainStory.Companion.groupId
 import com.rubyhuntersky.interaction.app.select.SelectOptionStory
 import com.rubyhuntersky.interaction.core.*
 import com.rubyhuntersky.interaction.core.wish.Wish
-import com.rubyhuntersky.interaction.core.wish.interval.Interval
-import com.rubyhuntersky.interaction.core.wish.interval.IntervalDjinn
+import com.rubyhuntersky.interaction.core.wish.interval.Intervals
 import java.util.concurrent.TimeUnit
 import com.rubyhuntersky.interaction.app.select.Action as SelectOptionAction
 import com.rubyhuntersky.interaction.app.select.Vision as SelectionVision
@@ -36,24 +35,25 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
                 startAction = SelectOptionAction.Start
             ) {
                 val choice = it as SelectionVision.Choice
-                Action.ReceiveSelection(choice.choice ?: "Cancelled") as Action
+                Action.ReceiveSelection(choice.choice ?: "Cancelled")
             }
             Revision(vision, wish)
         }
         is Action.ReceiveSelection -> {
             val newVision = Vision.Message(action.selection)
-            val wish = IntervalDjinn.newWish(
-                name = "interval",
-                interval = Interval(3, TimeUnit.SECONDS),
-                indexToAction = { index -> Action.SetMessage("${action.selection}: $index") as Action }
-            )
-            Revision(newVision, wish)
+            val intervals = Intervals(3, TimeUnit.SECONDS)
+                .toWish<Intervals, Action>(
+                    "interval",
+                    onResult = { index -> Action.SetMessage("${action.selection}: $index") },
+                    onAction = { throw it }
+                )
+            Revision(newVision, intervals)
         }
         is Action.SetMessage -> {
             Revision(Vision.Message(action.message))
         }
         is Action.Cancel -> {
-            Revision(Vision.Message("Cancelled"), Wish.none("selection"), Wish.none("interval"))
+            Revision(Vision.Message("Cancelled"), Wish.cancel("selection"), Wish.none("interval"))
         }
     }
 }

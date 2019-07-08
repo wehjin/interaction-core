@@ -31,4 +31,26 @@ class LampTest {
         )
         assertNotNull(single)
     }
+
+    @Test
+    fun genieParams() {
+
+        data class FormatNumber(val n: Int) : GenieParams<String>
+
+        lamp.add(object : Genie<FormatNumber, String> {
+            override val paramsClass: Class<FormatNumber> = FormatNumber::class.java
+            override fun toSingle(params: FormatNumber): Single<String> = Single.just(params.n.toString())
+        })
+
+        data class Print(val string: String)
+
+        val wish = FormatNumber(3)
+            .toWish<FormatNumber, Print>(
+                name = "format-number",
+                onResult = ::Print,
+                onAction = { throw it }
+            )
+
+        lamp.toSingle(wish).test().assertValue(Print("3"))
+    }
 }
