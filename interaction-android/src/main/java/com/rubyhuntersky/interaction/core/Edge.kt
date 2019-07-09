@@ -16,7 +16,10 @@ open class Edge {
     internal val well: Well = SwitchWell(lamp)
 
     open fun <V : Any, A : Any, AFinal : Any> wish(
-        name: String, interaction: Interaction<V, A>, startAction: A? = null, endVisionToAction: (V) -> AFinal
+        name: String,
+        interaction: Interaction<V, A>,
+        startAction: A? = null,
+        endVisionToAction: (V) -> AFinal
     ): Wish<Interaction<V, A>, AFinal> {
         lamp.add(object : Genie<Interaction<V, A>, V> {
             override val paramsClass: Class<Interaction<V, A>> = interaction.javaClass

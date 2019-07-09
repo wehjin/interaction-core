@@ -48,7 +48,7 @@ class LampTest {
             .toWish<FormatNumber, Print>(
                 name = "format-number",
                 onResult = ::Print,
-                onAction = { throw it }
+                onError = { throw it }
             )
 
         lamp.toSingle(wish).test().assertValue(Print("3"))

@@ -45,7 +45,7 @@ private fun revise(vision: Vision, action: Action, edge: Edge): Revision<Vision,
                 .toWish<Intervals, Action>(
                     "interval",
                     onResult = { index -> Action.SetMessage("${action.selection}: $index") },
-                    onAction = { throw it }
+                    onError = { throw it }
                 )
             Revision(newVision, intervals)
         }
