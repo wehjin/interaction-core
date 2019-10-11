@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
     var repeat = true
     do {
         when (val command = monitor.awaitCommand()?.trim()!!) {
-            "quit" -> {
+            "quit", "exit", "done" -> {
                 monitor.showLine("Done")
                 repeat = false
             }
