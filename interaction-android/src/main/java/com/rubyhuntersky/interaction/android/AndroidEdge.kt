@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.android
 
 import android.annotation.SuppressLint
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Edge
 import com.rubyhuntersky.interaction.core.Interaction
 

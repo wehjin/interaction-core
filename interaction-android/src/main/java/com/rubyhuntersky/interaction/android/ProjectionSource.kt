@@ -1,6 +1,6 @@
 package com.rubyhuntersky.interaction.android
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.rubyhuntersky.interaction.core.Interaction
 
 interface ProjectionSource<V : Any, out A : Any> {

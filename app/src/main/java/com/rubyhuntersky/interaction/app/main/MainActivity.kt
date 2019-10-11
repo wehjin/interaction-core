@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.app.main
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.rubyhuntersky.interaction.android.ActivityInteraction
 import com.rubyhuntersky.interaction.android.updateContentView
 import com.rubyhuntersky.interaction.app.R

@@ -2,12 +2,12 @@ package com.rubyhuntersky.interaction.android
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.design.widget.BottomSheetDialogFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.rubyhuntersky.interaction.core.Interaction
 import com.rubyhuntersky.interaction.core.InteractionSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +21,8 @@ abstract class KeyedInteractionBottomSheetDialogFragment<V : Any, A : Any>(
     var edgeKey: Long
         get() = arguments!!.getLong(EDGE_INTERACTION_ARGS_KEY)
         set(value) {
-            arguments = (arguments ?: Bundle()).also { it.putLong(EDGE_INTERACTION_ARGS_KEY, value) }
+            arguments =
+                (arguments ?: Bundle()).also { it.putLong(EDGE_INTERACTION_ARGS_KEY, value) }
         }
 
     private var visionDisposable: Disposable? = null
@@ -40,7 +41,11 @@ abstract class KeyedInteractionBottomSheetDialogFragment<V : Any, A : Any>(
         AndroidEdge.findInteraction<V, A>(InteractionSearch.ByKey(edgeKey))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
         inflater.inflate(layoutRes, container, false)
 
     override fun onStart() {
@@ -74,7 +79,7 @@ abstract class KeyedInteractionBottomSheetDialogFragment<V : Any, A : Any>(
         super.onStop()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         closeAction?.let {
             interaction.sendAction(it.invoke())
         }
