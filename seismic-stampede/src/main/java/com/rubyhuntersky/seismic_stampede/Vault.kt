@@ -4,7 +4,7 @@ import java.io.File
 
 class Vault(folder: File) {
 
-    val readingLevel: ReadingLevel = ReadingLevel.Public
+    val depth: Depth = Depth.Public
 
     val activeGems: List<Gem>
         get() = emptyList()

@@ -3,22 +3,22 @@ package com.rubyhuntersky.seismic_stampede
 
 object PageMonitor : Monitor by IndentMonitor(0) {
 
-    fun awaitCommand(): String? {
-        showPhrase(">>>  ")
-        return readLine()
+    fun awaitLine(): String {
+        showPhrase("Seismic:command$  ")
+        return readLine()?.trim()!!
     }
 
     fun showList(label: String, lines: List<String>) {
-        showLine("$label:")
-        showLine()
-        indent {
-            if (lines.isEmpty()) {
-                it.showLine("No $label")
-            } else {
+        if (lines.isEmpty()) {
+            showLine("$label: No $label")
+        } else {
+            showLine("$label:")
+            showLine()
+            indent {
                 it.showLine(lines)
             }
+            showLine()
         }
-        showLine()
     }
 
     fun showMap(map: Map<String, String>) {
@@ -27,10 +27,6 @@ object PageMonitor : Monitor by IndentMonitor(0) {
 
     fun indent(block: (monitor: Monitor) -> Unit) {
         block(IndentMonitor(2, this))
-    }
-
-    fun startPage() {
-        showLine("", "")
     }
 
     private object SystemMonitor : Monitor {

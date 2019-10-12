@@ -1,7 +1,7 @@
 package com.rubyhuntersky.interaction.android
 
-import androidx.annotation.LayoutRes
 import android.view.View
+import androidx.annotation.LayoutRes
 
 interface Renderer<V : Any, A : Any, Data : Any> {
     @get:LayoutRes

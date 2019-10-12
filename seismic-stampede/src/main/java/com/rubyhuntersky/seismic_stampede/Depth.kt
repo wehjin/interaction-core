@@ -1,6 +1,6 @@
 package com.rubyhuntersky.seismic_stampede
 
-enum class ReadingLevel {
+enum class Depth {
     Public,
     Protected,
     Private
