@@ -13,70 +13,81 @@ interface Story2<V : Any, A : Any> {
     fun dispose()
 }
 
-fun <V : Any, A : Any> Story2<V, A>.monitor(block: (vision: V) -> RenderStatus): Job {
+fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
+    offer: (OutA) -> Boolean,
+    block: (vision: V) -> OutA?
+): Job {
     val story = this
-    return GlobalScope.launch { story.tell { vision, _ -> block(vision) } }
+    return GlobalScope.launch {
+        story.tell { vision, _ ->
+            val outAction = block(vision)
+            if (outAction == null) {
+                RenderStatus.Repeat
+            } else {
+                RenderStatus.Stop.also { offer(outAction) }
+            }
+        }
+    }
 }
 
 @ExperimentalCoroutinesApi
 fun <V : Any, A : Any> storyOf(
-    name: String,
+    family: String,
     init: V,
     block: (action: A, vision: V) -> Revision<V>
-): Story2<V, A> =
-    storyOf(
-        name,
-        init,
-        { action, vision, _ -> block(action, vision) })
+): Story2<V, A> {
+    return storyOf(family, init, { action, vision, _ -> block(action, vision) })
+}
 
 @ExperimentalCoroutinesApi
 fun <V : Any, A : Any> storyOf(
-    name: String,
+    family: String,
     init: V,
     block: (action: A, vision: V, offer: (A) -> Boolean) -> Revision<V>
-): Story2<V, A> = object :
-    Story2<V, A> {
+): Story2<V, A> {
+    return object : Story2<V, A> {
 
-    private val actions = Channel<A>(5)
+        private val actions = Channel<A>(5)
 
-    private val visions = ConflatedBroadcastChannel(init)
+        private val visions = ConflatedBroadcastChannel(init)
 
-    private val job = GlobalScope.launch {
-        var vision = init
-        for (action in actions) {
-            val (newVision, isLast) = block(action, vision, actions::offer)
-            if (newVision != vision) {
-                vision = newVision.also { visions.send(newVision) }
+        private val job = GlobalScope.launch {
+            var vision = init
+            for (action in actions) {
+                val (newVision, isLast) = block(action, vision, actions::offer)
+                if (newVision != vision) {
+                    vision = newVision.also { visions.send(newVision) }
+                }
+                if (isLast) {
+                    actions.cancel()
+                }
             }
-            if (isLast) {
-                actions.cancel()
+            Log.info("$family ended")
+        }
+
+        override val family: String
+            get() = family
+
+        override suspend fun tell(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
+            val visions = visions.openSubscription()
+            loop@ for (vision in visions) {
+                when (render(vision, actions::offer)) {
+                    RenderStatus.Repeat -> Unit
+                    RenderStatus.Stop -> break@loop
+                }
             }
         }
-        Log.info("$name ended")
-    }
 
-    override val family: String
-        get() = name
+        override fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
+            runBlocking { tell(render) }
+        }
 
-    override suspend fun tell(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
-        val visions = visions.openSubscription()
-        loop@ for (vision in visions) {
-            when (render(vision, actions::offer)) {
-                RenderStatus.Repeat -> Unit
-                RenderStatus.Stop -> break@loop
+        override fun offer(action: A) {
+            GlobalScope.launch {
+                actions.offer(action)
             }
         }
-    }
 
-    override fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
-        runBlocking { tell(render) }
+        override fun dispose() = job.cancel()
     }
-
-    override fun offer(action: A) {
-        GlobalScope.launch {
-            actions.offer(action)
-        }
-    }
-
-    override fun dispose() = job.cancel()
 }

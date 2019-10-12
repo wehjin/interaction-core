@@ -2,14 +2,12 @@ package com.rubyhuntersky.seismic_stampede
 
 import java.io.File
 
-fun vaultAt(folder: File): Vault? {
+fun loadVault(folder: File): Vault? {
     val passHashFile = passHashFile(folder)
     return if (passHashFile.exists()) Vault(folder) else null
 }
 
-fun vaultOf(password: ByteArray, folder: File): Vault {
-    TODO()
-}
+fun initVault(folder: File): Vault = Vault(folder)
 
 private fun passHashFile(folder: File) = File(folder, "PASSHASH.BIN")
 
