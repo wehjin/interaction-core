@@ -1,4 +1,4 @@
-package com.rubyhuntersky.seismic_stampede
+package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
 sealed class Ending<out T : Any> {
 
@@ -17,3 +17,5 @@ sealed class Ending<out T : Any> {
 }
 
 fun <T : Any> okEnding(value: T) = Ending.Ok(value)
+fun cancelEnding() = Ending.Cancel
+fun errorEnding(error: Throwable) = Ending.Error(error)

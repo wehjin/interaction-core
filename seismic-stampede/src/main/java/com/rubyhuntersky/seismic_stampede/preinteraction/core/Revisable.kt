@@ -1,4 +1,4 @@
-package com.rubyhuntersky.seismic_stampede
+package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
 interface Revisable
 

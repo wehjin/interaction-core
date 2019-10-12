@@ -1,11 +1,12 @@
-package com.rubyhuntersky.seismic_stampede
+package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
+import com.rubyhuntersky.seismic_stampede.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
 interface Story2<V : Any, A : Any> {
-    val name: String
+    val family: String
     fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus)
     suspend fun tell(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus)
     fun offer(action: A)
@@ -22,14 +23,19 @@ fun <V : Any, A : Any> storyOf(
     name: String,
     init: V,
     block: (action: A, vision: V) -> Revision<V>
-): Story2<V, A> = storyOf(name, init, { action, vision, _ -> block(action, vision) })
+): Story2<V, A> =
+    storyOf(
+        name,
+        init,
+        { action, vision, _ -> block(action, vision) })
 
 @ExperimentalCoroutinesApi
 fun <V : Any, A : Any> storyOf(
     name: String,
     init: V,
     block: (action: A, vision: V, offer: (A) -> Boolean) -> Revision<V>
-): Story2<V, A> = object : Story2<V, A> {
+): Story2<V, A> = object :
+    Story2<V, A> {
 
     private val actions = Channel<A>(5)
 
@@ -49,7 +55,7 @@ fun <V : Any, A : Any> storyOf(
         Log.info("$name ended")
     }
 
-    override val name: String
+    override val family: String
         get() = name
 
     override suspend fun tell(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
