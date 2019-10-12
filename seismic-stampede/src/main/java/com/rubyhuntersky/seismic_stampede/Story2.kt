@@ -6,12 +6,12 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
 interface Story2<V : Any, A : Any> {
     val name: String
-    fun tellBlocking(render: (vision: V) -> LoopAction)
+    fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> NextStep)
     fun offer(action: A)
     fun dispose()
 }
 
-enum class LoopAction {
+enum class NextStep {
     Repeat,
     Stop
 }
@@ -20,7 +20,7 @@ enum class LoopAction {
 fun <V : Any, A : Any> storyOf(
     name: String,
     init: V,
-    block: suspend CoroutineScope.(action: A, vision: V) -> Pair<V, LoopAction>
+    block: suspend CoroutineScope.(action: A, vision: V) -> Pair<V, NextStep>
 ): Story2<V, A> = object : Story2<V, A> {
 
     private val actions = Channel<A>(5)
@@ -34,7 +34,7 @@ fun <V : Any, A : Any> storyOf(
             if (newVision != vision) {
                 vision = newVision.also { visions.send(newVision) }
             }
-            if (stepResult == LoopAction.Stop) {
+            if (stepResult == NextStep.Stop) {
                 actions.cancel()
             }
         }
@@ -44,13 +44,13 @@ fun <V : Any, A : Any> storyOf(
     override val name: String
         get() = name
 
-    override fun tellBlocking(render: (vision: V) -> LoopAction) {
+    override fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> NextStep) {
         runBlocking {
             val visions = visions.openSubscription()
             loop@ for (vision in visions) {
-                when (render(vision)) {
-                    LoopAction.Repeat -> Unit
-                    LoopAction.Stop -> break@loop
+                when (render(vision, actions::offer)) {
+                    NextStep.Repeat -> Unit
+                    NextStep.Stop -> break@loop
                 }
             }
         }

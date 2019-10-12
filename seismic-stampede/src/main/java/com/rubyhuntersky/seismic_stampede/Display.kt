@@ -1,7 +1,7 @@
 package com.rubyhuntersky.seismic_stampede
 
 
-object PageMonitor : Monitor by IndentMonitor(0) {
+object Display : Monitor by IndentMonitor(0) {
 
     fun awaitLine(): String {
         showPhrase("Seismic:command$  ")
