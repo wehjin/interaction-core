@@ -6,8 +6,6 @@ fun vaultOf(folder: File) = Vault(folder)
 
 class Vault(folder: File) {
 
-    val depth: Depth = Depth.Public
-
     val activeGems: List<Gem>
         get() = emptyList()
 }

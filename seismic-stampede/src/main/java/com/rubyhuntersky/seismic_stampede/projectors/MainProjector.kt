@@ -1,5 +1,6 @@
 package com.rubyhuntersky.seismic_stampede.projectors
 
+import com.rubyhuntersky.seismic_stampede.KeyStack
 import com.rubyhuntersky.seismic_stampede.Log
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
@@ -23,13 +24,18 @@ object MainProjector : Projector<Vision, Action> {
     }
 
     private fun viewingStatus(vision: Vision.Viewing, offer: (Action) -> Boolean): RenderStatus {
-        val vault = vision.session.vault
+        val (keyStack, vault) = vision.session
         Display.printLine()
-        Display.printMap(mapOf("Depth" to vault.depth.name))
+        Display.printMap(mapOf("Lens" to keyStack.toLens()))
         Display.printList("Gems", vault.activeGems.map { it.toString() })
         Display.printLine()
         offer(getViewingAction(vision))
         return RenderStatus.Repeat
+    }
+
+    private fun KeyStack.toLens(): String = when (this) {
+        is KeyStack.Empty -> "Public"
+        is KeyStack.Shallow -> "Protected"
     }
 
     private fun getViewingAction(viewing: Vision.Viewing): Action {

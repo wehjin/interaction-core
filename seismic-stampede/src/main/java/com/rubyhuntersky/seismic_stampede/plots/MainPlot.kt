@@ -60,6 +60,8 @@ object MainPlot {
                 }
             }.toRevision()
         } else {
+            val (keyStack, vault) = session
+
             Vision.Ended("TODO").toRevision()
         }
     }
