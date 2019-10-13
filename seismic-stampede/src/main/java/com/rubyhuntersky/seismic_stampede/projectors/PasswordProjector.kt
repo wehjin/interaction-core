@@ -1,18 +1,18 @@
 package com.rubyhuntersky.seismic_stampede.projectors
 
+import com.rubyhuntersky.seismic_stampede.KeyMaster
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
-import com.rubyhuntersky.seismic_stampede.plots.NewSessionPlot.Action
-import com.rubyhuntersky.seismic_stampede.plots.NewSessionPlot.Vision
+import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot.Action
+import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot.Vision
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Projector
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.RenderStatus
 
-object NewSessionProjector : Projector<Vision, Action> {
+object PasswordProjector : Projector<Vision, Action> {
     override fun render(vision: Vision, offer: (Action) -> Boolean) = renderVision(vision, offer)
 }
 
 private fun renderVision(vision: Vision, offer: (Action) -> Boolean): RenderStatus {
-    Display.printLine(vision.toString())
     return when (vision) {
         is Vision.BuildPassword -> renderBuildPassword(vision, offer)
         is Vision.Ended -> RenderStatus.Stop
@@ -27,16 +27,17 @@ private fun renderBuildPassword(
     if (password == null) {
         offer(Action.Cancel)
     } else {
-        offer(Action.SetPassword(password, vision.target))
+        val passwordId = KeyMaster.setPassword(password)
+        offer(Action.SetPassword(passwordId))
     }
     return RenderStatus.Repeat
 }
 
-private fun getConfirmedCheckedPassword(checker: (CharArray) -> String?): CharArray? {
+private fun getConfirmedCheckedPassword(isValid: (CharArray) -> String?): CharArray? {
     var confirmedPassword: CharArray? = null
     var repeat = true
     while (repeat) {
-        val password = getCheckedPassword(checker)
+        val password = getCheckedPassword(isValid)
         if (password == null) {
             repeat = false
         } else {
@@ -56,7 +57,7 @@ private fun getConfirmedCheckedPassword(checker: (CharArray) -> String?): CharAr
     return confirmedPassword
 }
 
-private fun getCheckedPassword(checker: (CharArray) -> String?): CharArray? {
+private fun getCheckedPassword(isValid: (CharArray) -> String?): CharArray? {
     var password: CharArray? = null
     var repeat = true
     while (repeat) {
@@ -64,7 +65,7 @@ private fun getCheckedPassword(checker: (CharArray) -> String?): CharArray? {
         if (candidate == null) {
             repeat = false
         } else {
-            val errorMessage = checker(candidate)
+            val errorMessage = isValid(candidate)
             if (errorMessage == null) {
                 password = candidate
                 repeat = false

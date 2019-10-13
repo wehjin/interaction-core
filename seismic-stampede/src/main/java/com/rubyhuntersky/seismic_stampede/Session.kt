@@ -6,4 +6,5 @@ data class Session(
     val refreshCount: Int = 0
 ) {
     fun refresh() = copy(refreshCount = refreshCount + 1)
+    fun setKeyStack(newKeyStack: KeyStack) = copy(keyStack = newKeyStack)
 }

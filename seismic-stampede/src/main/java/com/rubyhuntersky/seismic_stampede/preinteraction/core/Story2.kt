@@ -14,8 +14,8 @@ interface Story2<V : Any, A : Any> {
 }
 
 fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
-    offer: (OutA) -> Boolean,
-    block: (vision: V) -> OutA?
+    feed: (OutA) -> Boolean,
+    block: (progress: V) -> OutA?
 ): Job {
     val story = this
     return GlobalScope.launch {
@@ -24,7 +24,7 @@ fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
             if (outAction == null) {
                 RenderStatus.Repeat
             } else {
-                RenderStatus.Stop.also { offer(outAction) }
+                RenderStatus.Stop.also { feed(outAction) }
             }
         }
     }
@@ -48,7 +48,6 @@ fun <V : Any, A : Any> storyOf(
     return object : Story2<V, A> {
 
         private val actions = Channel<A>(5)
-
         private val visions = ConflatedBroadcastChannel(init)
 
         private val job = GlobalScope.launch {

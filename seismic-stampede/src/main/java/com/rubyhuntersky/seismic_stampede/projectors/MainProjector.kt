@@ -1,5 +1,6 @@
 package com.rubyhuntersky.seismic_stampede.projectors
 
+import com.rubyhuntersky.seismic_stampede.Log
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
 import com.rubyhuntersky.seismic_stampede.plots.MainPlot.Action
@@ -9,33 +10,44 @@ import com.rubyhuntersky.seismic_stampede.preinteraction.core.RenderStatus
 
 object MainProjector : Projector<Vision, Action> {
     override fun render(vision: Vision, offer: (Action) -> Boolean): RenderStatus {
+        Log.info("VISION: $vision")
         return when (vision) {
-            is Vision.Ended -> renderEnded(vision)
-            is Vision.Viewing -> renderViewing(vision, offer)
-            is Vision.Idle -> RenderStatus.Repeat
+            is Vision.Viewing -> viewingStatus(vision, offer)
+            is Vision.Ended -> endedStatus(vision)
         }
     }
 
-    private fun renderEnded(vision: Vision.Ended): RenderStatus {
+    private fun endedStatus(vision: Vision.Ended): RenderStatus {
         vision.message?.let { Display.printLine(it) }
         return RenderStatus.Stop
     }
 
-    private fun renderViewing(vision: Vision.Viewing, offer: (Action) -> Boolean): RenderStatus {
+    private fun viewingStatus(vision: Vision.Viewing, offer: (Action) -> Boolean): RenderStatus {
         val vault = vision.session.vault
         Display.printLine()
         Display.printMap(mapOf("Depth" to vault.depth.name))
         Display.printList("Gems", vault.activeGems.map { it.toString() })
         Display.printLine()
-        offer(getViewingAction())
+        offer(getViewingAction(vision))
         return RenderStatus.Repeat
     }
 
-    private fun getViewingAction(): Action {
+    private fun getViewingAction(viewing: Vision.Viewing): Action {
+
         var action: Action?
         do {
-            action = when (Display.awaitLine()) {
+            val tokens = Tokens(Display.awaitLine())
+            action = when (tokens.symbol()) {
                 "" -> null
+                "add" -> when (val kind = tokens.symbol()) {
+                    "note" -> {
+                        when (val text = tokens.remaining()) {
+                            "" -> null.also { Display.printLine("Usage: add note <text>") }
+                            else -> Action.AddNote(text, viewing.session)
+                        }
+                    }
+                    else -> null.also { Display.printLine("Token: $kind", "Usage: add [note]") }
+                }
                 "quit", "exit", "done" -> Action.Quit()
                 else -> Action.Refresh
             }
