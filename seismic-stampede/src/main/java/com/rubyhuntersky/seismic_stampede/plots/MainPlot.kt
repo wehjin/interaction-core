@@ -25,11 +25,15 @@ object MainPlot {
     fun start(storybook: Storybook): Story2<Vision, Action> =
         storyOf("Main", init()) { action, vision, offer ->
             Log.info("ACTION: $action")
-            when (action) {
-                is Action.Ignore -> vision.toRevision()
-                is Action.Refresh -> (vision as Vision.Viewing).refresh().toRevision()
-                is Action.Quit -> Vision.Ended(action.message).toRevision(isLast = true)
-                is Action.AddNote -> addNoteRevision(action, vision, storybook, offer)
+            try {
+                when (action) {
+                    is Action.Ignore -> vision.toRevision()
+                    is Action.Refresh -> (vision as Vision.Viewing).refresh().toRevision()
+                    is Action.Quit -> Vision.Ended(action.message).toRevision(isLast = true)
+                    is Action.AddNote -> addNoteRevision(action, vision, storybook, offer)
+                }
+            } catch (t: Throwable) {
+                Vision.Ended(t.localizedMessage).toRevision()
             }
         }
 
@@ -60,9 +64,8 @@ object MainPlot {
                 }
             }.toRevision()
         } else {
-            val (keyStack, vault) = session
-
-            Vision.Ended("TODO").toRevision()
+            val newSession = session.addNote(text)
+            Vision.Viewing(newSession).toRevision()
         }
     }
 

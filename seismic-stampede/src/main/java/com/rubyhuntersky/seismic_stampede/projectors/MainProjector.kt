@@ -24,10 +24,10 @@ object MainProjector : Projector<Vision, Action> {
     }
 
     private fun viewingStatus(vision: Vision.Viewing, offer: (Action) -> Boolean): RenderStatus {
-        val (keyStack, vault) = vision.session
+        val (keyStack, _) = vision.session
         Display.printLine()
         Display.printMap(mapOf("Lens" to keyStack.toLens()))
-        Display.printList("Gems", vault.activeGems.map { it.toString() })
+        Display.printList("Gems", vision.session.activeGems.map { it.toString() })
         Display.printLine()
         offer(getViewingAction(vision))
         return RenderStatus.Repeat
