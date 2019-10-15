@@ -17,11 +17,15 @@ object GatherPlot {
             val message: String? = null,
             val changeCount: Int = 0
         ) : Vision() {
+
             val activeGather: Gather by lazy { finalGather.all[values.size] }
-            val unfinishedGathers: Int
-                get() = finalGather.all.size - values.size
+
             val isLastGather: Boolean
-                get() = unfinishedGathers == 1
+                get() = ungatheredValues == 1
+
+            private val ungatheredValues: Int
+                get() = finalGather.all.size - values.size
+
             val gatheredValues: Map<String, String> by lazy {
                 values
                     .mapIndexed { i, value -> Pair(finalGather.all[i].label, value) }
@@ -29,7 +33,7 @@ object GatherPlot {
             }
 
             fun addValue(validValue: String): Gathering {
-                check(unfinishedGathers > 0)
+                check(ungatheredValues > 1)
                 return copy(
                     values = values + validValue,
                     message = null,

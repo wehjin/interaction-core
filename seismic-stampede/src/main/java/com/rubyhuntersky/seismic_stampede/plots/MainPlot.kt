@@ -66,7 +66,18 @@ object MainPlot {
                 GatherPlot.start(gather, storybook).follow(offer) { progress ->
                     when (progress) {
                         is GatherPlot.Vision.Gathering -> null
-                        is GatherPlot.Vision.Ended -> Action.Refresh
+                        is GatherPlot.Vision.Ended -> {
+                            when (val end = progress.end) {
+                                is End.High -> {
+                                    val gathering = end.value
+                                    val location = gather[0](gathering)!!
+                                    val username = gather[1](gathering)!!
+                                    Log.info("Location: $location, Username: $username")
+                                    Action.Refresh
+                                }
+                                is End.Flat, is End.Low -> Action.Refresh
+                            }
+                        }
                     }
                 }
             }.toRevision()
