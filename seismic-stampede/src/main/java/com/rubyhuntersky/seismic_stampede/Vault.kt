@@ -9,26 +9,38 @@ class Vault(initFolder: File) {
 
     private val folder: File = initFolder.apply { mkdir() }
 
-    fun addNote(text: String, passwordId: Int) {
-        val bytes = "$NOTE_GEM_TYPE\n$text".toByteArray(Charsets.UTF_8)
-        val cipherItem = KeyMaster.encryptAndZeroPlain(bytes, passwordId)
-        writeCipherItem(cipherItem)
+    fun addNote(title: String, text: String, passwordId: Int) {
+        val metaBytes = makeMeta("note", listOf(title))
+        val bodyBytes = text.toByteArray(Charsets.UTF_8)
+        val recordBytes = makeRecord(metaBytes, bodyBytes).also { bodyBytes.zero() }
+        writeCipherItem(KeyMaster.encryptAndZeroPlain(recordBytes, passwordId))
+    }
+
+    fun addPassword(location: String, user: String, password: String, passwordId: Int) {
+        val metaBytes = makeMeta("password", listOf(location, user))
+        val bodyBytes = password.toByteArray(Charsets.UTF_8)
+        val recordBytes = makeRecord(metaBytes, bodyBytes).also { bodyBytes.zero() }
+        writeCipherItem(KeyMaster.encryptAndZeroPlain(recordBytes, passwordId))
     }
 
     fun findGems(passwordId: Int): List<Gem> {
+        return readCipherItems(passwordId).map { cipherItem ->
+            val recordBytes = KeyMaster.decrypt(cipherItem, passwordId)
+            val metaBytes = breakRecordToMeta(recordBytes).also { recordBytes.zero() }
+            val fields = breakMeta(metaBytes)
+            when (val type = fields[0]) {
+                "note" -> Gem(type, fields[1])
+                "password" -> Gem(type, "${fields[1]} - ${fields[2]}")
+                else -> error("Invalid type $type")
+            }
+        }
+    }
+
+    private fun readCipherItems(passwordId: Int): List<CipherItem> {
         return folder.listFiles()!!.mapNotNull {
             val split = it.nameWithoutExtension.split(":")
             if (it.isFile && split.size == 2) {
-                val cipherItem = readCipherItem(it)
-                val plainBytes = KeyMaster.decrypt(
-                    cipherItem = cipherItem,
-                    passwordId = passwordId
-                )
-                val plain = String(plainBytes)
-                val division = plain.indexOf('\n')
-                val type = plain.substring(0, division)
-                val title = plain.substring(division + 1)
-                Gem(type, title)
+                readCipherItem(it)
             } else {
                 null
             }

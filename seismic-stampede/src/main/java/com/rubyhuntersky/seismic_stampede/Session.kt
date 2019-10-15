@@ -10,7 +10,13 @@ data class Session(
 
     fun addNote(text: String): Session {
         require(keyStack is KeyStack.Shallow)
-        vault.addNote(text, keyStack.passwordId)
+        vault.addNote(text, "empty", keyStack.passwordId)
+        return refresh()
+    }
+
+    fun addPassword(location: String, user: String): Session {
+        require(keyStack is KeyStack.Shallow)
+        vault.addPassword(location, user, "12345", keyStack.passwordId)
         return refresh()
     }
 

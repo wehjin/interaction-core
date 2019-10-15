@@ -58,8 +58,9 @@ object MainPlot {
         offer: (Action) -> Boolean
     ): Revision<Vision> {
         require(vision is Vision.Viewing)
+        val session = action.session
         return if (action.location.isNullOrBlank() || action.username.isNullOrBlank()) {
-            Vision.Viewing(action.session).also {
+            Vision.Viewing(session).also {
                 val gather =
                     gatherOf("Location", validator = ::validWhenNotEmpty)
                         .and("Username", validator = ::validWhenNotEmpty)
@@ -72,8 +73,7 @@ object MainPlot {
                                     val gathering = end.value
                                     val location = gather[0](gathering)!!
                                     val username = gather[1](gathering)!!
-                                    Log.info("Location: $location, Username: $username")
-                                    Action.Refresh
+                                    Action.AddPassword(location, username, session)
                                 }
                                 is End.Flat, is End.Low -> Action.Refresh
                             }
@@ -82,8 +82,8 @@ object MainPlot {
                 }
             }.toRevision()
         } else {
-            // TODO Add password to vault.
-            Vision.Viewing(action.session).toRevision()
+            val newSession = session.addPassword(action.location, action.username)
+            Vision.Viewing(newSession).toRevision()
         }
     }
 

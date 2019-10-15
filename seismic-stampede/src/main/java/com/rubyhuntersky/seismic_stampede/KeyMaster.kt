@@ -86,18 +86,6 @@ object KeyMaster {
     private fun cipherName(nonce: ByteArray, iv: ByteArray): String =
         "${nonce.toHex()}:${iv.toHex()}"
 
-    private fun ByteArray.toHex(): String = joinToString("") { "%02x".format(it) }
-    private fun ByteArray.zero() = indices.forEach { i -> this[i] = 0 }
-
-    private fun String.hexToByteArray(): ByteArray = ByteArray(length / 2)
-        .also { bytes ->
-            (0 until length step 2).forEach { i ->
-                val left = Character.digit(this[i], 16) shl 4
-                val right = Character.digit(this[i + 1], 16)
-                bytes[i / 2] = (left + right).toByte()
-            }
-        }
-
     private const val HMAC_NONCE_LENGTH = 16
     private const val GCM_TAG_LENGTH = 16
     private const val IV_LENGTH = 16
