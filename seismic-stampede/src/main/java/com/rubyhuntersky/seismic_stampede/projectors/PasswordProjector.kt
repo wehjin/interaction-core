@@ -14,12 +14,12 @@ object PasswordProjector : Projector<Vision, Action> {
 
 private fun renderVision(vision: Vision, offer: (Action) -> Boolean): RenderStatus {
     return when (vision) {
-        is Vision.BuildPassword -> renderBuildPassword(vision, offer)
+        is Vision.BuildPassword -> renderGathering(vision, offer)
         is Vision.Ended -> RenderStatus.Stop
     }
 }
 
-private fun renderBuildPassword(
+private fun renderGathering(
     vision: Vision.BuildPassword,
     offer: (Action) -> Boolean
 ): RenderStatus {

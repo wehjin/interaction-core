@@ -10,7 +10,7 @@ class Storybook(val projectors: Map<String, Projector<*, *>>) :
 
     override val coroutineContext: CoroutineContext = Job()
 
-    fun <V : Any, A : Any> project(story: Story2<V, A>) {
+    fun <V : Any, A : Any> startProjector(story: Story2<V, A>) {
         val renderer = (projectors[story.family] as? Projector<V, A>)
             ?: error("Missing renderer for story ${story.family}")
         launch {

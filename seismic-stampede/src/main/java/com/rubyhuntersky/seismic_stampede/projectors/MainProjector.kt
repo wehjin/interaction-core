@@ -52,6 +52,9 @@ object MainProjector : Projector<Vision, Action> {
                             else -> Action.AddNote(text, viewing.session)
                         }
                     }
+                    "password" -> {
+                        Action.AddPassword(null, null, viewing.session)
+                    }
                     else -> null.also { Display.printLine("Token: $kind", "Usage: add [note]") }
                 }
                 "quit", "exit", "done" -> Action.Quit()

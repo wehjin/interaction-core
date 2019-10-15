@@ -1,6 +1,8 @@
 package com.rubyhuntersky.seismic_stampede.plots
 
 import com.rubyhuntersky.seismic_stampede.*
+import com.rubyhuntersky.seismic_stampede.gather.core.gatherOf
+import com.rubyhuntersky.seismic_stampede.gather.core.validWhenNotEmpty
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -18,7 +20,17 @@ object MainPlot {
         object Ignore : Action()
         data class Quit(val message: String? = null) : Action()
         object Refresh : Action()
-        data class AddNote(val text: String, val session: Session) : Action()
+
+        data class AddNote(
+            val text: String,
+            val session: Session
+        ) : Action()
+
+        data class AddPassword(
+            val location: String? = null,
+            val username: String? = null,
+            val session: Session
+        ) : Action()
     }
 
     @ExperimentalCoroutinesApi
@@ -30,7 +42,8 @@ object MainPlot {
                     is Action.Ignore -> vision.toRevision()
                     is Action.Refresh -> (vision as Vision.Viewing).refresh().toRevision()
                     is Action.Quit -> Vision.Ended(action.message).toRevision(isLast = true)
-                    is Action.AddNote -> addNoteRevision(action, vision, storybook, offer)
+                    is Action.AddNote -> addNote(action, vision, storybook, offer)
+                    is Action.AddPassword -> addPassword(vision, action, storybook, offer)
                 }
             } catch (t: Throwable) {
                 Vision.Ended(t.localizedMessage).toRevision()
@@ -38,7 +51,33 @@ object MainPlot {
         }
 
     @ExperimentalCoroutinesApi
-    private fun addNoteRevision(
+    private fun addPassword(
+        vision: Vision,
+        action: Action.AddPassword,
+        storybook: Storybook,
+        offer: (Action) -> Boolean
+    ): Revision<Vision> {
+        require(vision is Vision.Viewing)
+        return if (action.location.isNullOrBlank() || action.username.isNullOrBlank()) {
+            Vision.Viewing(action.session).also {
+                val gather =
+                    gatherOf("Location", validator = ::validWhenNotEmpty)
+                        .and("Username", validator = ::validWhenNotEmpty)
+                GatherPlot.start(gather, storybook).follow(offer) { progress ->
+                    when (progress) {
+                        is GatherPlot.Vision.Gathering -> null
+                        is GatherPlot.Vision.Ended -> Action.Refresh
+                    }
+                }
+            }.toRevision()
+        } else {
+            // TODO Add password to vault.
+            Vision.Viewing(action.session).toRevision()
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun addNote(
         action: Action.AddNote,
         vision: Vision,
         storybook: Storybook,

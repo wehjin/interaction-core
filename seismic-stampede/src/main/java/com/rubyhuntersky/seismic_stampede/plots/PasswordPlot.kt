@@ -41,6 +41,6 @@ object PasswordPlot {
                 Vision.Ended(endLow(t)).toRevision(isLast = true)
             }
         }
-        return story.also(storybook::project)
+        return story.also(storybook::startProjector)
     }
 }
