@@ -1,4 +1,4 @@
-package com.rubyhuntersky.seismic_stampede.plots
+package com.rubyhuntersky.seismic_stampede.stories
 
 import com.rubyhuntersky.seismic_stampede.*
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
@@ -7,7 +7,7 @@ import com.rubyhuntersky.seismic_stampede.vibes.wishForLocationUsername
 import com.rubyhuntersky.seismic_stampede.vibes.wishForNewPassword
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-object MainPlot {
+object MainStory {
 
     sealed class Vision : Revisable<Vision, Action> {
         data class Viewing(val session: Session) : Vision() {

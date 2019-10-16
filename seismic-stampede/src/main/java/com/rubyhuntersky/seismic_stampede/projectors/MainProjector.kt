@@ -4,8 +4,8 @@ import com.rubyhuntersky.seismic_stampede.KeyStack
 import com.rubyhuntersky.seismic_stampede.Log
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
-import com.rubyhuntersky.seismic_stampede.plots.MainPlot.Action
-import com.rubyhuntersky.seismic_stampede.plots.MainPlot.Vision
+import com.rubyhuntersky.seismic_stampede.stories.MainStory.Action
+import com.rubyhuntersky.seismic_stampede.stories.MainStory.Vision
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Projector
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.RenderStatus
 

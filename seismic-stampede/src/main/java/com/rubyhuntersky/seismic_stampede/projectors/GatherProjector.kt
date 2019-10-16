@@ -2,8 +2,8 @@ package com.rubyhuntersky.seismic_stampede.projectors
 
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
-import com.rubyhuntersky.seismic_stampede.plots.GatherPlot.Action
-import com.rubyhuntersky.seismic_stampede.plots.GatherPlot.Vision
+import com.rubyhuntersky.seismic_stampede.stories.GatherStory.Action
+import com.rubyhuntersky.seismic_stampede.stories.GatherStory.Vision
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Projector
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.RenderStatus
 

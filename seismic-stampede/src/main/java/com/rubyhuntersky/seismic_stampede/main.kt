@@ -1,8 +1,8 @@
 package com.rubyhuntersky.seismic_stampede
 
-import com.rubyhuntersky.seismic_stampede.plots.GatherPlot
-import com.rubyhuntersky.seismic_stampede.plots.MainPlot
-import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot
+import com.rubyhuntersky.seismic_stampede.stories.GatherStory
+import com.rubyhuntersky.seismic_stampede.stories.MainStory
+import com.rubyhuntersky.seismic_stampede.stories.PasswordStory
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Storybook
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.tellBlocking
 import com.rubyhuntersky.seismic_stampede.projectors.GatherProjector
@@ -17,10 +17,10 @@ val defaultFolder = File(System.getenv("HOME"), ".seismic-stampede")
 fun main(args: Array<String>) {
     val storyBook = Storybook(
         projectors = mapOf(
-            PasswordPlot.storyName to PasswordProjector,
-            GatherPlot.storyName to GatherProjector
+            PasswordStory.storyName to PasswordProjector,
+            GatherStory.storyName to GatherProjector
         )
     )
-    MainPlot.start(storyBook).tellBlocking(MainProjector::render)
+    MainStory.start(storyBook).tellBlocking(MainProjector::render)
 }
 

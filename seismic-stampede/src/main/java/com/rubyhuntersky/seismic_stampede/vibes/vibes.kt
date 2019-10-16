@@ -2,8 +2,10 @@ package com.rubyhuntersky.seismic_stampede.vibes
 
 import com.rubyhuntersky.seismic_stampede.gather.core.gatherOf
 import com.rubyhuntersky.seismic_stampede.gather.core.validWhenNotEmpty
-import com.rubyhuntersky.seismic_stampede.plots.GatherPlot
-import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot
+import com.rubyhuntersky.seismic_stampede.stories.GatherStory
+import com.rubyhuntersky.seismic_stampede.stories.PasswordStory
+import com.rubyhuntersky.seismic_stampede.stories.startPasswordStory
+import com.rubyhuntersky.seismic_stampede.stories.startStory
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.End
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Storybook
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.toEnding
@@ -15,8 +17,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun <OutA : Any> wishForNewPassword(
     storybook: Storybook,
     transform: (End<Int>) -> OutA
-): Wish2<OutA> = PasswordPlot.start(storybook)
-    .toEnding { (it as? PasswordPlot.Vision.Ended)?.end }
+): Wish2<OutA> = startPasswordStory(storybook)
+    .toEnding { (it as? PasswordStory.Vision.Ended)?.end }
     .toWish(transform)
 
 @ExperimentalCoroutinesApi
@@ -27,8 +29,8 @@ fun <OutA : Any> wishForLocationUsername(
     gatherOf("Location", validator = ::validWhenNotEmpty)
         .and("Username", validator = ::validWhenNotEmpty)
         .let { gather ->
-            GatherPlot.start(gather, storybook)
-                .toEnding { (it as? GatherPlot.Vision.Ended)?.end }
+            gather.startStory(storybook)
+                .toEnding { (it as? GatherStory.Vision.Ended)?.end }
                 .toWish {
                     val pairEnd = it.map { gathering ->
                         val location = gather[0](gathering)!!

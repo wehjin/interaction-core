@@ -3,8 +3,8 @@ package com.rubyhuntersky.seismic_stampede.projectors
 import com.rubyhuntersky.seismic_stampede.KeyMaster
 import com.rubyhuntersky.seismic_stampede.display.Display
 import com.rubyhuntersky.seismic_stampede.display.printLine
-import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot.Action
-import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot.Vision
+import com.rubyhuntersky.seismic_stampede.stories.PasswordStory.Action
+import com.rubyhuntersky.seismic_stampede.stories.PasswordStory.Vision
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Projector
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.RenderStatus
 
