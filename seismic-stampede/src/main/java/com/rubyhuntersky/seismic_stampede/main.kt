@@ -4,6 +4,7 @@ import com.rubyhuntersky.seismic_stampede.plots.GatherPlot
 import com.rubyhuntersky.seismic_stampede.plots.MainPlot
 import com.rubyhuntersky.seismic_stampede.plots.PasswordPlot
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.Storybook
+import com.rubyhuntersky.seismic_stampede.preinteraction.core.tellBlocking
 import com.rubyhuntersky.seismic_stampede.projectors.GatherProjector
 import com.rubyhuntersky.seismic_stampede.projectors.MainProjector
 import com.rubyhuntersky.seismic_stampede.projectors.PasswordProjector

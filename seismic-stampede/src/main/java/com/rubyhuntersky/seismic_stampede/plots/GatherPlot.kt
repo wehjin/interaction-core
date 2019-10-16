@@ -9,7 +9,7 @@ object GatherPlot {
 
     val storyName: String = GatherPlot::class.java.simpleName
 
-    sealed class Vision : Revisable {
+    sealed class Vision : Revisable<Vision, Action> {
 
         data class Gathering(
             val finalGather: Gather,

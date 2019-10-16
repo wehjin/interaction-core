@@ -1,14 +1,15 @@
 package com.rubyhuntersky.seismic_stampede.plots
 
 import com.rubyhuntersky.seismic_stampede.*
-import com.rubyhuntersky.seismic_stampede.gather.core.gatherOf
-import com.rubyhuntersky.seismic_stampede.gather.core.validWhenNotEmpty
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
+import com.rubyhuntersky.seismic_stampede.preinteraction.core.End.*
+import com.rubyhuntersky.seismic_stampede.vibes.wishForLocationUsername
+import com.rubyhuntersky.seismic_stampede.vibes.wishForNewPassword
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 object MainPlot {
 
-    sealed class Vision : Revisable {
+    sealed class Vision : Revisable<Vision, Action> {
         data class Viewing(val session: Session) : Vision() {
             fun refresh() = copy(session = session.refresh())
         }
@@ -35,15 +36,15 @@ object MainPlot {
 
     @ExperimentalCoroutinesApi
     fun start(storybook: Storybook): Story2<Vision, Action> =
-        storyOf("Main", init()) { action, vision, offer ->
+        storyOf("Main", init()) { action, vision ->
             Log.info("ACTION: $action")
             try {
                 when (action) {
                     is Action.Ignore -> vision.toRevision()
                     is Action.Refresh -> (vision as Vision.Viewing).refresh().toRevision()
                     is Action.Quit -> Vision.Ended(action.message).toRevision(isLast = true)
-                    is Action.AddNote -> addNote(action, vision, storybook, offer)
-                    is Action.AddPassword -> addPassword(vision, action, storybook, offer)
+                    is Action.AddNote -> addNote(action, vision, storybook)
+                    is Action.AddPassword -> addPassword(action, vision, storybook)
                 }
             } catch (t: Throwable) {
                 Vision.Ended(t.localizedMessage).toRevision()
@@ -52,35 +53,22 @@ object MainPlot {
 
     @ExperimentalCoroutinesApi
     private fun addPassword(
-        vision: Vision,
         action: Action.AddPassword,
-        storybook: Storybook,
-        offer: (Action) -> Boolean
-    ): Revision<Vision> {
+        vision: Vision,
+        storybook: Storybook
+    ): Revision<Vision, Action> {
         require(vision is Vision.Viewing)
         val session = action.session
         return if (action.location.isNullOrBlank() || action.username.isNullOrBlank()) {
-            Vision.Viewing(session).also {
-                val gather =
-                    gatherOf("Location", validator = ::validWhenNotEmpty)
-                        .and("Username", validator = ::validWhenNotEmpty)
-                GatherPlot.start(gather, storybook).follow(offer) { progress ->
-                    when (progress) {
-                        is GatherPlot.Vision.Gathering -> null
-                        is GatherPlot.Vision.Ended -> {
-                            when (val end = progress.end) {
-                                is End.High -> {
-                                    val gathering = end.value
-                                    val location = gather[0](gathering)!!
-                                    val username = gather[1](gathering)!!
-                                    Action.AddPassword(location, username, session)
-                                }
-                                is End.Flat, is End.Low -> Action.Refresh
-                            }
-                        }
+            Vision.Viewing(session) and wishForLocationUsername(storybook) { end ->
+                when (end) {
+                    is High -> {
+                        val (location, username) = end.value
+                        Action.AddPassword(location, username, session)
                     }
+                    is Flat, is Low -> Action.Refresh
                 }
-            }.toRevision()
+            }
         } else {
             val newSession = session.addPassword(action.location, action.username)
             Vision.Viewing(newSession).toRevision()
@@ -91,28 +79,21 @@ object MainPlot {
     private fun addNote(
         action: Action.AddNote,
         vision: Vision,
-        storybook: Storybook,
-        offer: (Action) -> Boolean
-    ): Revision<Vision> {
+        storybook: Storybook
+    ): Revision<Vision, Action> {
         require(vision is Vision.Viewing)
         val (text, session) = action
         return if (session.keyStack is KeyStack.Empty) {
-            Vision.Viewing(session).also {
-                PasswordPlot.start(storybook).follow(offer) { progress ->
-                    when (progress) {
-                        is PasswordPlot.Vision.Ended ->
-                            when (val ending = progress.end) {
-                                is End.High -> Action.AddNote(
-                                    text = text,
-                                    session = session.setKeyStack(KeyStack.Shallow(ending.value))
-                                )
-                                is End.Flat -> Action.Quit("Cancelled")
-                                is End.Low -> Action.Quit(ending.error.localizedMessage)
-                            }
-                        else -> null
+            Vision.Viewing(session) and wishForNewPassword(storybook) { end ->
+                when (end) {
+                    is High -> {
+                        val newSession = session.setKeyStack(KeyStack.Shallow(end.value))
+                        Action.AddNote(text, newSession)
                     }
+                    is Flat -> Action.Quit("Cancelled")
+                    is Low -> Action.Quit(end.error.localizedMessage)
                 }
-            }.toRevision()
+            }
         } else {
             val newSession = session.addNote(text)
             Vision.Viewing(newSession).toRevision()

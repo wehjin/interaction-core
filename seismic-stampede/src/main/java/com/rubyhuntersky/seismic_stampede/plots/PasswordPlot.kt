@@ -7,7 +7,7 @@ object PasswordPlot {
 
     val storyName: String = this::class.java.simpleName
 
-    sealed class Vision : Revisable {
+    sealed class Vision : Revisable<Vision, Action> {
         data class BuildPassword(val checker: (CharArray) -> String?) : Vision()
         data class Ended(val end: End<Int>) : Vision()
     }

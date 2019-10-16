@@ -1,17 +1,21 @@
 package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
 import com.rubyhuntersky.seismic_stampede.Log
+import com.rubyhuntersky.seismic_stampede.vibes.Wish2
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 
 interface Story2<V : Any, A : Any> {
     val family: String
-    fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus)
-    suspend fun tell(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus)
+    suspend fun tell(render: (vision: V, offer: (A) -> Boolean) -> RenderStatus)
     fun offer(action: A)
     fun dispose()
 }
+
+fun <V : Any, A : Any> Story2<V, A>.tellBlocking(
+    render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus
+) = runBlocking { tell(render) }
 
 fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
     feed: (OutA) -> Boolean,
@@ -30,11 +34,42 @@ fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
     }
 }
 
+interface StoryEnding<V : Any, A : Any, R : Any> {
+    val story: Story2<V, A>
+    val endFromVision: (progress: V) -> End<R>?
+}
+
+fun <V : Any, A : Any, R : Any, OutA : Any> StoryEnding<V, A, R>.toWish(transform: (End<R>) -> OutA): Wish2<OutA> {
+    return object : Wish2<OutA> {
+        override val name = "${story.family}Wish"
+        override fun follow(offer: (OutA) -> Boolean) = follow2 { end -> offer(transform(end)) }
+    }
+}
+
+fun <V : Any, A : Any, R : Any> StoryEnding<V, A, R>.follow2(feed: (End<R>) -> Boolean): Job {
+    return GlobalScope.launch {
+        story.tell { vision, _ ->
+            when (val end = endFromVision(vision)) {
+                null -> RenderStatus.Repeat
+                else -> RenderStatus.Stop.also { feed(end) }
+            }
+        }
+    }
+}
+
+fun <V : Any, A : Any, R : Any> Story2<V, A>.toEnding(mapToEnd: (V) -> End<R>?): StoryEnding<V, A, R> {
+    val story = this
+    return object : StoryEnding<V, A, R> {
+        override val story: Story2<V, A> = story
+        override val endFromVision: (progress: V) -> End<R>? = mapToEnd
+    }
+}
+
 @ExperimentalCoroutinesApi
 fun <V : Any, A : Any> storyOf(
     family: String,
     init: V,
-    block: (action: A, vision: V) -> Revision<V>
+    block: (action: A, vision: V) -> Revision<V, A>
 ): Story2<V, A> {
     return storyOf(family, init, { action, vision, _ -> block(action, vision) })
 }
@@ -43,7 +78,7 @@ fun <V : Any, A : Any> storyOf(
 fun <V : Any, A : Any> storyOf(
     family: String,
     init: V,
-    block: (action: A, vision: V, offer: (A) -> Boolean) -> Revision<V>
+    block: (action: A, vision: V, offer: (A) -> Boolean) -> Revision<V, A>
 ): Story2<V, A> {
     return object : Story2<V, A> {
 
@@ -52,10 +87,20 @@ fun <V : Any, A : Any> storyOf(
 
         private val job = GlobalScope.launch {
             var vision = init
+            val wishJobs = mutableMapOf<String, Job>()
             for (action in actions) {
-                val (newVision, isLast) = block(action, vision, actions::offer)
+                val (newVision, isLast, wishes) = block(action, vision, actions::offer)
                 if (newVision != vision) {
                     vision = newVision.also { visions.send(newVision) }
+                }
+                wishes.forEach { wish ->
+                    wishJobs.remove(wish.name)?.cancel()
+                    wish.follow {
+                        wishJobs.remove(wish.name)
+                        actions.offer(it)
+                    }.also {
+                        wishJobs[wish.name] = it
+                    }
                 }
                 if (isLast) {
                     actions.cancel()
@@ -75,10 +120,6 @@ fun <V : Any, A : Any> storyOf(
                     RenderStatus.Stop -> break@loop
                 }
             }
-        }
-
-        override fun tellBlocking(render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus) {
-            runBlocking { tell(render) }
         }
 
         override fun offer(action: A) {
