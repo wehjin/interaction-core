@@ -42,18 +42,22 @@ fun storyOfMain(storybook: Storybook): Story2<Vision, Action> = storyOf(
     }
 )
 
+private fun addNote(action: Action.AddNote, vision: Vision): Revision<Vision, Action> {
+    require(vision is Vision.Viewing && vision.session.keyStack is KeyStack.Empty)
+    val (text, session) = action
+    return Vision.Viewing(session.addNote(text)).toRevision()
+}
+
 @ExperimentalCoroutinesApi
 private fun addPassword(
     action: Action.AddPassword,
     vision: Vision,
     storybook: Storybook
 ): Revision<Vision, Action> {
-    require(vision is Vision.Viewing)
+    require(vision is Vision.Viewing && vision.session.keyStack is KeyStack.Empty)
     val session = action.session
     return if (action.location.isNullOrBlank() || action.username.isNullOrBlank()) {
-        Vision.Viewing(session) and wishForLocationUsername(
-            storybook
-        ) { end ->
+        Vision.Viewing(session) and wishForLocationUsername(storybook) { end ->
             when (end) {
                 is High -> {
                     val (location, username) = end.value
@@ -65,17 +69,6 @@ private fun addPassword(
     } else {
         val newSession = session.addPassword(action.location, action.username)
         Vision.Viewing(newSession).toRevision()
-    }
-}
-
-@ExperimentalCoroutinesApi
-private fun addNote(action: Action.AddNote, vision: Vision): Revision<Vision, Action> {
-    require(vision is Vision.Viewing)
-    val (text, session) = action
-    return if (session.keyStack is KeyStack.Empty) {
-        Vision.Viewing(session).toRevision()
-    } else {
-        Vision.Viewing(session.addNote(text)).toRevision()
     }
 }
 
