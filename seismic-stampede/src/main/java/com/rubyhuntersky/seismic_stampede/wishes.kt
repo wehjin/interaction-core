@@ -8,8 +8,10 @@ import com.rubyhuntersky.seismic_stampede.stories.PasswordStory
 import com.rubyhuntersky.seismic_stampede.stories.startPasswordStory
 import com.rubyhuntersky.seismic_stampede.stories.startStory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 fun <OutA : Any> wishForNewPassword(
     storybook: Storybook,

@@ -7,12 +7,14 @@ import com.rubyhuntersky.seismic_stampede.projectors.MainProjector
 import com.rubyhuntersky.seismic_stampede.projectors.PasswordProjector
 import com.rubyhuntersky.seismic_stampede.stories.GatherStory
 import com.rubyhuntersky.seismic_stampede.stories.PasswordStory
-import com.rubyhuntersky.seismic_stampede.stories.startMainStory
+import com.rubyhuntersky.seismic_stampede.stories.storyOfMain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.io.File
 
 val defaultFolder = File(System.getenv("HOME"), ".seismic-stampede")
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 fun main(args: Array<String>) {
     val storyBook = Storybook(
@@ -21,6 +23,6 @@ fun main(args: Array<String>) {
             GatherStory.storyName to GatherProjector
         )
     )
-    startMainStory(storyBook).tellBlocking(MainProjector::render)
+    storyOfMain(storyBook).tellBlocking(MainProjector::render)
 }
 

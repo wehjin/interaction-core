@@ -4,7 +4,7 @@ package com.rubyhuntersky.seismic_stampede.display
 object Display : LinePrinter by IndentLinePrinter(
     0
 ) {
-    fun awaitLine(prompt: String = "Seismic:command$"): String {
+    fun awaitLine(prompt: String): String {
         printPhrase("$prompt  ")
         return readLine()?.trim()!!
     }
@@ -13,8 +13,7 @@ object Display : LinePrinter by IndentLinePrinter(
         if (lines.isEmpty()) {
             printLine("$label: No $label")
         } else {
-            printLine("$label:")
-            printLine()
+            printLine("$label: ${lines.size}")
             indent { it.printLine(lines) }
             printLine()
         }

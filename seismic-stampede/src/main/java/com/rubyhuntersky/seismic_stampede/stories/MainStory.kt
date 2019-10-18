@@ -10,9 +10,18 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-fun startMainStory(storybook: Storybook): Story2<Vision, Action> = storyOf(
+fun storyOfMain(storybook: Storybook): Story2<Vision, Action> = storyOf(
     family = "Main",
-    init = { Vision.Viewing(Session(KeyStack.Empty, vaultOf(defaultFolder))).toRevision() },
+    init = {
+        val session = Session(KeyStack.Empty, vaultOf(defaultFolder))
+        Vision.Viewing(session) and wishForNewPassword(storybook) { ending ->
+            when (ending) {
+                is High -> Action.SetKeystack(KeyStack.Shallow(ending.value))
+                is Flat -> Action.Quit("Cancelled")
+                is Low -> Action.Quit(ending.error.localizedMessage)
+            }
+        }
+    },
     update = { action, vision ->
         Log.info("ACTION: $action")
         try {
@@ -20,7 +29,11 @@ fun startMainStory(storybook: Storybook): Story2<Vision, Action> = storyOf(
                 is Action.Ignore -> vision.toRevision()
                 is Action.Refresh -> (vision as Vision.Viewing).refresh().toRevision()
                 is Action.Quit -> Vision.Ended(action.message).toRevision(isLast = true)
-                is Action.AddNote -> addNote(action, vision, storybook)
+                is Action.SetKeystack -> {
+                    check(vision is Vision.Viewing)
+                    Vision.Viewing(vision.session.setKeyStack(action.keyStack)).toRevision()
+                }
+                is Action.AddNote -> addNote(action, vision)
                 is Action.AddPassword -> addPassword(action, vision, storybook)
             }
         } catch (t: Throwable) {
@@ -56,27 +69,13 @@ private fun addPassword(
 }
 
 @ExperimentalCoroutinesApi
-private fun addNote(
-    action: Action.AddNote,
-    vision: Vision,
-    storybook: Storybook
-): Revision<Vision, Action> {
+private fun addNote(action: Action.AddNote, vision: Vision): Revision<Vision, Action> {
     require(vision is Vision.Viewing)
     val (text, session) = action
     return if (session.keyStack is KeyStack.Empty) {
-        Vision.Viewing(session) and wishForNewPassword(storybook) { end ->
-            when (end) {
-                is High -> {
-                    val newSession = session.setKeyStack(KeyStack.Shallow(end.value))
-                    Action.AddNote(text, newSession)
-                }
-                is Flat -> Action.Quit("Cancelled")
-                is Low -> Action.Quit(end.error.localizedMessage)
-            }
-        }
+        Vision.Viewing(session).toRevision()
     } else {
-        val newSession = session.addNote(text)
-        Vision.Viewing(newSession).toRevision()
+        Vision.Viewing(session.addNote(text)).toRevision()
     }
 }
 
@@ -95,10 +94,9 @@ object MainStory {
         data class Quit(val message: String? = null) : Action()
         object Refresh : Action()
 
-        data class AddNote(
-            val text: String,
-            val session: Session
-        ) : Action()
+        data class SetKeystack(val keyStack: KeyStack) : Action()
+
+        data class AddNote(val text: String, val session: Session) : Action()
 
         data class AddPassword(
             val location: String? = null,
