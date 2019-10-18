@@ -3,8 +3,8 @@ package com.rubyhuntersky.seismic_stampede.stories
 import com.rubyhuntersky.seismic_stampede.*
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import com.rubyhuntersky.seismic_stampede.preinteraction.core.End.*
-import com.rubyhuntersky.seismic_stampede.vibes.wishForLocationUsername
-import com.rubyhuntersky.seismic_stampede.vibes.wishForNewPassword
+import com.rubyhuntersky.seismic_stampede.wishForLocationUsername
+import com.rubyhuntersky.seismic_stampede.wishForNewPassword
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 object MainStory {
@@ -60,7 +60,9 @@ object MainStory {
         require(vision is Vision.Viewing)
         val session = action.session
         return if (action.location.isNullOrBlank() || action.username.isNullOrBlank()) {
-            Vision.Viewing(session) and wishForLocationUsername(storybook) { end ->
+            Vision.Viewing(session) and wishForLocationUsername(
+                storybook
+            ) { end ->
                 when (end) {
                     is High -> {
                         val (location, username) = end.value
@@ -84,7 +86,9 @@ object MainStory {
         require(vision is Vision.Viewing)
         val (text, session) = action
         return if (session.keyStack is KeyStack.Empty) {
-            Vision.Viewing(session) and wishForNewPassword(storybook) { end ->
+            Vision.Viewing(session) and wishForNewPassword(
+                storybook
+            ) { end ->
                 when (end) {
                     is High -> {
                         val newSession = session.setKeyStack(KeyStack.Shallow(end.value))

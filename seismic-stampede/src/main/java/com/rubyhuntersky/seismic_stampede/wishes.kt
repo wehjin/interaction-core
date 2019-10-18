@@ -1,15 +1,12 @@
-package com.rubyhuntersky.seismic_stampede.vibes
+package com.rubyhuntersky.seismic_stampede
 
 import com.rubyhuntersky.seismic_stampede.gather.core.gatherOf
 import com.rubyhuntersky.seismic_stampede.gather.core.validWhenNotEmpty
+import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import com.rubyhuntersky.seismic_stampede.stories.GatherStory
 import com.rubyhuntersky.seismic_stampede.stories.PasswordStory
 import com.rubyhuntersky.seismic_stampede.stories.startPasswordStory
 import com.rubyhuntersky.seismic_stampede.stories.startStory
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.End
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.Storybook
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.toEnding
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.toWish
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 

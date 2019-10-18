@@ -1,7 +1,6 @@
 package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
 import com.rubyhuntersky.seismic_stampede.Log
-import com.rubyhuntersky.seismic_stampede.vibes.Wish2
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel

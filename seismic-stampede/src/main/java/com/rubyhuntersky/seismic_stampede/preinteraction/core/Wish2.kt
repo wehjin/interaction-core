@@ -1,4 +1,4 @@
-package com.rubyhuntersky.seismic_stampede.vibes
+package com.rubyhuntersky.seismic_stampede.preinteraction.core
 
 import kotlinx.coroutines.Job
 
