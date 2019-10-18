@@ -13,43 +13,45 @@ interface Story2<V : Any, A : Any> {
     fun dispose()
 }
 
-fun <V : Any, A : Any> Story2<V, A>.tellBlocking(
+fun <V, A> Story2<V, A>.tellBlocking(
     render: (vision: V, offerAction: (A) -> Boolean) -> RenderStatus
-) = runBlocking { tell(render) }
+) where V : Any, A : Any {
+    runBlocking { tell(render) }
+}
 
-fun <V : Any, A : Any, OutA : Any> Story2<V, A>.follow(
-    feed: (OutA) -> Boolean,
-    block: (progress: V) -> OutA?
-): Job {
+fun <V, A, OutT> Story2<V, A>.toEnding(
+    mapToEnd: (V) -> End<OutT>?
+): StoryEnding<V, A, OutT> where V : Any, A : Any, OutT : Any {
     val story = this
-    return GlobalScope.launch {
-        story.tell { vision, _ ->
-            val outAction = block(vision)
-            if (outAction == null) {
-                RenderStatus.Repeat
-            } else {
-                RenderStatus.Stop.also { feed(outAction) }
+    return object : StoryEnding<V, A, OutT> {
+        override val story: Story2<V, A> = story
+        override val endOfStory: (progress: V) -> End<OutT>? = mapToEnd
+    }
+}
+
+interface StoryEnding<V : Any, A : Any, OutT : Any> {
+    val story: Story2<V, A>
+    val endOfStory: (vision: V) -> End<OutT>?
+
+}
+
+fun <V, A, OutT, OutA> StoryEnding<V, A, OutT>.toWish(transform: (End<OutT>) -> OutA)
+        : Wish2<OutA> where V : Any, A : Any, OutT : Any, OutA : Any {
+    return object : Wish2<OutA> {
+        override val name = "${story.family}Wish"
+        override fun follow(offer: (OutA) -> Boolean): Job {
+            return this@toWish.follow { end ->
+                offer(transform(end))
             }
         }
     }
 }
 
-interface StoryEnding<V : Any, A : Any, R : Any> {
-    val story: Story2<V, A>
-    val endFromVision: (progress: V) -> End<R>?
-}
-
-fun <V : Any, A : Any, R : Any, OutA : Any> StoryEnding<V, A, R>.toWish(transform: (End<R>) -> OutA): Wish2<OutA> {
-    return object : Wish2<OutA> {
-        override val name = "${story.family}Wish"
-        override fun follow(offer: (OutA) -> Boolean) = follow2 { end -> offer(transform(end)) }
-    }
-}
-
-fun <V : Any, A : Any, R : Any> StoryEnding<V, A, R>.follow2(feed: (End<R>) -> Boolean): Job {
+fun <V, A, R> StoryEnding<V, A, R>.follow(feed: (End<R>) -> Boolean)
+        : Job where V : Any, A : Any, R : Any {
     return GlobalScope.launch {
         story.tell { vision, _ ->
-            when (val end = endFromVision(vision)) {
+            when (val end = endOfStory(vision)) {
                 null -> RenderStatus.Repeat
                 else -> RenderStatus.Stop.also { feed(end) }
             }
@@ -57,29 +59,12 @@ fun <V : Any, A : Any, R : Any> StoryEnding<V, A, R>.follow2(feed: (End<R>) -> B
     }
 }
 
-fun <V : Any, A : Any, R : Any> Story2<V, A>.toEnding(mapToEnd: (V) -> End<R>?): StoryEnding<V, A, R> {
-    val story = this
-    return object : StoryEnding<V, A, R> {
-        override val story: Story2<V, A> = story
-        override val endFromVision: (progress: V) -> End<R>? = mapToEnd
-    }
-}
-
 @ExperimentalCoroutinesApi
-fun <V : Any, A : Any> storyOf(
+fun <V, A> storyOf(
     family: String,
     init: V,
     block: (action: A, vision: V) -> Revision<V, A>
-): Story2<V, A> {
-    return storyOf(family, init, { action, vision, _ -> block(action, vision) })
-}
-
-@ExperimentalCoroutinesApi
-fun <V : Any, A : Any> storyOf(
-    family: String,
-    init: V,
-    block: (action: A, vision: V, offer: (A) -> Boolean) -> Revision<V, A>
-): Story2<V, A> {
+): Story2<V, A> where A : Any, V : Any {
     return object : Story2<V, A> {
 
         private val actions = Channel<A>(5)
@@ -89,7 +74,7 @@ fun <V : Any, A : Any> storyOf(
             var vision = init
             val wishJobs = mutableMapOf<String, Job>()
             for (action in actions) {
-                val (newVision, isLast, wishes) = block(action, vision, actions::offer)
+                val (newVision, isLast, wishes) = block(action, vision)
                 if (newVision != vision) {
                     vision = newVision.also { visions.send(newVision) }
                 }
