@@ -4,6 +4,10 @@ import com.rubyhuntersky.seismic_stampede.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 
 interface Story2<V : Any, A : Any> {
     val family: String
@@ -58,38 +62,40 @@ fun <V, A, R> StoryEnding<V, A, R>.follow(feed: (End<R>) -> Boolean)
     }
 }
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 fun <V, A> storyOf(
     family: String,
-    init: V,
-    block: (action: A, vision: V) -> Revision<V, A>
+    init: RevisionScope<V, A>.() -> Revision<V, A>,
+    update: RevisionScope<V, A>.(action: A, vision: V) -> Revision<V, A>
 ): Story2<V, A> where A : Any, V : Any {
+
     return object : Story2<V, A> {
 
         private val actions = Channel<A>(5)
-        private val visions = ConflatedBroadcastChannel(init)
-
+        private val visions = ConflatedBroadcastChannel<V>()
         private val job = GlobalScope.launch {
-            var vision = init
             val wishJobs = mutableMapOf<String, Job>()
-            for (action in actions) {
-                val (newVision, isLast, wishes) = block(action, vision)
-                if (newVision != vision) {
-                    vision = newVision.also { visions.send(newVision) }
-                }
-                wishes.forEach { wish ->
-                    wishJobs.remove(wish.name)?.cancel()
-                    wish.follow {
-                        wishJobs.remove(wish.name)
-                        actions.offer(it)
-                    }.also {
-                        wishJobs[wish.name] = it
+            actions.consumeAsFlow()
+                .map { update(RevisionScope(), it, visions.value) }
+                .onStart { emit(init.invoke(RevisionScope())) }
+                .collect { (newVision, isLast, wishes) ->
+                    if (newVision != visions.valueOrNull) {
+                        visions.send(newVision)
+                    }
+                    wishes.forEach { wish ->
+                        wishJobs.remove(wish.name)?.cancel()
+                        wish.follow {
+                            wishJobs.remove(wish.name)
+                            actions.offer(it)
+                        }.also {
+                            wishJobs[wish.name] = it
+                        }
+                    }
+                    if (isLast) {
+                        actions.cancel()
                     }
                 }
-                if (isLast) {
-                    actions.cancel()
-                }
-            }
             Log.info("$family ended")
         }
 

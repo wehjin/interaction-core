@@ -2,17 +2,18 @@ package com.rubyhuntersky.seismic_stampede.stories
 
 import com.rubyhuntersky.seismic_stampede.gather.core.Gather
 import com.rubyhuntersky.seismic_stampede.gather.core.GatherValidity
+import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import com.rubyhuntersky.seismic_stampede.stories.GatherStory.Action
 import com.rubyhuntersky.seismic_stampede.stories.GatherStory.Vision
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
 @ExperimentalCoroutinesApi
-fun Gather.startStory(storybook: Storybook): Story2<Vision, Action> {
-    val story = storyOf<Vision, Action>(
-        family = GatherStory.storyName,
-        init = Vision.Gathering(this, emptyList()) as Vision
-    ) { action, vision ->
+fun Gather.startStory(storybook: Storybook): Story2<Vision, Action> = storyOf(
+    family = GatherStory.storyName,
+    init = { Vision.Gathering(this@startStory, emptyList()).toRevision() },
+    update = { action: Action, vision: Vision ->
         when (action) {
             is Action.Advance -> {
                 require(vision is Vision.Gathering)
@@ -37,8 +38,7 @@ fun Gather.startStory(storybook: Storybook): Story2<Vision, Action> {
             }
         }
     }
-    return story.also(storybook::startProjector)
-}
+).also(storybook::startProjector)
 
 object GatherStory {
 

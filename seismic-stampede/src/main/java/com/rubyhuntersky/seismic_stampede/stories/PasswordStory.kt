@@ -1,23 +1,25 @@
 package com.rubyhuntersky.seismic_stampede.stories
 
+import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import com.rubyhuntersky.seismic_stampede.stories.PasswordStory.Action
 import com.rubyhuntersky.seismic_stampede.stories.PasswordStory.Vision
-import com.rubyhuntersky.seismic_stampede.preinteraction.core.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
 @ExperimentalCoroutinesApi
-fun startPasswordStory(storybook: Storybook): Story2<Vision, Action> {
-    val minLength = 5
-    val init = Vision.BuildPassword(
-        checker = { password ->
-            if (password.size < minLength) "Password must be at least $minLength characters long."
-            else null
-        }
-    )
-    val story = storyOf<Vision, Action>(
-        PasswordStory.storyName,
-        init
-    ) { action, vision ->
+fun startPasswordStory(storybook: Storybook): Story2<Vision, Action> = storyOf(
+    family = PasswordStory.storyName,
+    init = {
+        Vision.BuildPassword(
+            checker = { password ->
+                val minLength = 5
+                if (password.size < minLength) "Password must be at least $minLength characters long."
+                else null
+            }
+        ).toRevision()
+    },
+    update = { action: Action, vision: Vision ->
         try {
             when (action) {
                 is Action.SetPassword -> {
@@ -32,8 +34,7 @@ fun startPasswordStory(storybook: Storybook): Story2<Vision, Action> {
             Vision.Ended(endLow(t)).toRevision(isLast = true)
         }
     }
-    return story.also(storybook::startProjector)
-}
+).also(storybook::startProjector)
 
 object PasswordStory {
 
